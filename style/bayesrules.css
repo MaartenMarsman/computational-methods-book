@@ -92,3 +92,20 @@ div.csl-entry {
   text-indent: -1.5em;
   margin-bottom: 0.5em;
 }
+
+/* Title block of the landing page: title, subtitle and authors, nothing else */
+#quarto-content .quarto-title .subtitle.lead {
+  color: #222;
+  font-size: 1.35rem;
+  font-weight: 400;
+  margin-top: 0.4em;
+}
+
+.quarto-title-meta-heading {
+  display: none;
+}
+
+.quarto-title-meta,
+.quarto-title-meta-author {
+  margin-top: 0.4em;
+}
