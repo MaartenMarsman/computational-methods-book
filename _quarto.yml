@@ -6,13 +6,7 @@ project:
 book:
   title: "Stochastic Simulation for Bayesian Modeling in Psychology"
   subtitle: "An Introduction to Computational Methods"
-  author:
-    - name: Maarten Marsman
-      affiliation: University of Amsterdam
-    - name: Lourens Waldorp
-      affiliation: University of Amsterdam
-  date: today
-  date-format: "YYYY"
+  author: "Maarten Marsman and Lourens Waldorp"
   site-url: https://maartenmarsman.github.io/computational-methods-book/
   repo-url: https://github.com/MaartenMarsman/computational-methods-book
   repo-actions: [issue]
@@ -26,7 +20,7 @@ book:
     - references.qmd
     - news.qmd
   page-footer:
-    left: "Stochastic Simulation for Bayesian Modeling in Psychology, Maarten Marsman and Lourens Waldorp. Work in progress."
+    left: "Stochastic Simulation for Bayesian Modeling in Psychology, Maarten Marsman and Lourens Waldorp."
     right: "Published with [Quarto](https://quarto.org)."
 
 bibliography: references.bib
