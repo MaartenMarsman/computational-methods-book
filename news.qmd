@@ -8,4 +8,5 @@ Not yet released. Online in the development version:
 
 - the welcome page;
 - Chapter 1, Probability and Simulation;
-- Chapter 2, Bayesian Inference, Revisited.
+- Chapter 2, Bayesian Inference, Revisited;
+- Chapter 3, Markov Chains.

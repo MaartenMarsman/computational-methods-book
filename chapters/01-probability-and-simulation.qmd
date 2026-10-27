@@ -602,7 +602,7 @@ The problem is the mismatch between proposal and target. In this deliberately si
 
 Markov chain Monte Carlo offers another approach. Instead of generating every candidate independently, we construct a sequence in which the next state depends on the current state. With an appropriate transition rule, long-run averages can estimate expectations under the target distribution. A **Markov chain** has the specific property that, conditional on the current state, its next state does not depend on the earlier history. Dependence alone does not ensure either this property or the desired long-run distribution.
 
-A chain can use its current location to propose nearby values, but this does not guarantee efficient exploration. It may move slowly or remain in one region for a long time. Chapter 3 (Markov Chains) develops the conditions needed for these methods, and Chapter 4 (Diagnosing Markov Chains) explains how to assess their performance.
+A chain can use its current location to propose nearby values, but this does not guarantee efficient exploration. It may move slowly or remain in one region for a long time. @sec-markov-chains develops the conditions needed for these methods, and Chapter 4 (Diagnosing Markov Chains) explains how to assess their performance.
 
 ## Chapter summary
 

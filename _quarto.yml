@@ -17,6 +17,9 @@ book:
       chapters:
         - chapters/01-probability-and-simulation.qmd
         - chapters/02-bayesian-inference-recap.qmd
+    - part: "Markov Chains"
+      chapters:
+        - chapters/03-markov-chains.qmd
     - references.qmd
     - news.qmd
   page-footer:

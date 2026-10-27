@@ -25,6 +25,7 @@ DEFAULT_BOOK = (Path.home() / "Library/CloudStorage/OneDrive-UvA/Teaching"
 PUBLIC_CHAPTERS = [
     "01-probability-and-simulation.qmd",
     "02-bayesian-inference-recap.qmd",
+    "03-markov-chains.qmd",
 ]
 SHARED = [
     "R/_common.R",
@@ -37,7 +38,6 @@ SHARED = [
 # Chapters that are not (yet) on the website. Update when a chapter goes online:
 # remove its entry here and add its file to PUBLIC_CHAPTERS and to _quarto.yml.
 ABSENT = {
-    "sec-markov-chains": "Chapter 3 (Markov Chains)",
     "sec-diagnostics": "Chapter 4 (Diagnosing Markov Chains)",
     "sec-metropolis": "Chapter 5 (The Metropolis Algorithm)",
     "sec-metropolis-hastings": "Chapter 6 (Metropolis–Hastings and Adaptive Proposals)",
