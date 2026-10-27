@@ -166,6 +166,23 @@ div.csl-indent {
 </li>
       </ul>
   </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Markov Chains</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapters/03-markov-chains.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Markov Chains</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./references.html" class="sidebar-item-text sidebar-link">
@@ -239,7 +256,7 @@ div.csl-indent {
 <i class="callout-icon"></i>
 </div>
 <div class="callout-body-container">
-<p><strong>Work in progress.</strong> This website holds the chapters of the book that are ready for readers. Online now: <a href="./chapters/01-probability-and-simulation.html">Chapter 1</a> (Probability and Simulation) and <a href="./chapters/02-bayesian-inference-recap.html">Chapter 2</a> (Bayesian Inference, Revisited). Further chapters are added as they are completed, and the chapters already online may still change.</p>
+<p><strong>Work in progress.</strong> This website holds the chapters of the book that are ready for readers. Online now: <a href="./chapters/01-probability-and-simulation.html">Chapter 1</a> (Probability and Simulation), <a href="./chapters/02-bayesian-inference-recap.html">Chapter 2</a> (Bayesian Inference, Revisited) and <a href="./chapters/03-markov-chains.html">Chapter 3</a> (Markov Chains). Further chapters are added as they are completed, and the chapters already online may still change.</p>
 </div>
 </div>
 </div>
@@ -266,7 +283,7 @@ div.csl-indent {
 <h2 class="unnumbered anchored" data-anchor-id="how-this-book-is-organized">How this book is organized</h2>
 <p>The book has five parts. Each builds on the concepts and methods introduced earlier.</p>
 <p><strong>Foundations.</strong> <a href="chapters/01-probability-and-simulation.html" class="quarto-xref"><span>1&nbsp; Probability and Simulation</span></a> introduces Monte Carlo integration, explains its accuracy, and develops methods for generating random draws. <a href="chapters/02-bayesian-inference-recap.html" class="quarto-xref"><span>2&nbsp; Bayesian Inference, Revisited</span></a> connects these ideas to Bayesian inference, including posterior summaries, marginal likelihoods, and Bayes factors. These chapters also explain why obtaining useful draws and evaluating integrals become more demanding as models grow.</p>
-<p><strong>Markov Chains.</strong> Chapter 3 (Markov Chains) develops the properties of Markov chains and explains how their transitions can be constructed to preserve a chosen stationary distribution. Chapter 4 (Diagnosing Markov Chains) uses simulations from Stan to introduce practical checks of chain behavior and estimates of Monte Carlo accuracy.</p>
+<p><strong>Markov Chains.</strong> <a href="chapters/03-markov-chains.html" class="quarto-xref"><span>3&nbsp; Markov Chains</span></a> develops the properties of Markov chains and explains how their transitions can be constructed to preserve a chosen stationary distribution. Chapter 4 (Diagnosing Markov Chains) uses simulations from Stan to introduce practical checks of chain behavior and estimates of Monte Carlo accuracy.</p>
 <p><strong>Sampling Algorithms.</strong> Chapter 5 (The Metropolis Algorithm) develops the Metropolis algorithm using ratios of posterior densities. Chapter 6 (Metropolis–Hastings and Adaptive Proposals) extends it to asymmetric proposals, parameter transformations, and adaptive tuning. Chapter 7 (Gibbs Sampling and Metropolis-within-Gibbs) introduces updates from conditional distributions and combines them with Metropolis steps when direct conditional sampling is unavailable. The code makes the connection between each algorithm’s mathematical definition and its implementation explicit.</p>
 <p><strong>Model Uncertainty.</strong> Chapter 8 (Bayesian Variable Selection) treats the inclusion of predictors as an unknown part of a regression model. Chapter 9 (Bayesian Model Averaging) uses posterior model probabilities to combine estimates and predictions across models, accounting for uncertainty about model choice.</p>
 <p><strong>Going Further.</strong> Chapter 10 (Hamiltonian Monte Carlo) introduces Hamiltonian Monte Carlo, the family of methods underlying Stan’s sampling algorithms. This chapter is optional; the earlier chapters can be studied independently of it.</p>

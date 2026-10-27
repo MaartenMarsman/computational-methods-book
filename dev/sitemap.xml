@@ -2,22 +2,26 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://maartenmarsman.github.io/computational-methods-book/index.html</loc>
-    <lastmod>2026-10-27T21:01:47.591Z</lastmod>
+    <lastmod>2026-10-27T21:03:24.499Z</lastmod>
   </url>
   <url>
     <loc>https://maartenmarsman.github.io/computational-methods-book/chapters/01-probability-and-simulation.html</loc>
-    <lastmod>2026-10-27T21:01:47.590Z</lastmod>
+    <lastmod>2026-10-27T21:03:24.498Z</lastmod>
   </url>
   <url>
     <loc>https://maartenmarsman.github.io/computational-methods-book/chapters/02-bayesian-inference-recap.html</loc>
-    <lastmod>2026-10-27T21:01:47.591Z</lastmod>
+    <lastmod>2026-10-27T21:03:24.499Z</lastmod>
+  </url>
+  <url>
+    <loc>https://maartenmarsman.github.io/computational-methods-book/chapters/03-markov-chains.html</loc>
+    <lastmod>2026-10-27T21:03:24.499Z</lastmod>
   </url>
   <url>
     <loc>https://maartenmarsman.github.io/computational-methods-book/references.html</loc>
-    <lastmod>2026-10-27T21:01:47.591Z</lastmod>
+    <lastmod>2026-10-27T21:03:24.499Z</lastmod>
   </url>
   <url>
     <loc>https://maartenmarsman.github.io/computational-methods-book/news.html</loc>
-    <lastmod>2026-10-27T21:01:47.591Z</lastmod>
+    <lastmod>2026-10-27T21:03:24.499Z</lastmod>
   </url>
 </urlset>

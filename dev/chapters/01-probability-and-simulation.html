@@ -230,6 +230,23 @@ window.Quarto = {
 </li>
       </ul>
   </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Markov Chains</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/03-markov-chains.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Markov Chains</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../references.html" class="sidebar-item-text sidebar-link">
@@ -893,7 +910,7 @@ Figure&nbsp;1.10: A broad proposal with several parameters. Left: For two parame
 <p>At ten parameters, about one in 1,024 proposals is accepted; at twenty, about one in a million. Each individual condition is easy to satisfy, yet satisfying all of them at once is unlikely. This example requires only multiplication of independent probabilities, rather than geometry in higher dimensions.</p>
 <p>The problem is the mismatch between proposal and target. In this deliberately simple example, drawing each coordinate directly from <span class="math inline">\([0.25,0.75]\)</span> solves it completely. For a real posterior, finding a proposal that matches both its concentration and the relationships between parameters can be much harder. Dimension alone does not force rejection sampling to fail, and dependent draws are not the only possible solution.</p>
 <p>Markov chain Monte Carlo offers another approach. Instead of generating every candidate independently, we construct a sequence in which the next state depends on the current state. With an appropriate transition rule, long-run averages can estimate expectations under the target distribution. A <strong>Markov chain</strong> has the specific property that, conditional on the current state, its next state does not depend on the earlier history. Dependence alone does not ensure either this property or the desired long-run distribution.</p>
-<p>A chain can use its current location to propose nearby values, but this does not guarantee efficient exploration. It may move slowly or remain in one region for a long time. Chapter 3 (Markov Chains) develops the conditions needed for these methods, and Chapter 4 (Diagnosing Markov Chains) explains how to assess their performance.</p>
+<p>A chain can use its current location to propose nearby values, but this does not guarantee efficient exploration. It may move slowly or remain in one region for a long time. <a href="03-markov-chains.html" class="quarto-xref"><span>Chapter 3</span></a> develops the conditions needed for these methods, and Chapter 4 (Diagnosing Markov Chains) explains how to assess their performance.</p>
 </section>
 </section>
 <section id="chapter-summary" class="level2" data-number="1.7">
