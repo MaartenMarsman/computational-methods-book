@@ -324,17 +324,17 @@
     "href": "news.html",
     "title": "News",
     "section": "",
-    "text": "2026-10-27: Version 0.1\nVersions of this website, newest first. Every version remains available through the version menu in the sidebar, and every change to the text and code is recorded in the GitHub repository.\nFirst public version, with the welcome page and the first two chapters:\nThe development version shows the latest changes between numbered versions.",
+    "text": "Development version\nVersions of this website, newest first. Every version remains available through the version menu in the sidebar, and every change to the text and code is recorded in the GitHub repository.\nNot yet released. Online in the development version:",
     "crumbs": [
       "News"
     ]
   },
   {
-    "objectID": "news.html#version-0.1",
-    "href": "news.html#version-0.1",
+    "objectID": "news.html#development-version",
+    "href": "news.html#development-version",
     "title": "News",
     "section": "",
-    "text": "Chapter 1, Probability and Simulation\nChapter 2, Bayesian Inference, Revisited",
+    "text": "the welcome page;\nChapter 1, Probability and Simulation;\nChapter 2, Bayesian Inference, Revisited.",
     "crumbs": [
       "News"
     ]
