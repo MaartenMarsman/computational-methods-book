@@ -29,27 +29,7 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-/* CSS for citations */
-div.csl-bib-body { }
-div.csl-entry {
-  clear: both;
-  margin-bottom: 0em;
-}
-.hanging-indent div.csl-entry {
-  margin-left:2em;
-  text-indent:-2em;
-}
-div.csl-left-margin {
-  min-width:2em;
-  float:left;
-}
-div.csl-right-inline {
-  margin-left:2em;
-  padding-left:1em;
-}
-div.csl-indent {
-  margin-left: 2em;
-}</style>
+</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -59,7 +39,6 @@ div.csl-indent {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./chapters/01-probability-and-simulation.html" rel="next">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -145,41 +124,6 @@ div.csl-indent {
  <span class="menu-text">Welcome</span></a>
   </div>
 </li>
-        <li class="sidebar-item sidebar-item-section">
-      <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
- <span class="menu-text">Foundations</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
-      </div>
-      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./chapters/01-probability-and-simulation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Probability and Simulation</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./chapters/02-bayesian-inference-recap.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Bayesian Inference, Revisited</span></span></a>
-  </div>
-</li>
-      </ul>
-  </li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./references.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">References</span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./news.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">News</span></a>
-  </div>
-</li>
     </ul>
     </div>
 </nav>
@@ -190,17 +134,7 @@ div.csl-indent {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#welcome" id="toc-welcome" class="nav-link active" data-scroll-target="#welcome">Welcome</a>
-  <ul class="collapse">
-  <li><a href="#why-we-wrote-this-book" id="toc-why-we-wrote-this-book" class="nav-link" data-scroll-target="#why-we-wrote-this-book">Why we wrote this book</a></li>
-  <li><a href="#who-this-book-is-for" id="toc-who-this-book-is-for" class="nav-link" data-scroll-target="#who-this-book-is-for">Who this book is for</a></li>
-  <li><a href="#how-this-book-is-organized" id="toc-how-this-book-is-organized" class="nav-link" data-scroll-target="#how-this-book-is-organized">How this book is organized</a></li>
-  <li><a href="#how-to-read-this-book" id="toc-how-to-read-this-book" class="nav-link" data-scroll-target="#how-to-read-this-book">How to read this book</a></li>
-  <li><a href="#software" id="toc-software" class="nav-link" data-scroll-target="#software">Software</a></li>
-  <li><a href="#acknowledgements" id="toc-acknowledgements" class="nav-link" data-scroll-target="#acknowledgements">Acknowledgements</a></li>
-  <li><a href="#license" id="toc-license" class="nav-link" data-scroll-target="#license">License</a></li>
-  <li><a href="#about-this-website" id="toc-about-this-website" class="nav-link" data-scroll-target="#about-this-website">About this website</a></li>
-  </ul></li>
+  <li><a href="#welcome" id="toc-welcome" class="nav-link active" data-scroll-target="#welcome">Welcome</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/MaartenMarsman/computational-methods-book/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -256,88 +190,10 @@ div.csl-indent {
 
 <section id="welcome" class="level1 unnumbered">
 <h1 class="unnumbered">Welcome</h1>
-<div class="callout callout-style-simple callout-note">
-<div class="callout-body d-flex">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-body-container">
-<p><strong>Work in progress.</strong> This website holds the chapters of the book that are ready for readers. Online now: <a href="./chapters/01-probability-and-simulation.html">Chapter 1</a> (Probability and Simulation) and <a href="./chapters/02-bayesian-inference-recap.html">Chapter 2</a> (Bayesian Inference, Revisited). Further chapters are added as they are completed, and the chapters already online may still change.</p>
-</div>
-</div>
-</div>
-<p>Stochastic simulation provides a way to study Bayesian models when the quantities of interest are difficult to calculate directly. By generating draws from a probability distribution, we can estimate posterior means, probabilities, and predictions. This book develops the methods behind those calculations and shows how to implement them in R.</p>
-<section id="why-we-wrote-this-book" class="level2 unnumbered">
-<h2 class="unnumbered anchored" data-anchor-id="why-we-wrote-this-book">Why we wrote this book</h2>
-<p>We previously taught two separate courses in the Research Master’s Psychology program at the University of Amsterdam. One used <em>Bayes Rules!</em> <span class="citation" data-cites="johnson2022bayes">(<a href="references.html#ref-johnson2022bayes" role="doc-biblioref">Johnson et al., 2022</a>)</span>, and the other used <em>MCMC from Scratch</em> <span class="citation" data-cites="hanada2022mcmc">(<a href="references.html#ref-hanada2022mcmc" role="doc-biblioref">Hanada &amp; Matsuura, 2022</a>)</span>. Both are excellent books, but they differ in the topics they cover, the depth of their treatment, and the technical background they expect. <em>Bayes Rules!</em> introduces Bayesian modeling through applications, while <em>MCMC from Scratch</em> develops the principles and implementation of Monte Carlo methods.</p>
-<p>Bringing the two courses together required a text that connected introductory Bayesian modeling with a more detailed study of simulation algorithms. We could not find a book that matched that combination of topics and level. We wrote this book to fill the gap, working through the explanations, mathematical steps, and code needed to understand and implement the methods.</p>
-</section>
-<section id="who-this-book-is-for" class="level2 unnumbered">
-<h2 class="unnumbered anchored" data-anchor-id="who-this-book-is-for">Who this book is for</h2>
-<p>This book is intended for research master’s students in psychology who want to understand how stochastic simulation supports Bayesian analysis. You should be familiar with elementary probability and statistics, including means, variances, and probability distributions, and be comfortable writing basic R code using vectors, functions, and loops. Familiarity with Bayesian inference is helpful; the opening chapters introduce the probability and Bayesian concepts used throughout the book.</p>
-<p>By working through the text and code, you will learn to</p>
-<ul>
-<li>explain how Monte Carlo simulation approximates posterior quantities and how its numerical accuracy is assessed;</li>
-<li>analyze Markov-chain transition rules and justify whether they preserve a specified target distribution;</li>
-<li>implement and compare Metropolis, Metropolis–Hastings, and Gibbs sampling algorithms in R;</li>
-<li>evaluate simulation output using diagnostics and Monte Carlo error estimates, and justify changes to the sampling procedure;</li>
-<li>apply Bayesian variable selection and model averaging, and evaluate how prior choices affect posterior conclusions and predictions; and</li>
-<li>implement, tune, and evaluate Hamiltonian Monte Carlo, and explain its relationship to Stan’s sampling methods in the optional final chapter.</li>
-</ul>
-</section>
-<section id="how-this-book-is-organized" class="level2 unnumbered">
-<h2 class="unnumbered anchored" data-anchor-id="how-this-book-is-organized">How this book is organized</h2>
-<p>The book has five parts. Each builds on the concepts and methods introduced earlier.</p>
-<p><strong>Foundations.</strong> <a href="chapters/01-probability-and-simulation.html" class="quarto-xref"><span>1&nbsp; Probability and Simulation</span></a> introduces Monte Carlo integration, explains its accuracy, and develops methods for generating random draws. <a href="chapters/02-bayesian-inference-recap.html" class="quarto-xref"><span>2&nbsp; Bayesian Inference, Revisited</span></a> connects these ideas to Bayesian inference, including posterior summaries, marginal likelihoods, and Bayes factors. These chapters also explain why obtaining useful draws and evaluating integrals become more demanding as models grow.</p>
-<p><strong>Markov Chains.</strong> Chapter 3 (Markov Chains) develops the properties of Markov chains and explains how their transitions can be constructed to preserve a chosen stationary distribution. Chapter 4 (Diagnosing Markov Chains) uses simulations from Stan to introduce practical checks of chain behavior and estimates of Monte Carlo accuracy.</p>
-<p><strong>Sampling Algorithms.</strong> Chapter 5 (The Metropolis Algorithm) develops the Metropolis algorithm using ratios of posterior densities. Chapter 6 (Metropolis–Hastings and Adaptive Proposals) extends it to asymmetric proposals, parameter transformations, and adaptive tuning. Chapter 7 (Gibbs Sampling and Metropolis-within-Gibbs) introduces updates from conditional distributions and combines them with Metropolis steps when direct conditional sampling is unavailable. The code makes the connection between each algorithm’s mathematical definition and its implementation explicit.</p>
-<p><strong>Model Uncertainty.</strong> Chapter 8 (Bayesian Variable Selection) treats the inclusion of predictors as an unknown part of a regression model. Chapter 9 (Bayesian Model Averaging) uses posterior model probabilities to combine estimates and predictions across models, accounting for uncertainty about model choice.</p>
-<p><strong>Going Further.</strong> Chapter 10 (Hamiltonian Monte Carlo) introduces Hamiltonian Monte Carlo, the family of methods underlying Stan’s sampling algorithms. This chapter is optional; the earlier chapters can be studied independently of it.</p>
-</section>
-<section id="how-to-read-this-book" class="level2 unnumbered">
-<h2 class="unnumbered anchored" data-anchor-id="how-to-read-this-book">How to read this book</h2>
-<p>Each chapter introduces a problem and its learning goals, develops the methods through worked examples, and closes with a summary and exercises. Read the explanations alongside the code, run the examples, and examine how the results change when you alter the inputs or simulation settings.</p>
-<p>The exercises take three forms. <em>Conceptual</em> exercises ask you to explain or derive an idea. <em>Practical</em> exercises develop your ability to implement and assess a method. <em>Applied</em> exercises use the methods to answer questions about data.</p>
-<div class="bookbox bookgraybox">
-<div class="title">
-<p>Definitions and algorithms</p>
-</div>
-<p>Gray boxes collect definitions, algorithms, and short summaries for reference while you work through the examples and exercises.</p>
-</div>
-<div class="quiz bookgraybox">
-<div class="title">
-<p>Quiz yourself!</p>
-</div>
-<p>Quiz boxes offer a question to consider before continuing. Try to formulate an answer, then compare it with the answers collected near the end of the chapter.</p>
-</div>
-</section>
-<section id="software" class="level2 unnumbered">
-<h2 class="unnumbered anchored" data-anchor-id="software">Software</h2>
-<p>The examples use R. The <code>tidyverse</code> supports data manipulation and plotting, <code>rstan</code> provides an interface to Stan, and <code>bayesplot</code> and <code>posterior</code> provide tools for examining simulation output. Appendix A (Software Setup) gives installation instructions and help with common setup problems.</p>
-</section>
-<section id="acknowledgements" class="level2 unnumbered">
-<h2 class="unnumbered anchored" data-anchor-id="acknowledgements">Acknowledgements</h2>
-<p>We acknowledge the influence of <em>Bayes Rules!</em> by Alicia Johnson, Miles Ott, and Mine Dogucu, and <em>MCMC from Scratch</em> by Masanori Hanada and So Matsuura. Their approaches to teaching Bayesian modeling and simulation helped shape this book, and we highly recommend both texts for further study <span class="citation" data-cites="johnson2022bayes hanada2022mcmc">(<a href="references.html#ref-hanada2022mcmc" role="doc-biblioref">Hanada &amp; Matsuura, 2022</a>; <a href="references.html#ref-johnson2022bayes" role="doc-biblioref">Johnson et al., 2022</a>)</span>.</p>
-<p>This book was co-written with Anthropic’s Claude Fable and OpenAI’s ChatGPT models Sol and Astra, which helped develop and refine the explanations, examples, and code.</p>
-</section>
-<section id="license" class="level2 unnumbered">
-<h2 class="unnumbered anchored" data-anchor-id="license">License</h2>
-<p>This book is licensed under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.</p>
-</section>
-<section id="about-this-website" class="level2 unnumbered">
-<h2 class="unnumbered anchored" data-anchor-id="about-this-website">About this website</h2>
-<p>The source of the chapters on this website is kept on <a href="https://github.com/MaartenMarsman/computational-methods-book">GitHub</a>, where every change to the text and code is recorded. If you find an error or have a suggestion, please <a href="https://github.com/MaartenMarsman/computational-methods-book/issues">open an issue</a> there.</p>
+<p>This website will hold the online version of <em>Stochastic Simulation for Bayesian Modeling in Psychology: An Introduction to Computational Methods</em>. No version of the book has been released yet.</p>
+<p>The chapters are written and published in the <a href="dev/">development version</a> of this website as they become ready. Once a set of chapters is complete, it is released here as a numbered version, and every released version remains available through the version menu in the sidebar.</p>
 
 
-<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" data-line-spacing="2" role="list" style="display: none">
-<div id="ref-hanada2022mcmc" class="csl-entry" role="listitem">
-Hanada, M., &amp; Matsuura, S. (2022). <em><span>MCMC</span> from scratch: A practical introduction to markov chain monte carlo</em>. Springer.
-</div>
-<div id="ref-johnson2022bayes" class="csl-entry" role="listitem">
-Johnson, A. A., Ott, M. Q., &amp; Dogucu, M. (2022). <em>Bayes rules! <span>A</span>n introduction to applied <span>B</span>ayesian modeling</em>. CRC Press.
-</div>
-</div>
-</section>
 </section>
 
 </main> <!-- /main -->
@@ -863,15 +719,6 @@ Johnson, A. A., Ott, M. Q., &amp; Dogucu, M. (2022). <em>Bayes rules! <span>A</s
     }
   });
   </script>
-<nav class="page-navigation">
-  <div class="nav-page nav-page-previous">
-  </div>
-  <div class="nav-page nav-page-next">
-      <a href="./chapters/01-probability-and-simulation.html" class="pagination-link" aria-label="Probability and Simulation">
-        <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Probability and Simulation</span></span> <i class="bi bi-arrow-right-short"></i>
-      </a>
-  </div>
-</nav>
 </div> <!-- /content -->
 <footer class="footer">
   <div class="nav-footer">
