@@ -1,0 +1,35 @@
+name: Publish website
+
+on:
+  push:
+    branches: [main, development]
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+# Deployments edit the gh-pages branch, so they must not run at the same time.
+concurrency:
+  group: publish
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repository (with tags, for versions.json)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Quarto
+        uses: quarto-dev/quarto-actions/setup@v2
+
+      # R is not installed here on purpose: all code results are cached in
+      # _freeze/ (committed), so Quarto only has to assemble the pages.
+      - name: Render
+        run: quarto render
+
+      - name: Publish to gh-pages (main -> root, development -> dev/, tag -> v<version>/)
+        run: bash tools/deploy.sh

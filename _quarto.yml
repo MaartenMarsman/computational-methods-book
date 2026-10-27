@@ -1,0 +1,50 @@
+project:
+  type: book
+  output-dir: _book
+  execute-dir: project
+
+book:
+  title: "Stochastic Simulation for Bayesian Modeling in Psychology"
+  subtitle: "An Introduction to Computational Methods"
+  author:
+    - name: Maarten Marsman
+      affiliation: University of Amsterdam
+    - name: Lourens Waldorp
+      affiliation: University of Amsterdam
+  date: today
+  date-format: "YYYY"
+  site-url: https://maartenmarsman.github.io/computational-methods-book/
+  repo-url: https://github.com/MaartenMarsman/computational-methods-book
+  repo-actions: [issue]
+  search: true
+  chapters:
+    - index.qmd
+  page-footer:
+    left: "Stochastic Simulation for Bayesian Modeling in Psychology, Maarten Marsman and Lourens Waldorp. Work in progress."
+    right: "Published with [Quarto](https://quarto.org)."
+
+execute:
+  freeze: auto      # results are cached in _freeze/ (committed), so GitHub can build the site without R
+  echo: true
+  warning: false
+  message: false
+
+filters:
+  - style/bookbox.lua
+
+format:
+  html:
+    theme: cosmo
+    css: style/bayesrules.css
+    include-after-body: style/version-switcher.html
+    toc: true
+    toc-depth: 3
+    number-sections: true
+    number-depth: 3
+    code-copy: true
+    code-overflow: wrap
+    highlight-style: tango
+    fig-width: 6
+    fig-height: 3.5
+    fig-align: center
+    df-print: default
