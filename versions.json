@@ -1,0 +1,16 @@
+{
+  "_comment": "Written by tools/versions.py in the publish workflow from the git tags; do not edit. Every published version of the book, newest first.",
+  "root": "/computational-methods-book/",
+  "versions": [
+    {
+      "version": "0.1",
+      "kind": "release",
+      "path": "/computational-methods-book/"
+    },
+    {
+      "version": "development",
+      "kind": "development",
+      "path": "/computational-methods-book/dev/"
+    }
+  ]
+}
