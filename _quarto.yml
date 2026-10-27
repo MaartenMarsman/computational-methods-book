@@ -19,9 +19,18 @@ book:
   search: true
   chapters:
     - index.qmd
+    - part: "Foundations"
+      chapters:
+        - chapters/01-probability-and-simulation.qmd
+        - chapters/02-bayesian-inference-recap.qmd
+    - references.qmd
+    - news.qmd
   page-footer:
     left: "Stochastic Simulation for Bayesian Modeling in Psychology, Maarten Marsman and Lourens Waldorp. Work in progress."
     right: "Published with [Quarto](https://quarto.org)."
+
+bibliography: references.bib
+csl: apa.csl
 
 execute:
   freeze: auto      # results are cached in _freeze/ (committed), so GitHub can build the site without R

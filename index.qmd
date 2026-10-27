@@ -1,5 +1,72 @@
 # Welcome {.unnumbered}
 
-This website will hold the online version of *Stochastic Simulation for Bayesian Modeling in Psychology: An Introduction to Computational Methods*. No version of the book has been released yet.
+::: {.callout-note appearance="simple"}
+**Work in progress.** This website holds the chapters of the book that are ready for readers. Online now: [Chapter 1](chapters/01-probability-and-simulation.qmd) (Probability and Simulation) and [Chapter 2](chapters/02-bayesian-inference-recap.qmd) (Bayesian Inference, Revisited). Further chapters are added as they are completed, and the chapters already online may still change.
+:::
 
-The chapters are written and published in the [development version](dev/) of this website as they become ready. Once a set of chapters is complete, it is released here as a numbered version, and every released version remains available through the version menu in the sidebar.
+Stochastic simulation provides a way to study Bayesian models when the quantities of interest are difficult to calculate directly. By generating draws from a probability distribution, we can estimate posterior means, probabilities, and predictions. This book develops the methods behind those calculations and shows how to implement them in R.
+
+## Why we wrote this book {.unnumbered}
+
+We previously taught two separate courses in the Research Master's Psychology program at the University of Amsterdam. One used *Bayes Rules!* [@johnson2022bayes], and the other used *MCMC from Scratch* [@hanada2022mcmc]. Both are excellent books, but they differ in the topics they cover, the depth of their treatment, and the technical background they expect. *Bayes Rules!* introduces Bayesian modeling through applications, while *MCMC from Scratch* develops the principles and implementation of Monte Carlo methods.
+
+Bringing the two courses together required a text that connected introductory Bayesian modeling with a more detailed study of simulation algorithms. We could not find a book that matched that combination of topics and level. We wrote this book to fill the gap, working through the explanations, mathematical steps, and code needed to understand and implement the methods.
+
+## Who this book is for {.unnumbered}
+
+This book is intended for research master's students in psychology who want to understand how stochastic simulation supports Bayesian analysis. You should be familiar with elementary probability and statistics, including means, variances, and probability distributions, and be comfortable writing basic R code using vectors, functions, and loops. Familiarity with Bayesian inference is helpful; the opening chapters introduce the probability and Bayesian concepts used throughout the book.
+
+By working through the text and code, you will learn to
+
+- explain how Monte Carlo simulation approximates posterior quantities and how its numerical accuracy is assessed;
+- analyze Markov-chain transition rules and justify whether they preserve a specified target distribution;
+- implement and compare Metropolis, Metropolis–Hastings, and Gibbs sampling algorithms in R;
+- evaluate simulation output using diagnostics and Monte Carlo error estimates, and justify changes to the sampling procedure;
+- apply Bayesian variable selection and model averaging, and evaluate how prior choices affect posterior conclusions and predictions; and
+- implement, tune, and evaluate Hamiltonian Monte Carlo, and explain its relationship to Stan's sampling methods in the optional final chapter.
+
+## How this book is organized {.unnumbered}
+
+The book has five parts. Each builds on the concepts and methods introduced earlier.
+
+**Foundations.** @sec-simulation introduces Monte Carlo integration, explains its accuracy, and develops methods for generating random draws. @sec-bayes-recap connects these ideas to Bayesian inference, including posterior summaries, marginal likelihoods, and Bayes factors. These chapters also explain why obtaining useful draws and evaluating integrals become more demanding as models grow.
+
+**Markov Chains.** Chapter 3 (Markov Chains) develops the properties of Markov chains and explains how their transitions can be constructed to preserve a chosen stationary distribution. Chapter 4 (Diagnosing Markov Chains) uses simulations from Stan to introduce practical checks of chain behavior and estimates of Monte Carlo accuracy.
+
+**Sampling Algorithms.** Chapter 5 (The Metropolis Algorithm) develops the Metropolis algorithm using ratios of posterior densities. Chapter 6 (Metropolis–Hastings and Adaptive Proposals) extends it to asymmetric proposals, parameter transformations, and adaptive tuning. Chapter 7 (Gibbs Sampling and Metropolis-within-Gibbs) introduces updates from conditional distributions and combines them with Metropolis steps when direct conditional sampling is unavailable. The code makes the connection between each algorithm's mathematical definition and its implementation explicit.
+
+**Model Uncertainty.** Chapter 8 (Bayesian Variable Selection) treats the inclusion of predictors as an unknown part of a regression model. Chapter 9 (Bayesian Model Averaging) uses posterior model probabilities to combine estimates and predictions across models, accounting for uncertainty about model choice.
+
+**Going Further.** Chapter 10 (Hamiltonian Monte Carlo) introduces Hamiltonian Monte Carlo, the family of methods underlying Stan's sampling algorithms. This chapter is optional; the earlier chapters can be studied independently of it.
+
+## How to read this book {.unnumbered}
+
+Each chapter introduces a problem and its learning goals, develops the methods through worked examples, and closes with a summary and exercises. Read the explanations alongside the code, run the examples, and examine how the results change when you alter the inputs or simulation settings.
+
+The exercises take three forms. *Conceptual* exercises ask you to explain or derive an idea. *Practical* exercises develop your ability to implement and assess a method. *Applied* exercises use the methods to answer questions about data.
+
+::: {.bookbox title="Definitions and algorithms"}
+Gray boxes collect definitions, algorithms, and short summaries for reference while you work through the examples and exercises.
+:::
+
+::: {.quiz title="Quiz yourself!"}
+Quiz boxes offer a question to consider before continuing. Try to formulate an answer, then compare it with the answers collected near the end of the chapter.
+:::
+
+## Software {.unnumbered}
+
+The examples use R. The `tidyverse` supports data manipulation and plotting, `rstan` provides an interface to Stan, and `bayesplot` and `posterior` provide tools for examining simulation output. Appendix A (Software Setup) gives installation instructions and help with common setup problems.
+
+## Acknowledgements {.unnumbered}
+
+We acknowledge the influence of *Bayes Rules!* by Alicia Johnson, Miles Ott, and Mine Dogucu, and *MCMC from Scratch* by Masanori Hanada and So Matsuura. Their approaches to teaching Bayesian modeling and simulation helped shape this book, and we highly recommend both texts for further study [@johnson2022bayes; @hanada2022mcmc].
+
+This book was co-written with Anthropic's Claude Fable and OpenAI's ChatGPT models Sol and Astra, which helped develop and refine the explanations, examples, and code.
+
+## License {.unnumbered}
+
+This book is licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
+
+## About this website {.unnumbered}
+
+The source of the chapters on this website is kept on [GitHub](https://github.com/MaartenMarsman/computational-methods-book), where every change to the text and code is recorded. If you find an error or have a suggestion, please [open an issue](https://github.com/MaartenMarsman/computational-methods-book/issues) there.

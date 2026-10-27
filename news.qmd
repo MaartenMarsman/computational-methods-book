@@ -1,0 +1,11 @@
+# News {.unnumbered}
+
+Versions of this website, newest first. Every version remains available through the version menu in the sidebar, and every change to the text and code is recorded in the [GitHub repository](https://github.com/MaartenMarsman/computational-methods-book).
+
+## Development version {.unnumbered}
+
+Not yet released. Online in the development version:
+
+- the welcome page;
+- Chapter 1, Probability and Simulation;
+- Chapter 2, Bayesian Inference, Revisited.
