@@ -25,9 +25,25 @@ jobs:
 
       - name: Set up Quarto
         uses: quarto-dev/quarto-actions/setup@v2
+        with:
+          tinytex: true
 
-      # R is not installed here on purpose: all code results are cached in
-      # _freeze/ (committed), so Quarto only has to assemble the pages.
+      # Quarto needs R (only base R and rmarkdown) to assemble the PDF book,
+      # even though every chapter's results come from the committed _freeze/.
+      - name: Set up R
+        uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+
+      - name: Install rmarkdown
+        uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          packages: rmarkdown
+
+      - name: Version label for the PDF
+        run: bash tools/version-label.sh
+
+      # All code results come from the committed _freeze/; nothing is executed.
       - name: Render
         run: quarto render
 

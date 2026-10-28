@@ -1,0 +1,4 @@
+format:
+  pdf:
+    date: "2026-10-28"
+    date-format: "[Development version,] D MMMM YYYY"

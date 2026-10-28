@@ -7,6 +7,8 @@ book:
   title: "Stochastic Simulation for Bayesian Modeling in Psychology"
   subtitle: "An Introduction to Computational Methods"
   author: "Maarten Marsman and Lourens Waldorp"
+  output-file: Stochastic-Simulation-for-Bayesian-Modeling
+  downloads: [pdf]
   site-url: https://maartenmarsman.github.io/computational-methods-book/
   repo-url: https://github.com/MaartenMarsman/computational-methods-book
   repo-actions: [issue]
@@ -25,6 +27,8 @@ book:
   page-footer:
     left: "Stochastic Simulation for Bayesian Modeling in Psychology, Maarten Marsman and Lourens Waldorp."
     right: "Published with [Quarto](https://quarto.org)."
+
+metadata-files: [_version.yml]   # version label and date on the PDF title page, written by tools/version-label.sh
 
 bibliography: references.bib
 csl: apa.csl
@@ -54,3 +58,19 @@ format:
     fig-height: 3.5
     fig-align: center
     df-print: default
+  pdf:
+    documentclass: report
+    pdf-engine: xelatex
+    include-in-header: style/bayesrules.sty
+    number-sections: true
+    toc: true
+    toc-depth: 2
+    highlight-style: tango
+    fig-width: 6
+    fig-height: 3.5
+    geometry:
+      - margin=1in
+    colorlinks: true
+    linkcolor: bayespurple
+    citecolor: bayespurple
+    urlcolor: bayespurple

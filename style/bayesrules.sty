@@ -1,0 +1,90 @@
+% bayesrules.sty  --  PDF styling for the Computational Methods book.
+% Adapted from the 2025 Bayes Rules! addendum. Loaded via include-in-header,
+% so this file is inserted verbatim into the LaTeX preamble.
+
+% -------------------------------------------------------
+% TYPOGRAPHY
+% -------------------------------------------------------
+\usepackage{fontspec}
+\setlength{\abovedisplayskip}{0.6em}
+\setlength{\belowdisplayskip}{0.6em}
+\setlength{\parskip}{0.3em plus 0.1em minus 0.1em}
+\usepackage{float}
+\usepackage{enumitem}
+\usepackage{booktabs}
+
+% -------------------------------------------------------
+% COLORS
+% -------------------------------------------------------
+\usepackage{xcolor}
+\definecolor{bayespurple}{RGB}{85,46,107}
+\definecolor{bookgray}{RGB}{236,236,236}
+
+% -------------------------------------------------------
+% HEADINGS  (documentclass: report, so titlesec is safe to use)
+% -------------------------------------------------------
+\usepackage{titlesec}
+
+\titleformat{\chapter}[display]
+  {\color{bayespurple}\sffamily\huge\bfseries}
+  {\filleft\Large Chapter \thechapter}{0.5em}
+  {\color{bayespurple}\rule{\textwidth}{2pt}\\[0.3em]}
+  [\vspace{0.2em}\color{bayespurple}\rule{\textwidth}{2pt}]
+\titlespacing*{\chapter}{0pt}{-1em}{2em}
+
+\titleformat{\section}
+  {\color{bayespurple}\sffamily\Large\bfseries}
+  {\thesection}{0.6em}{}
+  [\vspace{-0.6em}\color{bayespurple}\rule{\textwidth}{1pt}]
+
+\titleformat{\subsection}
+  {\color{bayespurple}\sffamily\large\bfseries}
+  {\thesubsection}{0.6em}{}
+
+\titleformat{\subsubsection}
+  {\color{bayespurple}\sffamily\normalsize\bfseries}
+  {\thesubsubsection}{0.5em}{}
+
+% -------------------------------------------------------
+% GRAY BOXES (used by style/bookbox.lua)
+% -------------------------------------------------------
+\usepackage[most]{tcolorbox}
+
+\tcbset{
+  bookgraybox/.style={
+    colback=bookgray,
+    colframe=bayespurple,
+    coltitle=black,
+    colbacktitle=bookgray,
+    fonttitle=\bfseries,
+    boxrule=0.4pt,
+    left=6pt, right=6pt, top=6pt, bottom=6pt,
+    enhanced,
+    breakable,
+    arc=6pt,
+    outer arc=6pt,
+    titlerule=0pt,
+    toptitle=0pt,
+    bottomtitle=0pt,
+    after title=\vspace{0pt},
+    before upper={\setlength{\parskip}{0.5em}\setlength{\parindent}{0pt}}
+  }
+}
+
+
+% Wrap long code lines instead of running into the margin.
+\usepackage{fvextra}
+\fvset{breaklines=true, breakanywhere=true, breaksymbolleft={}, breakindent=1em}
+
+% -------------------------------------------------------
+% CODE  (Quarto/Pandoc highlighting; framed like Bayes Rules!)
+% -------------------------------------------------------
+% Pandoc wraps highlighted code in the `Shaded` environment; give it a thin
+% black frame and white background instead of the default gray fill.
+\makeatletter
+\AtBeginDocument{%
+  \@ifundefined{Shaded}{}{%
+    \renewenvironment{Shaded}{\begin{tcolorbox}[colback=white,colframe=black,boxrule=0.4pt,arc=0pt,outer arc=0pt,left=4pt,right=4pt,top=2pt,bottom=2pt,breakable]}{\end{tcolorbox}}%
+  }%
+}
+\makeatother

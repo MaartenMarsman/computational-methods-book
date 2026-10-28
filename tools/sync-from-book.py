@@ -30,6 +30,7 @@ PUBLIC_CHAPTERS = [
 SHARED = [
     "R/_common.R",
     "style/bayesrules.css",
+    "style/bayesrules.sty",
     "style/bookbox.lua",
     "references.bib",
     "references.qmd",
