@@ -428,7 +428,7 @@ window.Quarto = {
 <p>A <strong>trace plot</strong> shows the sampled values in the order they were produced. In <a href="#fig-ar1-traces" class="quarto-xref">Figure&nbsp;<span>4.1</span></a>, the three chains all fluctuate around zero, but they do so quite differently.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
-<div id="fig-ar1-traces" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-pos="H" data-fig-align="center">
+<div id="fig-ar1-traces" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center" data-fig-pos="H">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-ar1-traces-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="04-diagnosing-markov-chains_files/figure-html/fig-ar1-traces-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%" data-fig-pos="H">
@@ -447,7 +447,7 @@ Figure&nbsp;4.1: The first 500 iterations of three chains that all have the N(0,
 <p>Consider four chains with <span class="math inline">\(\phi=0.99\)</span>, started at <span class="math inline">\(-6\)</span>, <span class="math inline">\(-3\)</span>, <span class="math inline">\(3\)</span>, and <span class="math inline">\(6\)</span>. The standard Normal target puts most of its probability between <span class="math inline">\(-2\)</span> and <span class="math inline">\(2\)</span>. <a href="#fig-warmup" class="quarto-xref">Figure&nbsp;<span>4.2</span></a> shows how these chains move from their starts toward that region.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
-<div id="fig-warmup" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-pos="H" data-fig-align="center">
+<div id="fig-warmup" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center" data-fig-pos="H">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-warmup-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="04-diagnosing-markov-chains_files/figure-html/fig-warmup-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%" data-fig-pos="H">
@@ -467,7 +467,7 @@ Figure&nbsp;4.2: Four AR(1) chains with phi = 0.99, started at -6, -3, 3, and 6.
 <p>The same questions arise with a posterior whose shape we do not know. Does the chain keep drifting? Does it remain near one value for long stretches? Do different chains explore different regions? <a href="#fig-pathologies" class="quarto-xref">Figure&nbsp;<span>4.3</span></a> illustrates these three patterns on a proportion scale.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
-<div id="fig-pathologies" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-pos="H" data-fig-align="center">
+<div id="fig-pathologies" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center" data-fig-pos="H">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-pathologies-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="04-diagnosing-markov-chains_files/figure-html/fig-pathologies-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%" data-fig-pos="H">
@@ -503,7 +503,7 @@ Figure&nbsp;4.3: Three exaggerated synthetic warning patterns. Top: upward drift
 <p>R estimates the autocorrelations from a simulated chain with <code>acf()</code>. For example, <code>acf(ar1_chains[[3]])</code> plots them for the chain with <span class="math inline">\(\phi=0.95\)</span>. <a href="#fig-acf" class="quarto-xref">Figure&nbsp;<span>4.4</span></a> compares all three chains.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
-<div id="fig-acf" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-pos="H" data-fig-align="center">
+<div id="fig-acf" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center" data-fig-pos="H">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-acf-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="04-diagnosing-markov-chains_files/figure-html/fig-acf-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%" data-fig-pos="H">
@@ -527,7 +527,7 @@ Figure&nbsp;4.4: Estimated autocorrelations of the three Normal chains. Dependen
 <p><a href="#fig-repeated-means" class="quarto-xref">Figure&nbsp;<span>4.5</span></a> compares these averages with those from <span class="math inline">\(\phi=0\)</span> and <span class="math inline">\(\phi=0.5\)</span>.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
-<div id="fig-repeated-means" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-pos="H" data-fig-align="center">
+<div id="fig-repeated-means" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center" data-fig-pos="H">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-repeated-means-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="04-diagnosing-markov-chains_files/figure-html/fig-repeated-means-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%" data-fig-pos="H">
@@ -626,7 +626,7 @@ N\approx2{,}500\frac{1+0.95}{1-0.95}=97{,}500
 <p>We can see both effects by repeating the Normal simulation from the fixed starting value 6, using <span class="math inline">\(\phi=0.99\)</span>. In <a href="#fig-bias-variance" class="quarto-xref">Figure&nbsp;<span>4.6</span></a> we vary how many early states we discard and how many later states we retain. Each panel contains the estimated means from 200 runs.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
-<div id="fig-bias-variance" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-pos="H" data-fig-align="center">
+<div id="fig-bias-variance" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center" data-fig-pos="H">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-bias-variance-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="04-diagnosing-markov-chains_files/figure-html/fig-bias-variance-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%" data-fig-pos="H">
@@ -661,7 +661,7 @@ Figure&nbsp;4.6: Repeated estimates of the mean of a standard Normal target, usi
 </div>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
-<div id="fig-chain-agreement" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-pos="H" data-fig-align="center">
+<div id="fig-chain-agreement" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center" data-fig-pos="H">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-chain-agreement-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="04-diagnosing-markov-chains_files/figure-html/fig-chain-agreement-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%" data-fig-pos="H">
@@ -801,7 +801,7 @@ W\approx\frac{1.028+0.915+0.973+1.012}{4}=0.982.
 <p><a href="#fig-radio-workflow" class="quarto-xref">Figure&nbsp;<span>4.8</span></a> brings these three plots together. Read them as complementary views of the same simulation.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
-<div id="fig-radio-workflow" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-pos="H" data-fig-align="center">
+<div id="fig-radio-workflow" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center" data-fig-pos="H">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-radio-workflow-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="04-diagnosing-markov-chains_files/figure-html/fig-radio-workflow-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%" data-fig-pos="H">
@@ -884,7 +884,7 @@ Figure&nbsp;4.8: The radio posterior from four Stan chains. Top: retained values
 <p><a href="#fig-radio-exact" class="quarto-xref">Figure&nbsp;<span>4.9</span></a> compares the simulated distribution with the known posterior. In a more complex model this exact check may be unavailable, but the diagnostic questions remain the same.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
-<div id="fig-radio-exact" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-pos="H" data-fig-align="center">
+<div id="fig-radio-exact" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center" data-fig-pos="H">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-radio-exact-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="04-diagnosing-markov-chains_files/figure-html/fig-radio-exact-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%" data-fig-pos="H">
@@ -914,7 +914,7 @@ Figure&nbsp;4.9: Histogram of the 4,000 Stan draws for the proportion of Dutch-l
 <p>Agreement over a short interval does not establish that a longer run will behave the same way. <a href="#fig-late-change" class="quarto-xref">Figure&nbsp;<span>4.10</span></a> illustrates a record that looks stable for its first 1,000 values but later moves to a different level.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
-<div id="fig-late-change" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-pos="H" data-fig-align="center">
+<div id="fig-late-change" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center" data-fig-pos="H">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-late-change-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="04-diagnosing-markov-chains_files/figure-html/fig-late-change-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%" data-fig-pos="H">
@@ -931,7 +931,7 @@ Figure&nbsp;4.10: A synthetic example of a late change. The first 1,000 values (
 <p>We can illustrate that output with four AR(1) records centered at <span class="math inline">\(-3\)</span>. These sample the left Normal component; they are not samplers for the full mixture. <a href="#fig-trapped" class="quarto-xref">Figure&nbsp;<span>4.11</span></a> compares their output with the whole target.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
-<div id="fig-trapped" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-pos="H" data-fig-align="center">
+<div id="fig-trapped" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center" data-fig-pos="H">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-trapped-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="04-diagnosing-markov-chains_files/figure-html/fig-trapped-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%" data-fig-pos="H">
@@ -999,7 +999,7 @@ Figure&nbsp;4.11: Four records representing exploration of only the left mode of
 <p><strong>Exercise 4.5 (Diagnose these chains)</strong> <a href="#fig-exercise-traces" class="quarto-xref">Figure&nbsp;<span>4.12</span></a> shows trace plots of four sets of chains, labelled A to D, and <a href="#fig-exercise-overlays" class="quarto-xref">Figure&nbsp;<span>4.13</span></a> shows the corresponding density overlays. The patterns are subtler than the ones in <a href="#fig-pathologies" class="quarto-xref">Figure&nbsp;<span>4.3</span></a>. For each set, decide whether the chains look healthy, and if not, name the pathology and the diagnostic that reveals it most clearly. Then say, for each unhealthy set, what further information would be needed to judge whether a longer run would help. The records illustrate patterns; do not assume that their generating rules are valid posterior samplers.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
-<div id="fig-exercise-traces" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-pos="H" data-fig-align="center">
+<div id="fig-exercise-traces" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center" data-fig-pos="H">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-exercise-traces-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="04-diagnosing-markov-chains_files/figure-html/fig-exercise-traces-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%" data-fig-pos="H">
@@ -1013,7 +1013,7 @@ Figure&nbsp;4.12: Trace plots for Exercise 4.5.
 </div>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
-<div id="fig-exercise-overlays" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-pos="H" data-fig-align="center">
+<div id="fig-exercise-overlays" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center" data-fig-pos="H">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-exercise-overlays-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="04-diagnosing-markov-chains_files/figure-html/fig-exercise-overlays-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%" data-fig-pos="H">
