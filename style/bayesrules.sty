@@ -27,7 +27,7 @@
 
 \titleformat{\chapter}[display]
   {\color{bayespurple}\sffamily\huge\bfseries}
-  {\filleft\Large Chapter \thechapter}{0.5em}
+  {\filleft\Large \chaptertitlename\ \thechapter}{0.5em}
   {\color{bayespurple}\rule{\textwidth}{2pt}\\[0.3em]}
   [\vspace{0.2em}\color{bayespurple}\rule{\textwidth}{2pt}]
 \titlespacing*{\chapter}{0pt}{-1em}{2em}
@@ -88,3 +88,7 @@
   }%
 }
 \makeatother
+
+% Keep section headings and their rules with the following text.
+\usepackage{needspace}
+\pretocmd{\section}{\Needspace{6\baselineskip}}{}{}

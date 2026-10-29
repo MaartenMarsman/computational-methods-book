@@ -92,6 +92,10 @@ online = entries[0] if len(entries) == 1 else ", ".join(entries[:-1]) + " and " 
 NOTE = f"""
 ::: {{.callout-note appearance="simple"}}
 **Work in progress.** This website holds the chapters of the book that are ready for readers. Online now: {online}. Further chapters are added as they are completed, and the chapters already online may still change.
+
+::: {{.content-visible when-format="html"}}
+[Download the PDF](Stochastic-Simulation-for-Bayesian-Modeling.pdf) of the chapters that are online.
+:::
 :::
 """
 ABOUT = """
