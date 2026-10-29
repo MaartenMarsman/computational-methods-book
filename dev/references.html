@@ -56,7 +56,7 @@ div.csl-indent {
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
 <link href="./news.html" rel="next">
-<link href="./chapters/03-markov-chains.html" rel="prev">
+<link href="./chapters/04-diagnosing-markov-chains.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -181,6 +181,12 @@ div.csl-indent {
  <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Markov Chains</span></span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapters/04-diagnosing-markov-chains.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Diagnosing Markov Chains</span></span></a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="sidebar-item">
@@ -195,6 +201,35 @@ div.csl-indent {
  <span class="menu-text">News</span></a>
   </div>
 </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./appendices/A-software-setup.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Software Setup</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./appendices/B-notation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Notation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./appendices/C-mcmc-diagnostics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Technical Notes on MCMC Diagnostics</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
     </ul>
     </div>
 </nav>
@@ -226,10 +261,21 @@ div.csl-indent {
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" data-line-spacing="2" role="list">
+<div id="ref-carpenter2017stan" class="csl-entry" role="listitem">
+Carpenter, B., Gelman, A., Hoffman, M. D., Lee, D., Goodrich, B.,
+Betancourt, M., Brubaker, M., Guo, J., Li, P., &amp; Riddell, A. (2017).
+<span>Stan</span>: A probabilistic programming language. <em>Journal of
+Statistical Software</em>, <em>76</em>(1), 1–32.
+</div>
 <div id="ref-dickey1970weighted" class="csl-entry" role="listitem">
 Dickey, J. M., &amp; Lientz, B. P. (1970). The weighted likelihood
 ratio, sharp hypotheses about chances, the order of a markov chain.
 <em>Annals of Mathematical Statistics</em>, <em>41</em>(1), 214–226.
+</div>
+<div id="ref-gelman1992inference" class="csl-entry" role="listitem">
+Gelman, A., &amp; Rubin, D. B. (1992). Inference from iterative
+simulation using multiple sequences. <em>Statistical Science</em>,
+<em>7</em>(4), 457–472.
 </div>
 <div id="ref-hanada2022mcmc" class="csl-entry" role="listitem">
 Hanada, M., &amp; Matsuura, S. (2022). <em><span>MCMC</span> from
@@ -254,6 +300,14 @@ Logan, G. D., &amp; Cowan, W. B. (1984). On the ability to inhibit
 thought and action: A theory of an act of control. <em>Psychological
 Review</em>, <em>91</em>(3), 295–327. <a href="https://doi.org/10.1037/0033-295X.91.3.295">https://doi.org/10.1037/0033-295X.91.3.295</a>
 </div>
+<div id="ref-margossian2024iterations" class="csl-entry" role="listitem">
+Margossian, C. C., &amp; Gelman, A. (2026). For how many iterations
+should we run <span>M</span>arkov chain <span>M</span>onte
+<span>C</span>arlo? In R. V. Craiu, D. Vats, G. L. Jones, S. Brooks, A.
+Gelman, &amp; X.-L. Meng (Eds.), <em>Handbook of <span>M</span>arkov
+chain <span>M</span>onte <span>C</span>arlo</em> (2nd ed., pp. 110–131).
+CRC Press. <a href="https://doi.org/10.1201/9781003453420-4">https://doi.org/10.1201/9781003453420-4</a>
+</div>
 <div id="ref-norris1997markov" class="csl-entry" role="listitem">
 Norris, J. R. (1997). <em>Markov chains</em>. Cambridge University
 Press.
@@ -261,6 +315,13 @@ Press.
 <div id="ref-robert2004monte" class="csl-entry" role="listitem">
 Robert, C. P., &amp; Casella, G. (2004). <em>Monte <span>C</span>arlo
 statistical methods</em> (2nd ed.). Springer.
+</div>
+<div id="ref-vehtari2021rank" class="csl-entry" role="listitem">
+Vehtari, A., Gelman, A., Simpson, D., Carpenter, B., &amp; Bürkner,
+P.-C. (2021). Rank-normalization, folding, and localization:
+<span>A</span>n improved <span class="math inline"><em>R̂</em></span> for
+assessing convergence of <span>MCMC</span> (with discussion).
+<em>Bayesian Analysis</em>, <em>16</em>(2), 667–718.
 </div>
 <div id="ref-wagenmakers2010savage" class="csl-entry" role="listitem">
 Wagenmakers, E.-J., Lodewyckx, T., Kuriyal, H., &amp; Grasman, R. P. P.
@@ -797,8 +858,8 @@ the savage–dickey method. <em>Cognitive Psychology</em>, <em>60</em>(3),
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./chapters/03-markov-chains.html" class="pagination-link" aria-label="Markov Chains">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Markov Chains</span></span>
+      <a href="./chapters/04-diagnosing-markov-chains.html" class="pagination-link" aria-label="Diagnosing Markov Chains">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Diagnosing Markov Chains</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">

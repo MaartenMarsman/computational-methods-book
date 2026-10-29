@@ -246,6 +246,12 @@ window.Quarto = {
  <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Markov Chains</span></span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/04-diagnosing-markov-chains.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Diagnosing Markov Chains</span></span></a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="sidebar-item">
@@ -260,6 +266,35 @@ window.Quarto = {
  <span class="menu-text">News</span></a>
   </div>
 </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendices/A-software-setup.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Software Setup</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendices/B-notation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Notation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendices/C-mcmc-diagnostics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Technical Notes on MCMC Diagnostics</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
     </ul>
     </div>
 </nav>
@@ -1117,7 +1152,7 @@ Figure&nbsp;2.8: The number of grid points, <span class="math inline">\(G^d\)</s
 <section id="sampling-instead-of-gridding" class="level2" data-number="2.6">
 <h2 data-number="2.6" class="anchored" data-anchor-id="sampling-instead-of-gridding"><span class="header-section-number">2.6</span> Sampling instead of gridding</h2>
 <p>In many models, we can evaluate an unnormalized posterior on the log scale even when we cannot integrate it. Grid approximation uses those evaluations to construct a discrete approximation, but its cost grows rapidly with the number of parameters. Sampling methods seek to obtain useful draws without evaluating every combination on a grid.</p>
-<p>Markov chain Monte Carlo constructs dependent draws using a transition rule designed to have the posterior as its long-run distribution. In the Metropolis methods, the normalizing constant cancels in ratios of posterior heights, so a function such as <code>log_posterior()</code> supplies the needed evaluations. The transition rule and its conditions matter; an arbitrary sequence of accepted candidates need not represent the posterior. <a href="03-markov-chains.html" class="quarto-xref"><span>Chapter 3</span></a> develops those conditions, and Chapter 4 (Diagnosing Markov Chains) explains how to assess the resulting simulations.</p>
+<p>Markov chain Monte Carlo constructs dependent draws using a transition rule designed to have the posterior as its long-run distribution. In the Metropolis methods, the normalizing constant cancels in ratios of posterior heights, so a function such as <code>log_posterior()</code> supplies the needed evaluations. The transition rule and its conditions matter; an arbitrary sequence of accepted candidates need not represent the posterior. <a href="03-markov-chains.html" class="quarto-xref"><span>Chapter 3</span></a> develops those conditions, and <a href="04-diagnosing-markov-chains.html" class="quarto-xref"><span>Chapter 4</span></a> explains how to assess the resulting simulations.</p>
 </section>
 <section id="chapter-summary" class="level2" data-number="2.7">
 <h2 data-number="2.7" class="anchored" data-anchor-id="chapter-summary"><span class="header-section-number">2.7</span> Chapter summary</h2>

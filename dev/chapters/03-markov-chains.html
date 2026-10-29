@@ -91,7 +91,7 @@ div.csl-indent {
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../references.html" rel="next">
+<link href="../chapters/04-diagnosing-markov-chains.html" rel="next">
 <link href="../chapters/02-bayesian-inference-recap.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
@@ -246,6 +246,12 @@ window.Quarto = {
  <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Markov Chains</span></span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/04-diagnosing-markov-chains.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Diagnosing Markov Chains</span></span></a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="sidebar-item">
@@ -260,6 +266,35 @@ window.Quarto = {
  <span class="menu-text">News</span></a>
   </div>
 </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendices/A-software-setup.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Software Setup</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendices/B-notation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Notation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendices/C-mcmc-diagnostics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Technical Notes on MCMC Diagnostics</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
     </ul>
     </div>
 </nav>
@@ -387,7 +422,7 @@ P_{12}=P(\text{neutral tomorrow}\mid\text{happy today}).
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;       1       1       1</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>The column sums need not equal one. A matrix with non-negative entries and row sums of one is called a <strong>stochastic matrix</strong>. Together with an initial distribution, it specifies a time-homogeneous Markov chain.</p>
-<p>A note on notation. In this chapter the states are moods, so we call the chain <span class="math inline">\(X^{(t)}\)</span> and the states <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span>. From Chapter 5 (The Metropolis Algorithm) on, the states are candidate values of a parameter, and we write the chain as <span class="math inline">\(\theta^{(t)}\)</span>, as in Appendix B (Notation). The states then describe a computational sequence rather than an observed sequence of moods. We use bold <span class="math inline">\(\boldsymbol{\pi}\)</span> for a vector of stationary probabilities and plain <span class="math inline">\(\pi\)</span> for an unknown proportion.</p>
+<p>A note on notation. In this chapter the states are moods, so we call the chain <span class="math inline">\(X^{(t)}\)</span> and the states <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span>. From Chapter 5 (The Metropolis Algorithm) on, the states are candidate values of a parameter, and we write the chain as <span class="math inline">\(\theta^{(t)}\)</span>, as in <a href="../appendices/B-notation.html" class="quarto-xref"><span>Appendix B</span></a>. The states then describe a computational sequence rather than an observed sequence of moods. We use bold <span class="math inline">\(\boldsymbol{\pi}\)</span> for a vector of stationary probabilities and plain <span class="math inline">\(\pi\)</span> for an unknown proportion.</p>
 <section id="simulating-the-chain" class="level3" data-number="3.1.1">
 <h3 data-number="3.1.1" class="anchored" data-anchor-id="simulating-the-chain"><span class="header-section-number">3.1.1</span> Simulating the chain</h3>
 <p>At each transition, select the row for the current mood and draw the next mood using that row’s probabilities. <code>sample()</code> takes the state labels, the number of draws, and the probabilities. For example, <code>sample(moods, 1, prob = P["happy", ])</code> generates a possible next state after a happy day.</p>
@@ -606,7 +641,7 @@ p_{t+1}-0.40=0.50(p_t-0.40),
 p_t=0.40+0.50^t(p_0-0.40).
 \]</span> For a happy start, the sequence begins <span class="math inline">\(1,0.70,0.55,0.475\)</span>. The difference from 0.40 halves at each transition. This explains the rate in this particular panel.</p>
 <p>Eigenvalues connect this repeated multiplication to the matrix calculation. The eigenvalues of <span class="math inline">\(\mathbf P\)</span> are 1, 0.5, and 0.1. The eigenvalue 1 corresponds to the stationary vector. In this example, the other components shrink at rates <span class="math inline">\(0.5^t\)</span> and <span class="math inline">\(0.1^t\)</span>. A component multiplied by 0.99 at each transition would decline much more slowly; after 100 transitions it would retain about 37% of its initial size, because <span class="math inline">\(0.99^{100}\approx0.37\)</span>. Eigenvalues near one in absolute value can therefore indicate slow decay of initial differences.</p>
-<p>Discarding initial states is one way to reduce the effect of an arbitrary start when estimating posterior summaries. It does not make later states independent. In Chapter 4 (Diagnosing Markov Chains), warm-up also includes the adaptation of sampler settings.</p>
+<p>Discarding initial states is one way to reduce the effect of an arbitrary start when estimating posterior summaries. It does not make later states independent. In <a href="04-diagnosing-markov-chains.html" class="quarto-xref"><span>Chapter 4</span></a>, warm-up also includes the adaptation of sampler settings.</p>
 </section>
 <section id="irreducibility-aperiodicity-and-convergence" class="level2" data-number="3.3">
 <h2 data-number="3.3" class="anchored" data-anchor-id="irreducibility-aperiodicity-and-convergence"><span class="header-section-number">3.3</span> Irreducibility, aperiodicity, and convergence</h2>
@@ -754,7 +789,7 @@ Figure&nbsp;3.5: Running fraction of happy days in three simulated diaries of 2,
 <span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;        &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt;</span></span>
 <span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1      0.399   0.0427    0.399 0.0255</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>Both estimates have expectation <span class="math inline">\(\pi_{\text{happy}}\)</span>. In this experiment, the standard deviation across the dependent-chain estimates is about 1.7 times the standard deviation across the independent estimates. The persistence of moods makes the chain estimates more variable. The ergodic theorem establishes their limiting behavior, but does not supply a standard error for a finite run. Chapter 4 (Diagnosing Markov Chains) develops effective sample size and Monte Carlo standard errors for dependent draws.</p>
+<p>Both estimates have expectation <span class="math inline">\(\pi_{\text{happy}}\)</span>. In this experiment, the standard deviation across the dependent-chain estimates is about 1.7 times the standard deviation across the independent estimates. The persistence of moods makes the chain estimates more variable. The ergodic theorem establishes their limiting behavior, but does not supply a standard error for a finite run. <a href="04-diagnosing-markov-chains.html" class="quarto-xref"><span>Chapter 4</span></a> develops effective sample size and Monte Carlo standard errors for dependent draws.</p>
 </section>
 <section id="detailed-balance" class="level2" data-number="3.5">
 <h2 data-number="3.5" class="anchored" data-anchor-id="detailed-balance"><span class="header-section-number">3.5</span> Detailed balance</h2>
@@ -1087,7 +1122,7 @@ Figure&nbsp;3.7: Left: the first 500 steps of the hand-built chain, started at <
 </div>
 </div>
 </div>
-<p>Compare the empirical frequencies in <a href="#fig-grid-walk" class="quarto-xref">Figure&nbsp;<span>3.7</span></a> with the normalized grid target. The following code also compares posterior summaries after omitting the first 500 transitions with the continuous Beta benchmark. The initial omission is illustrative; Chapter 4 (Diagnosing Markov Chains) develops ways to assess simulations more systematically.</p>
+<p>Compare the empirical frequencies in <a href="#fig-grid-walk" class="quarto-xref">Figure&nbsp;<span>3.7</span></a> with the normalized grid target. The following code also compares posterior summaries after omitting the first 500 transitions with the continuous Beta benchmark. The initial omission is illustrative; <a href="04-diagnosing-markov-chains.html" class="quarto-xref"><span>Chapter 4</span></a> develops ways to assess simulations more systematically.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>draws <span class="sc">|&gt;</span></span>
 <span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(step <span class="sc">&gt;</span> <span class="dv">500</span>) <span class="sc">|&gt;</span></span>
@@ -1100,7 +1135,7 @@ Figure&nbsp;3.7: Left: the first 500 steps of the hand-built chain, started at <
 <span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      mean     lower     upper </span></span>
 <span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 0.1636364 0.1009084 0.2379286</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>Differences from the continuous Beta values can arise from the finite grid, Monte Carlo variation, and any remaining effect of the starting state. Neighbor moves also produce persistent successive values, so counting <span class="math inline">\(N=49{,}500\)</span> retained states does not describe their precision as if they were independent. Chapter 4 (Diagnosing Markov Chains) develops the corresponding Monte Carlo error calculations.</p>
+<p>Differences from the continuous Beta values can arise from the finite grid, Monte Carlo variation, and any remaining effect of the starting state. Neighbor moves also produce persistent successive values, so counting <span class="math inline">\(N=49{,}500\)</span> retained states does not describe their precision as if they were independent. <a href="04-diagnosing-markov-chains.html" class="quarto-xref"><span>Chapter 4</span></a> develops the corresponding Monte Carlo error calculations.</p>
 <p>The construction used relative log weights, neighbor proposals, and an acceptance step. The normalization was needed for the matrix check and the plotted benchmark, but not inside <code>walk_grid()</code>. For a different prior and likelihood, the same transition rule can be applied to new finite log weights. Its target would still be a grid approximation. Chapter 5 (The Metropolis Algorithm) develops the corresponding method on a continuous parameter space.</p>
 <div class="quiz bookgraybox">
 <div class="title">
@@ -1757,8 +1792,8 @@ Robert, C. P., &amp; Casella, G. (2004). <em>Monte <span>C</span>arlo statistica
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../references.html" class="pagination-link" aria-label="References">
-        <span class="nav-page-text">References</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../chapters/04-diagnosing-markov-chains.html" class="pagination-link" aria-label="Diagnosing Markov Chains">
+        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Diagnosing Markov Chains</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

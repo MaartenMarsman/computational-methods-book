@@ -2,30 +2,46 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://maartenmarsman.github.io/computational-methods-book/index.html</loc>
-    <lastmod>2026-10-28T07:52:49.777Z</lastmod>
+    <lastmod>2026-10-29T11:30:12.974Z</lastmod>
   </url>
   <url>
     <loc>https://maartenmarsman.github.io/computational-methods-book/chapters/01-probability-and-simulation.html</loc>
-    <lastmod>2026-10-28T07:52:49.776Z</lastmod>
+    <lastmod>2026-10-29T11:30:12.974Z</lastmod>
   </url>
   <url>
     <loc>https://maartenmarsman.github.io/computational-methods-book/chapters/02-bayesian-inference-recap.html</loc>
-    <lastmod>2026-10-28T07:52:49.777Z</lastmod>
+    <lastmod>2026-10-29T11:30:12.974Z</lastmod>
   </url>
   <url>
     <loc>https://maartenmarsman.github.io/computational-methods-book/chapters/03-markov-chains.html</loc>
-    <lastmod>2026-10-28T07:52:49.777Z</lastmod>
+    <lastmod>2026-10-29T11:30:12.974Z</lastmod>
+  </url>
+  <url>
+    <loc>https://maartenmarsman.github.io/computational-methods-book/chapters/04-diagnosing-markov-chains.html</loc>
+    <lastmod>2026-10-29T11:30:12.974Z</lastmod>
   </url>
   <url>
     <loc>https://maartenmarsman.github.io/computational-methods-book/references.html</loc>
-    <lastmod>2026-10-28T07:52:49.777Z</lastmod>
+    <lastmod>2026-10-29T11:30:12.974Z</lastmod>
   </url>
   <url>
     <loc>https://maartenmarsman.github.io/computational-methods-book/news.html</loc>
-    <lastmod>2026-10-28T07:52:49.777Z</lastmod>
+    <lastmod>2026-10-29T11:30:12.974Z</lastmod>
+  </url>
+  <url>
+    <loc>https://maartenmarsman.github.io/computational-methods-book/appendices/A-software-setup.html</loc>
+    <lastmod>2026-10-29T11:30:12.973Z</lastmod>
+  </url>
+  <url>
+    <loc>https://maartenmarsman.github.io/computational-methods-book/appendices/B-notation.html</loc>
+    <lastmod>2026-10-29T11:30:12.974Z</lastmod>
+  </url>
+  <url>
+    <loc>https://maartenmarsman.github.io/computational-methods-book/appendices/C-mcmc-diagnostics.html</loc>
+    <lastmod>2026-10-29T11:30:12.974Z</lastmod>
   </url>
   <url>
     <loc>https://maartenmarsman.github.io/computational-methods-book/Stochastic-Simulation-for-Bayesian-Modeling.pdf</loc>
-    <lastmod>2026-10-28T07:56:12.959Z</lastmod>
+    <lastmod>2026-10-29T11:33:57.642Z</lastmod>
   </url>
 </urlset>
