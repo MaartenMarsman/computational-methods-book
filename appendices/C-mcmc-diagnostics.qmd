@@ -1,0 +1,125 @@
+# Technical Notes on MCMC Diagnostics {#sec-diagnostics-notes}
+
+```{r}
+#| include: false
+source("R/_common.R")
+library(bayesplot)
+library(patchwork)
+library(posterior)
+color_scheme_set("purple")
+to_draws <- function(M, name = "theta") {
+  as_draws_array(array(M, dim = c(nrow(M), ncol(M), 1),
+                       dimnames = list(NULL, NULL, name)))
+}
+```
+
+
+These notes give the derivations and diagnostic implementations used in @sec-diagnostics. Exercise 4.7 uses the R-hat functions in @sec-rhat-calculations.
+
+## The variance of a dependent average {#sec-mcmc-variance}
+
+For $N$ independent draws, the variance of their average is $\sigma^2/N$. With dependent draws, the covariances also contribute. For a stationary chain, $\operatorname{Cov}(\theta^{(t)},\theta^{(t+k)})=\sigma^2\rho_k$. There are $N-k$ pairs of values separated by lag $k$, giving
+$$
+\operatorname{Var}(\bar\theta)
+=\frac{\sigma^2}{N}\left[1+2\sum_{k=1}^{N-1}
+\left(1-\frac{k}{N}\right)\rho_k\right].
+$$ {#eq-mcmc-finite-var}
+This expression is exact for a stationary chain with finite variance. When $N$ is large relative to the lags with appreciable correlation, the weights $1-k/N$ are close to one. Extending the sum gives the large-$N$ approximation used in @sec-diagnostics:
+$$
+\operatorname{Var}(\bar\theta)\approx\frac{\sigma^2}{N}
+\left(1+2\sum_{k=1}^{\infty}\rho_k\right).
+$$
+
+Positive autocorrelation increases this variance. Negative autocorrelation can reduce it: for example, the AR(1) formula gives $N_{\mathrm{eff}}>N$ when $\phi<0$. Thinning such a chain can remove the benefit of its negative autocorrelation.
+
+Bias and variation can also be combined in one expression. For an estimate $\widehat\mu$ of a mean $\mu$,
+$$
+\mathbb E[(\widehat\mu-\mu)^2]
+=\bigl(\mathbb E[\widehat\mu]-\mu\bigr)^2
+ +\operatorname{Var}(\widehat\mu).
+$$ {#eq-mcmc-mse}
+The mean squared error on the left is the sum of squared bias and Monte Carlo variance. Bias describes a systematic displacement from the true mean; Monte Carlo variance describes how much the estimates vary between runs [@margossian2024iterations].
+
+## Calculating basic and split R-hat {#sec-rhat-calculations}
+
+For $m$ chains of length $L$, let $s_j^2$ and $\bar\theta_j$ be the variance and mean within chain $j$, and $\bar\theta_{\cdot}$ the average of the chain means. Then
+$$
+W=\frac1m\sum_{j=1}^m s_j^2,\qquad
+B=\frac{L}{m-1}\sum_{j=1}^m(\bar\theta_j-\bar\theta_{\cdot})^2.
+$$
+We illustrate the calculation with four records of independent standard Normal draws. The following functions implement the basic R-hat formula and split each column into equal-length first and last halves. For an odd number of values, the middle value is left out.
+
+```{r}
+rhat_by_hand <- function(x) {
+  L <- nrow(x)
+  W <- mean(apply(x, 2, var))
+  B <- L * var(colMeans(x))
+  sqrt(((L - 1) / L * W + B / L) / W)
+}
+split_halves <- function(x) {
+  half <- floor(nrow(x) / 2)
+  cbind(x[seq_len(half), , drop = FALSE],
+        x[seq.int(nrow(x) - half + 1, nrow(x)), , drop = FALSE])
+}
+set.seed(48407)
+normal_chains <- matrix(rnorm(4000), ncol = 4)
+rbind(
+  unsplit = c(by_hand = rhat_by_hand(normal_chains),
+              package = rhat_basic(normal_chains, split = FALSE)),
+  split = c(by_hand = rhat_by_hand(split_halves(normal_chains)),
+            package = rhat_basic(normal_chains, split = TRUE))
+)
+```
+
+Within each row, the hand and package calculations match because they implement the same formula. The split and unsplit results can also look nearly identical after rounding when both halves explore similar values. `rhat_basic()` splits by default; `split = FALSE` disables that step.
+
+## Rank normalization and folding {#sec-rank-folding}
+
+Chains can agree about their center and still disagree about their spread. Suppose two records vary narrowly around zero while two others range much farther above and below it. Their means can be similar, so comparing means alone may give little warning.
+
+The following code creates that situation. All four records have an expected mean of zero, but the last two have standard deviation three instead of one:
+
+```{r}
+set.seed(48408)
+same_mean <- cbind(rnorm(1000, 0, 1), rnorm(1000, 0, 1), rnorm(1000, 0, 3), rnorm(1000, 0, 3))
+c(basic = rhat_basic(same_mean), rank_normalized = posterior::rhat(same_mean))
+```
+
+`posterior::rhat()` adds two improvements to the basic split calculation [@vehtari2021rank].
+
+**Rank normalization** replaces values by their positions in an ordered list. For example, the values $(-3,-1,1,3)$ have ranks $(1,2,3,4)$. An extremely large value still receives the highest rank, but its numerical size no longer dominates the comparison.
+
+After splitting the chains, we rank all their retained values together. Ties receive their average rank. We then convert the ranks to standard Normal scores. If $r$ is a rank and $S$ the total number of ranked values, the transformation is
+$$
+z=\Phi^{-1}\!\left(\frac{r-3/8}{S+1/4}\right).
+$$
+The expression inside $\Phi^{-1}$ turns a rank into a probability between zero and one; $\Phi^{-1}$ gives the corresponding standard Normal quantile. For the four-value example, the scores are approximately $(-1.05,-0.30,0.30,1.05)$. We calculate basic R-hat on the scores. This makes the comparison less sensitive to extreme values, including those from distributions with very long tails. Bulk ESS uses this same transformation of the split chains before estimating ESS. Tail ESS instead computes ESS for indicators of falling below the pooled 5% quantile and below the pooled 95% quantile, and reports the smaller value.
+
+**Folding** checks spread more directly. Replace each original value by its distance from the pooled median. In the four-value example the median is zero, so $(-3,-1,1,3)$ becomes $(3,1,1,3)$. The sign disappears and distance from the center remains. Wider chains now tend to have larger values than narrower chains. We split and rank-normalize these distances, then calculate R-hat again.
+
+The reported `posterior::rhat()` is the larger of these two results. @fig-folding shows how folding separates records with different spreads. In this example, ranking the original values alone can miss the problem, while folding reveals it. The code below calculates both parts and compares their maximum with `posterior::rhat()`:
+
+```{r}
+rank_normalize <- function(x) {
+  ranks <- rank(x, ties.method = "average")
+  scores <- qnorm((ranks - 3/8) / (length(ranks) + 1/4))
+  matrix(scores, nrow = nrow(x), ncol = ncol(x))
+}
+rank_component <- rhat_by_hand(rank_normalize(split_halves(same_mean)))
+folded <- abs(same_mean - median(same_mean))
+fold_component <- rhat_by_hand(rank_normalize(split_halves(folded)))
+c(rank_component = rank_component, folded_component = fold_component,
+  maximum = max(rank_component, fold_component), package = posterior::rhat(same_mean))
+```
+
+```{r}
+#| label: fig-folding
+#| echo: false
+#| fig-cap: "Folding makes a spread difference easier to compare. Left: records share a center but have different spreads. Right: absolute deviations from the pooled median are systematically larger in the wider records."
+#| fig-height: 2.7
+mcmc_dens_overlay(to_draws(same_mean, "theta"), pars = "theta") +
+  labs(x = "Original value") + legend_none() |
+  mcmc_dens_overlay(to_draws(folded, "theta"), pars = "theta") +
+  labs(x = "Absolute deviation from pooled median") + legend_none()
+```
+

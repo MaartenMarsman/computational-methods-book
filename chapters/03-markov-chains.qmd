@@ -69,7 +69,7 @@ rowSums(P)
 
 The column sums need not equal one. A matrix with non-negative entries and row sums of one is called a **stochastic matrix**. Together with an initial distribution, it specifies a time-homogeneous Markov chain.
 
-A note on notation. In this chapter the states are moods, so we call the chain $X^{(t)}$ and the states $i$ and $j$. From Chapter 5 (The Metropolis Algorithm) on, the states are candidate values of a parameter, and we write the chain as $\theta^{(t)}$, as in Appendix B (Notation). The states then describe a computational sequence rather than an observed sequence of moods. We use bold $\boldsymbol{\pi}$ for a vector of stationary probabilities and plain $\pi$ for an unknown proportion.
+A note on notation. In this chapter the states are moods, so we call the chain $X^{(t)}$ and the states $i$ and $j$. From Chapter 5 (The Metropolis Algorithm) on, the states are candidate values of a parameter, and we write the chain as $\theta^{(t)}$, as in @sec-notation. The states then describe a computational sequence rather than an observed sequence of moods. We use bold $\boldsymbol{\pi}$ for a vector of stationary probabilities and plain $\pi$ for an unknown proportion.
 
 ### Simulating the chain
 
@@ -279,7 +279,7 @@ For a happy start, the sequence begins $1,0.70,0.55,0.475$. The difference from 
 
 Eigenvalues connect this repeated multiplication to the matrix calculation. The eigenvalues of $\mathbf P$ are 1, 0.5, and 0.1. The eigenvalue 1 corresponds to the stationary vector. In this example, the other components shrink at rates $0.5^t$ and $0.1^t$. A component multiplied by 0.99 at each transition would decline much more slowly; after 100 transitions it would retain about 37% of its initial size, because $0.99^{100}\approx0.37$. Eigenvalues near one in absolute value can therefore indicate slow decay of initial differences.
 
-Discarding initial states is one way to reduce the effect of an arbitrary start when estimating posterior summaries. It does not make later states independent. In Chapter 4 (Diagnosing Markov Chains), warm-up also includes the adaptation of sampler settings.
+Discarding initial states is one way to reduce the effect of an arbitrary start when estimating posterior summaries. It does not make later states independent. In @sec-diagnostics, warm-up also includes the adaptation of sampler settings.
 
 ## Irreducibility, aperiodicity, and convergence
 
@@ -411,7 +411,7 @@ years <- map(1:500, \(i) one_year()) |> bind_rows()
 years |> summarize(across(everything(), list(mean = mean, sd = sd)))
 ```
 
-Both estimates have expectation $\pi_{\text{happy}}$. In this experiment, the standard deviation across the dependent-chain estimates is about `r round(sd(years$chain) / sd(years$iid), 1)` times the standard deviation across the independent estimates. The persistence of moods makes the chain estimates more variable. The ergodic theorem establishes their limiting behavior, but does not supply a standard error for a finite run. Chapter 4 (Diagnosing Markov Chains) develops effective sample size and Monte Carlo standard errors for dependent draws.
+Both estimates have expectation $\pi_{\text{happy}}$. In this experiment, the standard deviation across the dependent-chain estimates is about `r round(sd(years$chain) / sd(years$iid), 1)` times the standard deviation across the independent estimates. The persistence of moods makes the chain estimates more variable. The ergodic theorem establishes their limiting behavior, but does not supply a standard error for a finite run. @sec-diagnostics develops effective sample size and Monte Carlo standard errors for dependent draws.
 
 ## Detailed balance
 
@@ -734,7 +734,7 @@ p_hist <- draws |>
 patchwork::wrap_plots(p_trace, p_hist)
 ```
 
-Compare the empirical frequencies in @fig-grid-walk with the normalized grid target. The following code also compares posterior summaries after omitting the first 500 transitions with the continuous Beta benchmark. The initial omission is illustrative; Chapter 4 (Diagnosing Markov Chains) develops ways to assess simulations more systematically.
+Compare the empirical frequencies in @fig-grid-walk with the normalized grid target. The following code also compares posterior summaries after omitting the first 500 transitions with the continuous Beta benchmark. The initial omission is illustrative; @sec-diagnostics develops ways to assess simulations more systematically.
 
 ```{r}
 draws |>
@@ -743,7 +743,7 @@ draws |>
 c(mean = 18 / 110, lower = qbeta(0.025, 18, 92), upper = qbeta(0.975, 18, 92))
 ```
 
-Differences from the continuous Beta values can arise from the finite grid, Monte Carlo variation, and any remaining effect of the starting state. Neighbor moves also produce persistent successive values, so counting $N=49{,}500$ retained states does not describe their precision as if they were independent. Chapter 4 (Diagnosing Markov Chains) develops the corresponding Monte Carlo error calculations.
+Differences from the continuous Beta values can arise from the finite grid, Monte Carlo variation, and any remaining effect of the starting state. Neighbor moves also produce persistent successive values, so counting $N=49{,}500$ retained states does not describe their precision as if they were independent. @sec-diagnostics develops the corresponding Monte Carlo error calculations.
 
 The construction used relative log weights, neighbor proposals, and an acceptance step. The normalization was needed for the matrix check and the plotted benchmark, but not inside `walk_grid()`. For a different prior and likelihood, the same transition rule can be applied to new finite log weights. Its target would still be a grid approximation. Chapter 5 (The Metropolis Algorithm) develops the corresponding method on a continuous parameter space.
 
