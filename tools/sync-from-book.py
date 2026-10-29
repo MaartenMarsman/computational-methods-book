@@ -3,7 +3,8 @@
 
 Usage:  python3 tools/sync-from-book.py [path-to-book-folder]
 
-Only the chapters listed in PUBLIC_CHAPTERS are copied, together with the
+Only the chapters and appendices listed in PUBLIC_CHAPTERS and
+PUBLIC_APPENDICES are copied, together with the
 book's welcome page (index.qmd, used as the landing page of the website) and
 the shared files they need (helper script, styling, bibliography). Nothing
 else from the book folder is touched. A website-only note at the top of the
@@ -26,7 +27,14 @@ PUBLIC_CHAPTERS = [
     "01-probability-and-simulation.qmd",
     "02-bayesian-inference-recap.qmd",
     "03-markov-chains.qmd",
+    "04-diagnosing-markov-chains.qmd",
 ]
+PUBLIC_APPENDICES = [
+    "A-software-setup.qmd",
+    "B-notation.qmd",
+    "C-mcmc-diagnostics.qmd",
+]
+PUBLIC_FILES = ["chapters/" + n for n in PUBLIC_CHAPTERS] + ["appendices/" + n for n in PUBLIC_APPENDICES]
 SHARED = [
     "R/_common.R",
     "style/bayesrules.css",
@@ -39,15 +47,12 @@ SHARED = [
 # Chapters that are not (yet) on the website. Update when a chapter goes online:
 # remove its entry here and add its file to PUBLIC_CHAPTERS and to _quarto.yml.
 ABSENT = {
-    "sec-diagnostics": "Chapter 4 (Diagnosing Markov Chains)",
     "sec-metropolis": "Chapter 5 (The Metropolis Algorithm)",
     "sec-metropolis-hastings": "Chapter 6 (Metropolis–Hastings and Adaptive Proposals)",
     "sec-gibbs": "Chapter 7 (Gibbs Sampling and Metropolis-within-Gibbs)",
     "sec-variable-selection": "Chapter 8 (Bayesian Variable Selection)",
     "sec-model-averaging": "Chapter 9 (Bayesian Model Averaging)",
     "sec-hmc": "Chapter 10 (Hamiltonian Monte Carlo)",
-    "sec-software": "Appendix A (Software Setup)",
-    "sec-notation": "Appendix B (Notation)",
 }
 
 site = Path(__file__).resolve().parent.parent
@@ -57,8 +62,8 @@ if not (book / "_quarto.yml").exists():
 
 # Labels defined by the public chapters themselves stay as cross-references.
 present = set()
-for name in PUBLIC_CHAPTERS:
-    present |= set(re.findall(r"\{#(sec-[a-z0-9-]+)", (book / "chapters" / name).read_text()))
+for name in PUBLIC_FILES:
+    present |= set(re.findall(r"\{#(sec-[a-z0-9-]+)", (book / name).read_text()))
 
 def rewrite(match):
     label = match.group(1)
@@ -69,11 +74,12 @@ def rewrite(match):
     print(f"  WARNING: unknown cross-reference @{label} left as is")
     return match.group(0)
 
-for name in PUBLIC_CHAPTERS:
-    text = (book / "chapters" / name).read_text()
+for name in PUBLIC_FILES:
+    text = (book / name).read_text()
     new, n = re.subn(r"@(sec-[a-z0-9-]+)", rewrite, text)
-    (site / "chapters" / name).write_text(new)
-    print(f"chapters/{name}: copied, {n} cross-references checked")
+    (site / name).parent.mkdir(parents=True, exist_ok=True)
+    (site / name).write_text(new)
+    print(f"{name}: copied, {n} cross-references checked")
 
 for rel in SHARED:
     src, dst = book / rel, site / rel

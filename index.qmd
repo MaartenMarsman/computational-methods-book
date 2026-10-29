@@ -1,7 +1,7 @@
 # Welcome {.unnumbered}
 
 ::: {.callout-note appearance="simple"}
-**Work in progress.** This website holds the chapters of the book that are ready for readers. Online now: [Chapter 1](chapters/01-probability-and-simulation.qmd) (Probability and Simulation), [Chapter 2](chapters/02-bayesian-inference-recap.qmd) (Bayesian Inference, Revisited) and [Chapter 3](chapters/03-markov-chains.qmd) (Markov Chains). Further chapters are added as they are completed, and the chapters already online may still change.
+**Work in progress.** This website holds the chapters of the book that are ready for readers. Online now: [Chapter 1](chapters/01-probability-and-simulation.qmd) (Probability and Simulation), [Chapter 2](chapters/02-bayesian-inference-recap.qmd) (Bayesian Inference, Revisited), [Chapter 3](chapters/03-markov-chains.qmd) (Markov Chains) and [Chapter 4](chapters/04-diagnosing-markov-chains.qmd) (Diagnosing Markov Chains). Further chapters are added as they are completed, and the chapters already online may still change.
 
 ::: {.content-visible when-format="html"}
 [Download the PDF](Stochastic-Simulation-for-Bayesian-Modeling.pdf) of the chapters that are online.
@@ -35,7 +35,7 @@ The book has five parts. Each builds on the concepts and methods introduced earl
 
 **Foundations.** @sec-simulation introduces Monte Carlo integration, explains its accuracy, and develops methods for generating random draws. @sec-bayes-recap connects these ideas to Bayesian inference, including posterior summaries, marginal likelihoods, and Bayes factors. These chapters also explain why obtaining useful draws and evaluating integrals become more demanding as models grow.
 
-**Markov Chains.** @sec-markov-chains develops the properties of Markov chains and explains how their transitions can be constructed to preserve a chosen stationary distribution. Chapter 4 (Diagnosing Markov Chains) uses simulations from Stan to introduce practical checks of chain behavior and estimates of Monte Carlo accuracy.
+**Markov Chains.** @sec-markov-chains develops the properties of Markov chains and explains how their transitions can be constructed to preserve a chosen stationary distribution. @sec-diagnostics uses simulations from Stan to introduce practical checks of chain behavior and estimates of Monte Carlo accuracy.
 
 **Sampling Algorithms.** Chapter 5 (The Metropolis Algorithm) develops the Metropolis algorithm using ratios of posterior densities. Chapter 6 (Metropolis–Hastings and Adaptive Proposals) extends it to asymmetric proposals, parameter transformations, and adaptive tuning. Chapter 7 (Gibbs Sampling and Metropolis-within-Gibbs) introduces updates from conditional distributions and combines them with Metropolis steps when direct conditional sampling is unavailable. The code makes the connection between each algorithm's mathematical definition and its implementation explicit.
 
@@ -59,7 +59,7 @@ Quiz boxes offer a question to consider before continuing. Try to formulate an a
 
 ## Software {.unnumbered}
 
-The examples use R. The `tidyverse` supports data manipulation and plotting, `rstan` provides an interface to Stan, and `bayesplot` and `posterior` provide tools for examining simulation output. Appendix A (Software Setup) gives installation instructions and help with common setup problems.
+The examples use R. The `tidyverse` supports data manipulation and plotting, `rstan` provides an interface to Stan, and `bayesplot` and `posterior` provide tools for examining simulation output. @sec-software gives installation instructions and help with common setup problems.
 
 ## Acknowledgements {.unnumbered}
 
