@@ -320,7 +320,7 @@ div.csl-indent {
 </div>
 </div>
 </div>
-<p>Stochastic simulation provides a way to study Bayesian models when the quantities of interest are difficult to calculate directly. By generating draws from a probability distribution, we can estimate posterior means, probabilities, and predictions. This book develops the methods behind those calculations and shows how to implement them in R.</p>
+<p>Stochastic simulation provides a way to study Bayesian models when the quantities of interest are difficult to calculate directly. By generating draws from a probability distribution, we can estimate posterior means, probabilities, and predictions. This book develops the methods behind those calculations and shows how to implement them in R. Implementing the algorithms helps reveal how they work, why they sometimes perform poorly, and how to assess the results produced by statistical software.</p>
 <section id="why-we-wrote-this-book" class="level2 unnumbered">
 <h2 class="unnumbered anchored" data-anchor-id="why-we-wrote-this-book">Why we wrote this book</h2>
 <p>We previously taught two separate courses in the Research Master’s Psychology program at the University of Amsterdam. One used <em>Bayes Rules!</em> <span class="citation" data-cites="johnson2022bayes">(<a href="references.html#ref-johnson2022bayes" role="doc-biblioref">Johnson et al., 2022</a>)</span>, and the other used <em>MCMC from Scratch</em> <span class="citation" data-cites="hanada2022mcmc">(<a href="references.html#ref-hanada2022mcmc" role="doc-biblioref">Hanada &amp; Matsuura, 2022</a>)</span>. Both are excellent books, but they differ in the topics they cover, the depth of their treatment, and the technical background they expect. <em>Bayes Rules!</em> introduces Bayesian modeling through applications, while <em>MCMC from Scratch</em> develops the principles and implementation of Monte Carlo methods.</p>
@@ -328,7 +328,7 @@ div.csl-indent {
 </section>
 <section id="who-this-book-is-for" class="level2 unnumbered">
 <h2 class="unnumbered anchored" data-anchor-id="who-this-book-is-for">Who this book is for</h2>
-<p>This book is intended for research master’s students in psychology who want to understand how stochastic simulation supports Bayesian analysis. You should be familiar with elementary probability and statistics, including means, variances, and probability distributions, and be comfortable writing basic R code using vectors, functions, and loops. Familiarity with Bayesian inference is helpful; the opening chapters introduce the probability and Bayesian concepts used throughout the book.</p>
+<p>This book is for students and researchers who want to understand how stochastic simulation supports Bayesian analysis. The examples draw primarily on psychology, but the methods apply across disciplines. You should be familiar with elementary probability and statistics, including means, variances, and probability distributions, and be comfortable writing basic R code using vectors, functions, and loops. Familiarity with Bayesian inference is helpful; the opening chapters introduce the probability and Bayesian concepts used throughout the book.</p>
 <p>By working through the text and code, you will learn to</p>
 <ul>
 <li>explain how Monte Carlo simulation approximates posterior quantities and how its numerical accuracy is assessed;</li>
@@ -351,6 +351,7 @@ div.csl-indent {
 <section id="how-to-read-this-book" class="level2 unnumbered">
 <h2 class="unnumbered anchored" data-anchor-id="how-to-read-this-book">How to read this book</h2>
 <p>Each chapter introduces a problem and its learning goals, develops the methods through worked examples, and closes with a summary and exercises. Read the explanations alongside the code, run the examples, and examine how the results change when you alter the inputs or simulation settings.</p>
+<p>The appendices provide software guidance, a reference for notation, and detailed mathematical derivations that supplement the main explanations.</p>
 <p>The exercises take three forms. <em>Conceptual</em> exercises ask you to explain or derive an idea. <em>Practical</em> exercises develop your ability to implement and assess a method. <em>Applied</em> exercises use the methods to answer questions about data.</p>
 <div class="bookbox bookgraybox">
 <div class="title">
