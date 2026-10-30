@@ -102,7 +102,7 @@ div.csl-indent {
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-3f446edc70b0757b4dde2b060815ebc9.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-2fcf8a0ee316d604ebc18c0691cf69d6.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-0b1eb3394df00950b6534c3d03f09fce.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -173,9 +173,9 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/01-probability-and-simulation.html">Foundations</a></li><li class="breadcrumb-item"><a href="../chapters/02-bayesian-inference-recap.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Bayesian Inference, Revisited</span></a></li></ol></nav>
-        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-        </a>
+        <a class="flex-grow-1 no-decor" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+          <h1 class="quarto-secondary-nav-title"><span id="sec-bayes-recap" class="quarto-section-identifier"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Bayesian Inference, Revisited</span></span></h1>
+        </a>     
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
       </button>
@@ -189,10 +189,6 @@ window.Quarto = {
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="../">Stochastic Simulation for Bayesian Modeling in Psychology</a> 
-        <div class="sidebar-tools-main">
-    <a href="https://github.com/MaartenMarsman/computational-methods-book" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
-    <a href="../Stochastic-Simulation-for-Bayesian-Modeling.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
-</div>
     </div>
       </div>
         <div class="mt-2 flex-shrink-0 align-items-center">
@@ -320,53 +316,32 @@ window.Quarto = {
   </li>
     </ul>
     </div>
-</nav>
-<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
-<!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
+    <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">Table of contents</h2>
    
-  <ul>
-  <li><a href="#prior-likelihood-posterior" id="toc-prior-likelihood-posterior" class="nav-link active" data-scroll-target="#prior-likelihood-posterior"><span class="header-section-number">2.1</span> Prior, likelihood, posterior</a>
   <ul class="collapse">
-  <li><a href="#the-modern-art-example" id="toc-the-modern-art-example" class="nav-link" data-scroll-target="#the-modern-art-example"><span class="header-section-number">2.1.1</span> The modern art example</a></li>
-  <li><a href="#the-log-scale-habit" id="toc-the-log-scale-habit" class="nav-link" data-scroll-target="#the-log-scale-habit"><span class="header-section-number">2.1.2</span> The log-scale habit</a></li>
-  </ul></li>
+  <li><a href="#prior-likelihood-posterior" id="toc-prior-likelihood-posterior" class="nav-link active" data-scroll-target="#prior-likelihood-posterior"><span class="header-section-number">2.1</span> Prior, likelihood, posterior</a></li>
   <li><a href="#conjugate-families-and-kernel-recognition" id="toc-conjugate-families-and-kernel-recognition" class="nav-link" data-scroll-target="#conjugate-families-and-kernel-recognition"><span class="header-section-number">2.2</span> Conjugate families and kernel recognition</a></li>
-  <li><a href="#summarizing-a-posterior" id="toc-summarizing-a-posterior" class="nav-link" data-scroll-target="#summarizing-a-posterior"><span class="header-section-number">2.3</span> Summarizing a posterior</a>
-  <ul class="collapse">
-  <li><a href="#credible-intervals-and-the-mode" id="toc-credible-intervals-and-the-mode" class="nav-link" data-scroll-target="#credible-intervals-and-the-mode"><span class="header-section-number">2.3.1</span> Credible intervals and the mode</a></li>
-  </ul></li>
-  <li><a href="#comparing-models-marginal-likelihoods-and-bayes-factors" id="toc-comparing-models-marginal-likelihoods-and-bayes-factors" class="nav-link" data-scroll-target="#comparing-models-marginal-likelihoods-and-bayes-factors"><span class="header-section-number">2.4</span> Comparing models: marginal likelihoods and Bayes factors</a>
-  <ul class="collapse">
-  <li><a href="#the-savagedickey-density-ratio" id="toc-the-savagedickey-density-ratio" class="nav-link" data-scroll-target="#the-savagedickey-density-ratio"><span class="header-section-number">2.4.1</span> The Savage–Dickey density ratio</a></li>
-  <li><a href="#the-prior-matters" id="toc-the-prior-matters" class="nav-link" data-scroll-target="#the-prior-matters"><span class="header-section-number">2.4.2</span> The prior matters</a></li>
-  <li><a href="#savagedickey-from-draws" id="toc-savagedickey-from-draws" class="nav-link" data-scroll-target="#savagedickey-from-draws"><span class="header-section-number">2.4.3</span> Savage–Dickey from draws</a></li>
-  </ul></li>
-  <li><a href="#grid-approximation-and-its-limits" id="toc-grid-approximation-and-its-limits" class="nav-link" data-scroll-target="#grid-approximation-and-its-limits"><span class="header-section-number">2.5</span> Grid approximation and its limits</a>
-  <ul class="collapse">
-  <li><a href="#two-parameters" id="toc-two-parameters" class="nav-link" data-scroll-target="#two-parameters"><span class="header-section-number">2.5.1</span> Two parameters</a></li>
-  <li><a href="#more-parameters" id="toc-more-parameters" class="nav-link" data-scroll-target="#more-parameters"><span class="header-section-number">2.5.2</span> More parameters</a></li>
-  </ul></li>
+  <li><a href="#summarizing-a-posterior" id="toc-summarizing-a-posterior" class="nav-link" data-scroll-target="#summarizing-a-posterior"><span class="header-section-number">2.3</span> Summarizing a posterior</a></li>
+  <li><a href="#comparing-models-marginal-likelihoods-and-bayes-factors" id="toc-comparing-models-marginal-likelihoods-and-bayes-factors" class="nav-link" data-scroll-target="#comparing-models-marginal-likelihoods-and-bayes-factors"><span class="header-section-number">2.4</span> Comparing models: marginal likelihoods and Bayes factors</a></li>
+  <li><a href="#grid-approximation-and-its-limits" id="toc-grid-approximation-and-its-limits" class="nav-link" data-scroll-target="#grid-approximation-and-its-limits"><span class="header-section-number">2.5</span> Grid approximation and its limits</a></li>
   <li><a href="#sampling-instead-of-gridding" id="toc-sampling-instead-of-gridding" class="nav-link" data-scroll-target="#sampling-instead-of-gridding"><span class="header-section-number">2.6</span> Sampling instead of gridding</a></li>
   <li><a href="#chapter-summary" id="toc-chapter-summary" class="nav-link" data-scroll-target="#chapter-summary"><span class="header-section-number">2.7</span> Chapter summary</a></li>
   <li><a href="#quiz-answers" id="toc-quiz-answers" class="nav-link" data-scroll-target="#quiz-answers"><span class="header-section-number">2.8</span> Quiz answers</a></li>
-  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises"><span class="header-section-number">2.9</span> Exercises</a>
-  <ul class="collapse">
-  <li><a href="#conceptual-exercises" id="toc-conceptual-exercises" class="nav-link" data-scroll-target="#conceptual-exercises"><span class="header-section-number">2.9.1</span> Conceptual exercises</a></li>
-  <li><a href="#practical-exercises" id="toc-practical-exercises" class="nav-link" data-scroll-target="#practical-exercises"><span class="header-section-number">2.9.2</span> Practical exercises</a></li>
-  <li><a href="#applied-exercises" id="toc-applied-exercises" class="nav-link" data-scroll-target="#applied-exercises"><span class="header-section-number">2.9.3</span> Applied exercises</a></li>
-  </ul></li>
+  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises"><span class="header-section-number">2.9</span> Exercises</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/MaartenMarsman/computational-methods-book/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
+</nav>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/01-probability-and-simulation.html">Foundations</a></li><li class="breadcrumb-item"><a href="../chapters/02-bayesian-inference-recap.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Bayesian Inference, Revisited</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span id="sec-bayes-recap" class="quarto-section-identifier"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Bayesian Inference, Revisited</span></span></h1>
+<h1 class="title d-none d-lg-block"><span id="sec-bayes-recap" class="quarto-section-identifier"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Bayesian Inference, Revisited</span></span></h1>
 </div>
 
 
@@ -1331,6 +1306,18 @@ Wagenmakers, E.-J., Lodewyckx, T., Kuriyal, H., &amp; Grasman, R. P. P. P. (2010
 .book-version .book-version-kind { color: #777; font-size: 0.8em; }
 </style>
 <script>
+  // Move the chapter's table of contents from the bottom of the sidebar to
+  // right under the chapter's own entry, as on the Bayes Rules! site.
+  document.addEventListener("DOMContentLoaded", function () {
+    const toc = document.querySelector("#quarto-sidebar #TOC");
+    const current = document.querySelector("#quarto-sidebar .sidebar-item a.active");
+    if (toc && current) {
+      const item = current.closest(".sidebar-item");
+      if (item) item.append(toc);
+    }
+  });
+</script>
+<script>
 (function () {
   const header = document.querySelector("#quarto-sidebar .sidebar-header");
   if (!header) return;
@@ -1850,7 +1837,7 @@ Wagenmakers, E.-J., Lodewyckx, T., Kuriyal, H., &amp; Grasman, R. P. P. P. (2010
 </div>   
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/MaartenMarsman/computational-methods-book/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></div>
+    </div>
     <div class="nav-footer-right">
 <p>Published with <a href="https://quarto.org">Quarto</a>.</p>
 </div>

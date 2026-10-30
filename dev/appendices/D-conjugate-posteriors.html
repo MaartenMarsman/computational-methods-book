@@ -46,7 +46,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-3f446edc70b0757b4dde2b060815ebc9.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-2fcf8a0ee316d604ebc18c0691cf69d6.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-0b1eb3394df00950b6534c3d03f09fce.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -117,9 +117,9 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../appendices/A-software-setup.html">Appendices</a></li><li class="breadcrumb-item"><a href="../appendices/D-conjugate-posteriors.html"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Deriving Conjugate Posteriors</span></a></li></ol></nav>
-        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-        </a>
+        <a class="flex-grow-1 no-decor" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+          <h1 class="quarto-secondary-nav-title"><span id="sec-conjugate-derivations" class="quarto-section-identifier">Appendix D — Deriving Conjugate Posteriors</span></h1>
+        </a>     
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
       </button>
@@ -133,10 +133,6 @@ window.Quarto = {
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="../">Stochastic Simulation for Bayesian Modeling in Psychology</a> 
-        <div class="sidebar-tools-main">
-    <a href="https://github.com/MaartenMarsman/computational-methods-book" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
-    <a href="../Stochastic-Simulation-for-Bayesian-Modeling.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
-</div>
     </div>
       </div>
         <div class="mt-2 flex-shrink-0 align-items-center">
@@ -264,32 +260,27 @@ window.Quarto = {
   </li>
     </ul>
     </div>
-</nav>
-<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
-<!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
+    <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">Table of contents</h2>
    
-  <ul>
+  <ul class="collapse">
   <li><a href="#what-we-need-to-recognize" id="toc-what-we-need-to-recognize" class="nav-link active" data-scroll-target="#what-we-need-to-recognize"><span class="header-section-number">D.1</span> What we need to recognize</a></li>
   <li><a href="#sec-conjugate-beta-binomial" id="toc-sec-conjugate-beta-binomial" class="nav-link" data-scroll-target="#sec-conjugate-beta-binomial"><span class="header-section-number">D.2</span> A Binomial likelihood and a Beta prior</a></li>
   <li><a href="#sec-conjugate-gamma-poisson" id="toc-sec-conjugate-gamma-poisson" class="nav-link" data-scroll-target="#sec-conjugate-gamma-poisson"><span class="header-section-number">D.3</span> A Poisson likelihood and a Gamma prior</a></li>
-  <li><a href="#sec-conjugate-normal-normal" id="toc-sec-conjugate-normal-normal" class="nav-link" data-scroll-target="#sec-conjugate-normal-normal"><span class="header-section-number">D.4</span> A Normal likelihood and a Normal prior</a>
-  <ul class="collapse">
-  <li><a href="#collecting-the-terms-in-the-unknown-mean" id="toc-collecting-the-terms-in-the-unknown-mean" class="nav-link" data-scroll-target="#collecting-the-terms-in-the-unknown-mean"><span class="header-section-number">D.4.1</span> Collecting the terms in the unknown mean</a></li>
-  <li><a href="#completing-the-square" id="toc-completing-the-square" class="nav-link" data-scroll-target="#completing-the-square"><span class="header-section-number">D.4.2</span> Completing the square</a></li>
-  <li><a href="#interpreting-the-update" id="toc-interpreting-the-update" class="nav-link" data-scroll-target="#interpreting-the-update"><span class="header-section-number">D.4.3</span> Interpreting the update</a></li>
-  </ul></li>
+  <li><a href="#sec-conjugate-normal-normal" id="toc-sec-conjugate-normal-normal" class="nav-link" data-scroll-target="#sec-conjugate-normal-normal"><span class="header-section-number">D.4</span> A Normal likelihood and a Normal prior</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/MaartenMarsman/computational-methods-book/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
+</nav>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../appendices/A-software-setup.html">Appendices</a></li><li class="breadcrumb-item"><a href="../appendices/D-conjugate-posteriors.html"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Deriving Conjugate Posteriors</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span id="sec-conjugate-derivations" class="quarto-section-identifier">Appendix D — Deriving Conjugate Posteriors</span></h1>
+<h1 class="title d-none d-lg-block"><span id="sec-conjugate-derivations" class="quarto-section-identifier">Appendix D — Deriving Conjugate Posteriors</span></h1>
 </div>
 
 
@@ -505,6 +496,18 @@ v=\frac1{101}\approx0.00990.
 .book-version li a.active { font-weight: bold; }
 .book-version .book-version-kind { color: #777; font-size: 0.8em; }
 </style>
+<script>
+  // Move the chapter's table of contents from the bottom of the sidebar to
+  // right under the chapter's own entry, as on the Bayes Rules! site.
+  document.addEventListener("DOMContentLoaded", function () {
+    const toc = document.querySelector("#quarto-sidebar #TOC");
+    const current = document.querySelector("#quarto-sidebar .sidebar-item a.active");
+    if (toc && current) {
+      const item = current.closest(".sidebar-item");
+      if (item) item.append(toc);
+    }
+  });
+</script>
 <script>
 (function () {
   const header = document.querySelector("#quarto-sidebar .sidebar-header");
@@ -1022,7 +1025,7 @@ v=\frac1{101}\approx0.00990.
 </div>   
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/MaartenMarsman/computational-methods-book/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></div>
+    </div>
     <div class="nav-footer-right">
 <p>Published with <a href="https://quarto.org">Quarto</a>.</p>
 </div>

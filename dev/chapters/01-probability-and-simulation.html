@@ -102,7 +102,7 @@ div.csl-indent {
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-3f446edc70b0757b4dde2b060815ebc9.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-2fcf8a0ee316d604ebc18c0691cf69d6.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-0b1eb3394df00950b6534c3d03f09fce.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -173,9 +173,9 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/01-probability-and-simulation.html">Foundations</a></li><li class="breadcrumb-item"><a href="../chapters/01-probability-and-simulation.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Probability and Simulation</span></a></li></ol></nav>
-        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-        </a>
+        <a class="flex-grow-1 no-decor" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+          <h1 class="quarto-secondary-nav-title"><span id="sec-simulation" class="quarto-section-identifier"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Probability and Simulation</span></span></h1>
+        </a>     
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
       </button>
@@ -189,10 +189,6 @@ window.Quarto = {
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="../">Stochastic Simulation for Bayesian Modeling in Psychology</a> 
-        <div class="sidebar-tools-main">
-    <a href="https://github.com/MaartenMarsman/computational-methods-book" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
-    <a href="../Stochastic-Simulation-for-Bayesian-Modeling.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
-</div>
     </div>
       </div>
         <div class="mt-2 flex-shrink-0 align-items-center">
@@ -320,49 +316,32 @@ window.Quarto = {
   </li>
     </ul>
     </div>
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul class="collapse">
+  <li><a href="#random-variables-densities-and-expectations" id="toc-random-variables-densities-and-expectations" class="nav-link active" data-scroll-target="#random-variables-densities-and-expectations"><span class="header-section-number">1.1</span> Random variables, densities, and expectations</a></li>
+  <li><a href="#pseudo-random-numbers-in-r" id="toc-pseudo-random-numbers-in-r" class="nav-link" data-scroll-target="#pseudo-random-numbers-in-r"><span class="header-section-number">1.2</span> Pseudo-random numbers in R</a></li>
+  <li><a href="#monte-carlo-integration" id="toc-monte-carlo-integration" class="nav-link" data-scroll-target="#monte-carlo-integration"><span class="header-section-number">1.3</span> Monte Carlo integration</a></li>
+  <li><a href="#generating-draws-from-a-distribution" id="toc-generating-draws-from-a-distribution" class="nav-link" data-scroll-target="#generating-draws-from-a-distribution"><span class="header-section-number">1.4</span> Generating draws from a distribution</a></li>
+  <li><a href="#simulating-a-bayesian-model-forward" id="toc-simulating-a-bayesian-model-forward" class="nav-link" data-scroll-target="#simulating-a-bayesian-model-forward"><span class="header-section-number">1.5</span> Simulating a Bayesian model forward</a></li>
+  <li><a href="#when-independent-draws-are-not-enough" id="toc-when-independent-draws-are-not-enough" class="nav-link" data-scroll-target="#when-independent-draws-are-not-enough"><span class="header-section-number">1.6</span> When independent draws are not enough</a></li>
+  <li><a href="#chapter-summary" id="toc-chapter-summary" class="nav-link" data-scroll-target="#chapter-summary"><span class="header-section-number">1.7</span> Chapter summary</a></li>
+  <li><a href="#quiz-answers" id="toc-quiz-answers" class="nav-link" data-scroll-target="#quiz-answers"><span class="header-section-number">1.8</span> Quiz answers</a></li>
+  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises"><span class="header-section-number">1.9</span> Exercises</a></li>
+  </ul>
+</nav>
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">Table of contents</h2>
-   
-  <ul>
-  <li><a href="#random-variables-densities-and-expectations" id="toc-random-variables-densities-and-expectations" class="nav-link active" data-scroll-target="#random-variables-densities-and-expectations"><span class="header-section-number">1.1</span> Random variables, densities, and expectations</a></li>
-  <li><a href="#pseudo-random-numbers-in-r" id="toc-pseudo-random-numbers-in-r" class="nav-link" data-scroll-target="#pseudo-random-numbers-in-r"><span class="header-section-number">1.2</span> Pseudo-random numbers in R</a></li>
-  <li><a href="#monte-carlo-integration" id="toc-monte-carlo-integration" class="nav-link" data-scroll-target="#monte-carlo-integration"><span class="header-section-number">1.3</span> Monte Carlo integration</a>
-  <ul class="collapse">
-  <li><a href="#how-accurate-is-it" id="toc-how-accurate-is-it" class="nav-link" data-scroll-target="#how-accurate-is-it"><span class="header-section-number">1.3.1</span> How accurate is it?</a></li>
-  <li><a href="#the-recipe-in-general" id="toc-the-recipe-in-general" class="nav-link" data-scroll-target="#the-recipe-in-general"><span class="header-section-number">1.3.2</span> The recipe in general</a></li>
-  </ul></li>
-  <li><a href="#generating-draws-from-a-distribution" id="toc-generating-draws-from-a-distribution" class="nav-link" data-scroll-target="#generating-draws-from-a-distribution"><span class="header-section-number">1.4</span> Generating draws from a distribution</a>
-  <ul class="collapse">
-  <li><a href="#inverse-transform-sampling" id="toc-inverse-transform-sampling" class="nav-link" data-scroll-target="#inverse-transform-sampling"><span class="header-section-number">1.4.1</span> Inverse-transform sampling</a></li>
-  <li><a href="#rejection-sampling" id="toc-rejection-sampling" class="nav-link" data-scroll-target="#rejection-sampling"><span class="header-section-number">1.4.2</span> Rejection sampling</a></li>
-  </ul></li>
-  <li><a href="#simulating-a-bayesian-model-forward" id="toc-simulating-a-bayesian-model-forward" class="nav-link" data-scroll-target="#simulating-a-bayesian-model-forward"><span class="header-section-number">1.5</span> Simulating a Bayesian model forward</a></li>
-  <li><a href="#when-independent-draws-are-not-enough" id="toc-when-independent-draws-are-not-enough" class="nav-link" data-scroll-target="#when-independent-draws-are-not-enough"><span class="header-section-number">1.6</span> When independent draws are not enough</a>
-  <ul class="collapse">
-  <li><a href="#one-parameter-using-what-we-can-evaluate" id="toc-one-parameter-using-what-we-can-evaluate" class="nav-link" data-scroll-target="#one-parameter-using-what-we-can-evaluate"><span class="header-section-number">1.6.1</span> One parameter: Using what we can evaluate</a></li>
-  <li><a href="#several-parameters-why-a-poor-proposal-becomes-expensive" id="toc-several-parameters-why-a-poor-proposal-becomes-expensive" class="nav-link" data-scroll-target="#several-parameters-why-a-poor-proposal-becomes-expensive"><span class="header-section-number">1.6.2</span> Several parameters: Why a poor proposal becomes expensive</a></li>
-  </ul></li>
-  <li><a href="#chapter-summary" id="toc-chapter-summary" class="nav-link" data-scroll-target="#chapter-summary"><span class="header-section-number">1.7</span> Chapter summary</a></li>
-  <li><a href="#quiz-answers" id="toc-quiz-answers" class="nav-link" data-scroll-target="#quiz-answers"><span class="header-section-number">1.8</span> Quiz answers</a></li>
-  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises"><span class="header-section-number">1.9</span> Exercises</a>
-  <ul class="collapse">
-  <li><a href="#conceptual-exercises" id="toc-conceptual-exercises" class="nav-link" data-scroll-target="#conceptual-exercises"><span class="header-section-number">1.9.1</span> Conceptual exercises</a></li>
-  <li><a href="#practical-exercises" id="toc-practical-exercises" class="nav-link" data-scroll-target="#practical-exercises"><span class="header-section-number">1.9.2</span> Practical exercises</a></li>
-  <li><a href="#applied-exercises" id="toc-applied-exercises" class="nav-link" data-scroll-target="#applied-exercises"><span class="header-section-number">1.9.3</span> Applied exercises</a></li>
-  </ul></li>
-  </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/MaartenMarsman/computational-methods-book/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/01-probability-and-simulation.html">Foundations</a></li><li class="breadcrumb-item"><a href="../chapters/01-probability-and-simulation.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Probability and Simulation</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span id="sec-simulation" class="quarto-section-identifier"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Probability and Simulation</span></span></h1>
+<h1 class="title d-none d-lg-block"><span id="sec-simulation" class="quarto-section-identifier"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Probability and Simulation</span></span></h1>
 </div>
 
 
@@ -1109,6 +1088,18 @@ Logan, G. D., &amp; Cowan, W. B. (1984). On the ability to inhibit thought and a
 .book-version .book-version-kind { color: #777; font-size: 0.8em; }
 </style>
 <script>
+  // Move the chapter's table of contents from the bottom of the sidebar to
+  // right under the chapter's own entry, as on the Bayes Rules! site.
+  document.addEventListener("DOMContentLoaded", function () {
+    const toc = document.querySelector("#quarto-sidebar #TOC");
+    const current = document.querySelector("#quarto-sidebar .sidebar-item a.active");
+    if (toc && current) {
+      const item = current.closest(".sidebar-item");
+      if (item) item.append(toc);
+    }
+  });
+</script>
+<script>
 (function () {
   const header = document.querySelector("#quarto-sidebar .sidebar-header");
   if (!header) return;
@@ -1628,7 +1619,7 @@ Logan, G. D., &amp; Cowan, W. B. (1984). On the ability to inhibit thought and a
 </div>   
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/MaartenMarsman/computational-methods-book/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></div>
+    </div>
     <div class="nav-footer-right">
 <p>Published with <a href="https://quarto.org">Quarto</a>.</p>
 </div>

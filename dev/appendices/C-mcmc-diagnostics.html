@@ -102,7 +102,7 @@ div.csl-indent {
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-3f446edc70b0757b4dde2b060815ebc9.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-2fcf8a0ee316d604ebc18c0691cf69d6.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-0b1eb3394df00950b6534c3d03f09fce.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -173,9 +173,9 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../appendices/A-software-setup.html">Appendices</a></li><li class="breadcrumb-item"><a href="../appendices/C-mcmc-diagnostics.html"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Technical Notes on MCMC</span></a></li></ol></nav>
-        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-        </a>
+        <a class="flex-grow-1 no-decor" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+          <h1 class="quarto-secondary-nav-title"><span id="sec-diagnostics-notes" class="quarto-section-identifier">Appendix C — Technical Notes on MCMC</span></h1>
+        </a>     
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
       </button>
@@ -189,10 +189,6 @@ window.Quarto = {
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="../">Stochastic Simulation for Bayesian Modeling in Psychology</a> 
-        <div class="sidebar-tools-main">
-    <a href="https://github.com/MaartenMarsman/computational-methods-book" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
-    <a href="../Stochastic-Simulation-for-Bayesian-Modeling.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
-</div>
     </div>
       </div>
         <div class="mt-2 flex-shrink-0 align-items-center">
@@ -320,37 +316,27 @@ window.Quarto = {
   </li>
     </ul>
     </div>
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul class="collapse">
+  <li><a href="#sec-mcmc-variance" id="toc-sec-mcmc-variance" class="nav-link active" data-scroll-target="#sec-mcmc-variance"><span class="header-section-number">C.1</span> The variance of a dependent average</a></li>
+  <li><a href="#sec-rhat-calculations" id="toc-sec-rhat-calculations" class="nav-link" data-scroll-target="#sec-rhat-calculations"><span class="header-section-number">C.2</span> Calculating basic and split R-hat</a></li>
+  <li><a href="#sec-rank-folding" id="toc-sec-rank-folding" class="nav-link" data-scroll-target="#sec-rank-folding"><span class="header-section-number">C.3</span> Rank normalization and folding</a></li>
+  <li><a href="#sec-metropolis-acceptance-derivation" id="toc-sec-metropolis-acceptance-derivation" class="nav-link" data-scroll-target="#sec-metropolis-acceptance-derivation"><span class="header-section-number">C.4</span> Deriving the Metropolis acceptance probability</a></li>
+  </ul>
+</nav>
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">Table of contents</h2>
-   
-  <ul>
-  <li><a href="#sec-mcmc-variance" id="toc-sec-mcmc-variance" class="nav-link active" data-scroll-target="#sec-mcmc-variance"><span class="header-section-number">C.1</span> The variance of a dependent average</a>
-  <ul class="collapse">
-  <li><a href="#start-with-three-sampled-states" id="toc-start-with-three-sampled-states" class="nav-link" data-scroll-target="#start-with-three-sampled-states"><span class="header-section-number">C.1.1</span> Start with three sampled states</a></li>
-  <li><a href="#count-the-pairs-in-a-run-of-length-n" id="toc-count-the-pairs-in-a-run-of-length-n" class="nav-link" data-scroll-target="#count-the-pairs-in-a-run-of-length-n"><span class="header-section-number">C.1.2</span> Count the pairs in a run of length <span class="math inline">\(N\)</span></a></li>
-  <li><a href="#approximation-for-a-long-run" id="toc-approximation-for-a-long-run" class="nav-link" data-scroll-target="#approximation-for-a-long-run"><span class="header-section-number">C.1.3</span> Approximation for a long run</a></li>
-  </ul></li>
-  <li><a href="#sec-rhat-calculations" id="toc-sec-rhat-calculations" class="nav-link" data-scroll-target="#sec-rhat-calculations"><span class="header-section-number">C.2</span> Calculating basic and split R-hat</a></li>
-  <li><a href="#sec-rank-folding" id="toc-sec-rank-folding" class="nav-link" data-scroll-target="#sec-rank-folding"><span class="header-section-number">C.3</span> Rank normalization and folding</a></li>
-  <li><a href="#sec-metropolis-acceptance-derivation" id="toc-sec-metropolis-acceptance-derivation" class="nav-link" data-scroll-target="#sec-metropolis-acceptance-derivation"><span class="header-section-number">C.4</span> Deriving the Metropolis acceptance probability</a>
-  <ul class="collapse">
-  <li><a href="#relating-the-two-directions" id="toc-relating-the-two-directions" class="nav-link" data-scroll-target="#relating-the-two-directions"><span class="header-section-number">C.4.1</span> Relating the two directions</a></li>
-  <li><a href="#a-numerical-comparison" id="toc-a-numerical-comparison" class="nav-link" data-scroll-target="#a-numerical-comparison"><span class="header-section-number">C.4.2</span> A numerical comparison</a></li>
-  <li><a href="#allowing-asymmetric-proposals" id="toc-allowing-asymmetric-proposals" class="nav-link" data-scroll-target="#allowing-asymmetric-proposals"><span class="header-section-number">C.4.3</span> Allowing asymmetric proposals</a></li>
-  </ul></li>
-  </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/MaartenMarsman/computational-methods-book/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../appendices/A-software-setup.html">Appendices</a></li><li class="breadcrumb-item"><a href="../appendices/C-mcmc-diagnostics.html"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Technical Notes on MCMC</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span id="sec-diagnostics-notes" class="quarto-section-identifier">Appendix C — Technical Notes on MCMC</span></h1>
+<h1 class="title d-none d-lg-block"><span id="sec-diagnostics-notes" class="quarto-section-identifier">Appendix C — Technical Notes on MCMC</span></h1>
 </div>
 
 
@@ -583,6 +569,18 @@ Vehtari, A., Gelman, A., Simpson, D., Carpenter, B., &amp; Bürkner, P.-C. (2021
 .book-version li a.active { font-weight: bold; }
 .book-version .book-version-kind { color: #777; font-size: 0.8em; }
 </style>
+<script>
+  // Move the chapter's table of contents from the bottom of the sidebar to
+  // right under the chapter's own entry, as on the Bayes Rules! site.
+  document.addEventListener("DOMContentLoaded", function () {
+    const toc = document.querySelector("#quarto-sidebar #TOC");
+    const current = document.querySelector("#quarto-sidebar .sidebar-item a.active");
+    if (toc && current) {
+      const item = current.closest(".sidebar-item");
+      if (item) item.append(toc);
+    }
+  });
+</script>
 <script>
 (function () {
   const header = document.querySelector("#quarto-sidebar .sidebar-header");
@@ -1103,7 +1101,7 @@ Vehtari, A., Gelman, A., Simpson, D., Carpenter, B., &amp; Bürkner, P.-C. (2021
 </div>   
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/MaartenMarsman/computational-methods-book/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></div>
+    </div>
     <div class="nav-footer-right">
 <p>Published with <a href="https://quarto.org">Quarto</a>.</p>
 </div>

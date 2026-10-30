@@ -4,7 +4,7 @@
     "href": "index.html",
     "title": "Stochastic Simulation for Bayesian Modeling in Psychology",
     "section": "",
-    "text": "Welcome\nStochastic simulation provides a way to study Bayesian models when the quantities of interest are difficult to calculate directly. By generating draws from a probability distribution, we can estimate posterior means, probabilities, and predictions. This book develops the methods behind those calculations and shows how to implement them in R. Implementing the algorithms helps reveal how they work, why they sometimes perform poorly, and how to assess the results produced by statistical software.",
+    "text": "Welcome\nThis website holds the released chapters of the book. You can also download it as a PDF.\nStochastic simulation provides a way to study Bayesian models when the quantities of interest are difficult to calculate directly. By generating draws from a probability distribution, we can estimate posterior means, probabilities, and predictions. This book develops the methods behind those calculations and shows how to implement them in R. Implementing the algorithms helps reveal how they work, why they sometimes perform poorly, and how to assess the results produced by statistical software.",
     "crumbs": [
       "Welcome"
     ]

@@ -102,7 +102,7 @@ div.csl-indent {
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-3f446edc70b0757b4dde2b060815ebc9.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-2fcf8a0ee316d604ebc18c0691cf69d6.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-0b1eb3394df00950b6534c3d03f09fce.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -173,9 +173,9 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/03-markov-chains.html">Markov Chains</a></li><li class="breadcrumb-item"><a href="../chapters/03-markov-chains.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Markov Chains</span></a></li></ol></nav>
-        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-        </a>
+        <a class="flex-grow-1 no-decor" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+          <h1 class="quarto-secondary-nav-title"><span id="sec-markov-chains" class="quarto-section-identifier"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Markov Chains</span></span></h1>
+        </a>     
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
       </button>
@@ -189,10 +189,6 @@ window.Quarto = {
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="../">Stochastic Simulation for Bayesian Modeling in Psychology</a> 
-        <div class="sidebar-tools-main">
-    <a href="https://github.com/MaartenMarsman/computational-methods-book" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
-    <a href="../Stochastic-Simulation-for-Bayesian-Modeling.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
-</div>
     </div>
       </div>
         <div class="mt-2 flex-shrink-0 align-items-center">
@@ -320,55 +316,33 @@ window.Quarto = {
   </li>
     </ul>
     </div>
-</nav>
-<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
-<!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
+    <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">Table of contents</h2>
    
-  <ul>
-  <li><a href="#chains-on-a-finite-state-space" id="toc-chains-on-a-finite-state-space" class="nav-link active" data-scroll-target="#chains-on-a-finite-state-space"><span class="header-section-number">3.1</span> Chains on a finite state space</a>
   <ul class="collapse">
-  <li><a href="#simulating-the-chain" id="toc-simulating-the-chain" class="nav-link" data-scroll-target="#simulating-the-chain"><span class="header-section-number">3.1.1</span> Simulating the chain</a></li>
-  <li><a href="#where-will-the-chain-be-in-t-days" id="toc-where-will-the-chain-be-in-t-days" class="nav-link" data-scroll-target="#where-will-the-chain-be-in-t-days"><span class="header-section-number">3.1.2</span> Where will the chain be in <span class="math inline">\(t\)</span> days?</a></li>
-  </ul></li>
+  <li><a href="#chains-on-a-finite-state-space" id="toc-chains-on-a-finite-state-space" class="nav-link active" data-scroll-target="#chains-on-a-finite-state-space"><span class="header-section-number">3.1</span> Chains on a finite state space</a></li>
   <li><a href="#stationary-distributions" id="toc-stationary-distributions" class="nav-link" data-scroll-target="#stationary-distributions"><span class="header-section-number">3.2</span> Stationary distributions</a></li>
   <li><a href="#irreducibility-aperiodicity-and-convergence" id="toc-irreducibility-aperiodicity-and-convergence" class="nav-link" data-scroll-target="#irreducibility-aperiodicity-and-convergence"><span class="header-section-number">3.3</span> Irreducibility, aperiodicity, and convergence</a></li>
   <li><a href="#the-ergodic-theorem" id="toc-the-ergodic-theorem" class="nav-link" data-scroll-target="#the-ergodic-theorem"><span class="header-section-number">3.4</span> The ergodic theorem</a></li>
-  <li><a href="#detailed-balance" id="toc-detailed-balance" class="nav-link" data-scroll-target="#detailed-balance"><span class="header-section-number">3.5</span> Detailed balance</a>
-  <ul class="collapse">
-  <li><a href="#what-detailed-balance-guarantees" id="toc-what-detailed-balance-guarantees" class="nav-link" data-scroll-target="#what-detailed-balance-guarantees"><span class="header-section-number">3.5.1</span> What detailed balance guarantees</a></li>
-  <li><a href="#choosing-transitions-for-a-target" id="toc-choosing-transitions-for-a-target" class="nav-link" data-scroll-target="#choosing-transitions-for-a-target"><span class="header-section-number">3.5.2</span> Choosing transitions for a target</a></li>
-  </ul></li>
-  <li><a href="#sec-transition-kernels" id="toc-sec-transition-kernels" class="nav-link" data-scroll-target="#sec-transition-kernels"><span class="header-section-number">3.6</span> From transition matrices to transition kernels</a>
-  <ul class="collapse">
-  <li><a href="#a-normal-transition-example" id="toc-a-normal-transition-example" class="nav-link" data-scroll-target="#a-normal-transition-example"><span class="header-section-number">3.6.1</span> A Normal transition example</a></li>
-  <li><a href="#when-a-transition-has-a-density" id="toc-when-a-transition-has-a-density" class="nav-link" data-scroll-target="#when-a-transition-has-a-density"><span class="header-section-number">3.6.2</span> When a transition has a density</a></li>
-  </ul></li>
-  <li><a href="#a-first-hand-built-chain" id="toc-a-first-hand-built-chain" class="nav-link" data-scroll-target="#a-first-hand-built-chain"><span class="header-section-number">3.7</span> A first hand-built chain</a>
-  <ul class="collapse">
-  <li><a href="#the-design" id="toc-the-design" class="nav-link" data-scroll-target="#the-design"><span class="header-section-number">3.7.1</span> The design</a></li>
-  <li><a href="#checking-the-design" id="toc-checking-the-design" class="nav-link" data-scroll-target="#checking-the-design"><span class="header-section-number">3.7.2</span> Checking the design</a></li>
-  <li><a href="#running-the-chain" id="toc-running-the-chain" class="nav-link" data-scroll-target="#running-the-chain"><span class="header-section-number">3.7.3</span> Running the chain</a></li>
-  </ul></li>
+  <li><a href="#detailed-balance" id="toc-detailed-balance" class="nav-link" data-scroll-target="#detailed-balance"><span class="header-section-number">3.5</span> Detailed balance</a></li>
+  <li><a href="#sec-transition-kernels" id="toc-sec-transition-kernels" class="nav-link" data-scroll-target="#sec-transition-kernels"><span class="header-section-number">3.6</span> From transition matrices to transition kernels</a></li>
+  <li><a href="#a-first-hand-built-chain" id="toc-a-first-hand-built-chain" class="nav-link" data-scroll-target="#a-first-hand-built-chain"><span class="header-section-number">3.7</span> A first hand-built chain</a></li>
   <li><a href="#chapter-summary" id="toc-chapter-summary" class="nav-link" data-scroll-target="#chapter-summary"><span class="header-section-number">3.8</span> Chapter summary</a></li>
   <li><a href="#quiz-answers" id="toc-quiz-answers" class="nav-link" data-scroll-target="#quiz-answers"><span class="header-section-number">3.9</span> Quiz answers</a></li>
-  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises"><span class="header-section-number">3.10</span> Exercises</a>
-  <ul class="collapse">
-  <li><a href="#conceptual-exercises" id="toc-conceptual-exercises" class="nav-link" data-scroll-target="#conceptual-exercises"><span class="header-section-number">3.10.1</span> Conceptual exercises</a></li>
-  <li><a href="#practical-exercises" id="toc-practical-exercises" class="nav-link" data-scroll-target="#practical-exercises"><span class="header-section-number">3.10.2</span> Practical exercises</a></li>
-  <li><a href="#applied-exercises" id="toc-applied-exercises" class="nav-link" data-scroll-target="#applied-exercises"><span class="header-section-number">3.10.3</span> Applied exercises</a></li>
-  </ul></li>
+  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises"><span class="header-section-number">3.10</span> Exercises</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/MaartenMarsman/computational-methods-book/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
+</nav>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/03-markov-chains.html">Markov Chains</a></li><li class="breadcrumb-item"><a href="../chapters/03-markov-chains.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Markov Chains</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span id="sec-markov-chains" class="quarto-section-identifier"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Markov Chains</span></span></h1>
+<h1 class="title d-none d-lg-block"><span id="sec-markov-chains" class="quarto-section-identifier"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Markov Chains</span></span></h1>
 </div>
 
 
@@ -1326,6 +1300,18 @@ Robert, C. P., &amp; Casella, G. (2004). <em>Monte <span>C</span>arlo statistica
 .book-version .book-version-kind { color: #777; font-size: 0.8em; }
 </style>
 <script>
+  // Move the chapter's table of contents from the bottom of the sidebar to
+  // right under the chapter's own entry, as on the Bayes Rules! site.
+  document.addEventListener("DOMContentLoaded", function () {
+    const toc = document.querySelector("#quarto-sidebar #TOC");
+    const current = document.querySelector("#quarto-sidebar .sidebar-item a.active");
+    if (toc && current) {
+      const item = current.closest(".sidebar-item");
+      if (item) item.append(toc);
+    }
+  });
+</script>
+<script>
 (function () {
   const header = document.querySelector("#quarto-sidebar .sidebar-header");
   if (!header) return;
@@ -1845,7 +1831,7 @@ Robert, C. P., &amp; Casella, G. (2004). <em>Monte <span>C</span>arlo statistica
 </div>   
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/MaartenMarsman/computational-methods-book/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></div>
+    </div>
     <div class="nav-footer-right">
 <p>Published with <a href="https://quarto.org">Quarto</a>.</p>
 </div>
