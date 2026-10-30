@@ -1,0 +1,1858 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.20">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>3&nbsp; Markov Chains – Stochastic Simulation for Bayesian Modeling in Psychology</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../chapters/04-diagnosing-markov-chains.html" rel="next">
+<link href="../chapters/02-bayesian-inference-recap.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-3f446edc70b0757b4dde2b060815ebc9.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-2fcf8a0ee316d604ebc18c0691cf69d6.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../style/bayesrules.css">
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/03-markov-chains.html">Markov Chains</a></li><li class="breadcrumb-item"><a href="../chapters/03-markov-chains.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Markov Chains</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">Stochastic Simulation for Bayesian Modeling in Psychology</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/MaartenMarsman/computational-methods-book" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+    <a href="../Stochastic-Simulation-for-Bayesian-Modeling.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Welcome</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Foundations</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/01-probability-and-simulation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Probability and Simulation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/02-bayesian-inference-recap.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Bayesian Inference, Revisited</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Markov Chains</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/03-markov-chains.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Markov Chains</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/04-diagnosing-markov-chains.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Diagnosing Markov Chains</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">Sampling Algorithms</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/05-metropolis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">The Metropolis Algorithm</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../news.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">News</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendices/A-software-setup.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Software Setup</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendices/B-notation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Notation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendices/C-mcmc-diagnostics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Technical Notes on MCMC</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendices/D-conjugate-posteriors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Deriving Conjugate Posteriors</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#chains-on-a-finite-state-space" id="toc-chains-on-a-finite-state-space" class="nav-link active" data-scroll-target="#chains-on-a-finite-state-space"><span class="header-section-number">3.1</span> Chains on a finite state space</a>
+  <ul class="collapse">
+  <li><a href="#simulating-the-chain" id="toc-simulating-the-chain" class="nav-link" data-scroll-target="#simulating-the-chain"><span class="header-section-number">3.1.1</span> Simulating the chain</a></li>
+  <li><a href="#where-will-the-chain-be-in-t-days" id="toc-where-will-the-chain-be-in-t-days" class="nav-link" data-scroll-target="#where-will-the-chain-be-in-t-days"><span class="header-section-number">3.1.2</span> Where will the chain be in <span class="math inline">\(t\)</span> days?</a></li>
+  </ul></li>
+  <li><a href="#stationary-distributions" id="toc-stationary-distributions" class="nav-link" data-scroll-target="#stationary-distributions"><span class="header-section-number">3.2</span> Stationary distributions</a></li>
+  <li><a href="#irreducibility-aperiodicity-and-convergence" id="toc-irreducibility-aperiodicity-and-convergence" class="nav-link" data-scroll-target="#irreducibility-aperiodicity-and-convergence"><span class="header-section-number">3.3</span> Irreducibility, aperiodicity, and convergence</a></li>
+  <li><a href="#the-ergodic-theorem" id="toc-the-ergodic-theorem" class="nav-link" data-scroll-target="#the-ergodic-theorem"><span class="header-section-number">3.4</span> The ergodic theorem</a></li>
+  <li><a href="#detailed-balance" id="toc-detailed-balance" class="nav-link" data-scroll-target="#detailed-balance"><span class="header-section-number">3.5</span> Detailed balance</a>
+  <ul class="collapse">
+  <li><a href="#what-detailed-balance-guarantees" id="toc-what-detailed-balance-guarantees" class="nav-link" data-scroll-target="#what-detailed-balance-guarantees"><span class="header-section-number">3.5.1</span> What detailed balance guarantees</a></li>
+  <li><a href="#choosing-transitions-for-a-target" id="toc-choosing-transitions-for-a-target" class="nav-link" data-scroll-target="#choosing-transitions-for-a-target"><span class="header-section-number">3.5.2</span> Choosing transitions for a target</a></li>
+  </ul></li>
+  <li><a href="#sec-transition-kernels" id="toc-sec-transition-kernels" class="nav-link" data-scroll-target="#sec-transition-kernels"><span class="header-section-number">3.6</span> From transition matrices to transition kernels</a>
+  <ul class="collapse">
+  <li><a href="#a-normal-transition-example" id="toc-a-normal-transition-example" class="nav-link" data-scroll-target="#a-normal-transition-example"><span class="header-section-number">3.6.1</span> A Normal transition example</a></li>
+  <li><a href="#when-a-transition-has-a-density" id="toc-when-a-transition-has-a-density" class="nav-link" data-scroll-target="#when-a-transition-has-a-density"><span class="header-section-number">3.6.2</span> When a transition has a density</a></li>
+  </ul></li>
+  <li><a href="#a-first-hand-built-chain" id="toc-a-first-hand-built-chain" class="nav-link" data-scroll-target="#a-first-hand-built-chain"><span class="header-section-number">3.7</span> A first hand-built chain</a>
+  <ul class="collapse">
+  <li><a href="#the-design" id="toc-the-design" class="nav-link" data-scroll-target="#the-design"><span class="header-section-number">3.7.1</span> The design</a></li>
+  <li><a href="#checking-the-design" id="toc-checking-the-design" class="nav-link" data-scroll-target="#checking-the-design"><span class="header-section-number">3.7.2</span> Checking the design</a></li>
+  <li><a href="#running-the-chain" id="toc-running-the-chain" class="nav-link" data-scroll-target="#running-the-chain"><span class="header-section-number">3.7.3</span> Running the chain</a></li>
+  </ul></li>
+  <li><a href="#chapter-summary" id="toc-chapter-summary" class="nav-link" data-scroll-target="#chapter-summary"><span class="header-section-number">3.8</span> Chapter summary</a></li>
+  <li><a href="#quiz-answers" id="toc-quiz-answers" class="nav-link" data-scroll-target="#quiz-answers"><span class="header-section-number">3.9</span> Quiz answers</a></li>
+  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises"><span class="header-section-number">3.10</span> Exercises</a>
+  <ul class="collapse">
+  <li><a href="#conceptual-exercises" id="toc-conceptual-exercises" class="nav-link" data-scroll-target="#conceptual-exercises"><span class="header-section-number">3.10.1</span> Conceptual exercises</a></li>
+  <li><a href="#practical-exercises" id="toc-practical-exercises" class="nav-link" data-scroll-target="#practical-exercises"><span class="header-section-number">3.10.2</span> Practical exercises</a></li>
+  <li><a href="#applied-exercises" id="toc-applied-exercises" class="nav-link" data-scroll-target="#applied-exercises"><span class="header-section-number">3.10.3</span> Applied exercises</a></li>
+  </ul></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/MaartenMarsman/computational-methods-book/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/03-markov-chains.html">Markov Chains</a></li><li class="breadcrumb-item"><a href="../chapters/03-markov-chains.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Markov Chains</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span id="sec-markov-chains" class="quarto-section-identifier"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Markov Chains</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<!-- SOURCES: Hanada & Matsuura Ch. 3 (Markov chain, irreducibility, aperiodicity, detailed balance via the balance-of-flows picture); Lourens's notes "hds-markov.pdf" and "markov-chain-example.pdf" (CM1 Canvas: two-state chain, mu(t) = mu(0) P^t, slow mixing); Bayes Rules! §7.1 for tone only. Level: discrete chains fully, continuous chains by analogy, no measure theory. The chapter ends with an explicit finite-grid sampling construction; Chapter 5 develops the continuous version. -->
+<p>Suppose you keep a mood diary, recording <em>happy</em>, <em>neutral</em>, or <em>sad</em> each evening. A simple model might allow tomorrow’s mood to depend on today’s. For example, a happy day could be followed by another happy day more often than by a sad one. To use a <strong>Markov chain</strong> for this model, we make a specific assumption. Once today’s mood is known, knowing earlier moods provides no additional information about tomorrow’s mood. Whether this assumption describes a real diary well is a separate modeling question.</p>
+<p>Markov chains also serve a computational purpose. Instead of modeling a person’s mood, we can construct a sequence of parameter values whose long-run behavior represents a posterior distribution. This chapter develops the connection, beginning with a small set of mood states and ending with a chain that samples a grid approximation to a posterior.</p>
+<p>We will distinguish the value of a chain at one time from the distribution of that value, and distinguish convergence of distributions from convergence of averages along a chain. These distinctions explain how dependent simulation can support Bayesian inference. Run the following setup before working through the examples.</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="bookbox bookgraybox">
+<div class="title">
+<p>Goals</p>
+</div>
+<ul>
+<li>Define and simulate a Markov chain with a finite set of possible states, specifying both its initial distribution and its transition probabilities.</li>
+<li>Compute and interpret state probabilities using a transition matrix and its powers.</li>
+<li>Determine stationary distributions using equations, eigenvectors, matrix powers, and simulated frequencies, and explain the conditions under which the last two methods apply.</li>
+<li>Analyze irreducibility and aperiodicity using examples and apply the finite-state convergence theorem.</li>
+<li>Distinguish a distribution at a specified time from a time average, and interpret the finite-state ergodic theorem.</li>
+<li>Verify detailed balance, explain why it implies stationarity, and check irreducibility and aperiodicity separately.</li>
+<li>Interpret a continuous transition rule through a worked Normal example.</li>
+<li>Construct and evaluate a grid-based sampling rule that preserves a chosen target distribution.</li>
+</ul>
+</div>
+<section id="chains-on-a-finite-state-space" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="chains-on-a-finite-state-space"><span class="header-section-number">3.1</span> Chains on a finite state space</h2>
+<p>A <strong>state space</strong> is the set of values a chain can take. For the mood model it is <span class="math inline">\(\{\text{happy},\text{neutral},\text{sad}\}\)</span>. This is a <strong>finite state space</strong> because it contains only three possible values. Write <span class="math inline">\(X^{(t)}\)</span> for the state at time <span class="math inline">\(t\)</span>, with <span class="math inline">\(t=0,1,2,\ldots\)</span>.</p>
+<p>The <strong>Markov property</strong> says that, conditional on the current state, the distribution of the next state does not depend on earlier states: <span class="math display">\[
+P\!\left(X^{(t+1)}=j\mid X^{(t)}=i,X^{(t-1)},\ldots,X^{(0)}\right)
+=P\!\left(X^{(t+1)}=j\mid X^{(t)}=i\right).
+\]</span> Here <span class="math inline">\(i\)</span> is the <strong>current</strong> state and <span class="math inline">\(j\)</span> is the <strong>next</strong> state. We consider <strong>time-homogeneous</strong> chains, whose transition probabilities do not change with <span class="math inline">\(t\)</span>, and write these probabilities as <span class="math inline">\(P_{ij}\)</span>. Numbering happy, neutral, and sad as states 1, 2, and 3 gives, for example, <span class="math display">\[
+P_{12}=P(\text{neutral tomorrow}\mid\text{happy today}).
+\]</span></p>
+<div class="bookbox bookgraybox">
+<div class="title">
+<p>Specifying a finite-state Markov chain</p>
+</div>
+<p>Specify the possible states, an <strong>initial distribution</strong> <span class="math inline">\(\boldsymbol{\mu}^{(0)}\)</span> over them, and a transition matrix <span class="math inline">\(\mathbf P\)</span>. Entry <span class="math inline">\(P_{ij}\)</span> is the probability of moving from state <span class="math inline">\(i\)</span> to state <span class="math inline">\(j\)</span> in one step.</p>
+<p>A fixed initial state is a special case. Starting happy with certainty gives <span class="math inline">\(\boldsymbol{\mu}^{(0)}=(1,0,0)\)</span>. Alternatively, we can draw the initial state using any specified probability vector over the three moods.</p>
+</div>
+<p>Arrange the transition probabilities with one row for each current state and one column for each next state. The following matrix defines our illustrative mood model. In R, <code>byrow = TRUE</code> fills the entries row by row, and <code>dimnames</code> attaches the mood labels to both rows and columns:</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>moods <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"happy"</span>, <span class="st">"neutral"</span>, <span class="st">"sad"</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>P <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="fl">0.70</span>, <span class="fl">0.25</span>, <span class="fl">0.05</span>,</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>              <span class="fl">0.20</span>, <span class="fl">0.50</span>, <span class="fl">0.30</span>,</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>              <span class="fl">0.20</span>, <span class="fl">0.40</span>, <span class="fl">0.40</span>),</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">nrow =</span> <span class="dv">3</span>, <span class="at">byrow =</span> <span class="cn">TRUE</span>, <span class="at">dimnames =</span> <span class="fu">list</span>(moods, moods))</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>P</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;         happy neutral  sad</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; happy     0.7    0.25 0.05</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; neutral   0.2    0.50 0.30</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; sad       0.2    0.40 0.40</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Read it by rows. After a happy day, the next day is happy with probability <span class="math inline">\(0.70\)</span>, neutral with probability <span class="math inline">\(0.25\)</span>, and sad with probability <span class="math inline">\(0.05\)</span>. After a sad day, the mood stays sad with probability <span class="math inline">\(0.40\)</span>, recovers to neutral with probability <span class="math inline">\(0.40\)</span>, and jumps straight to happy with probability <span class="math inline">\(0.20\)</span>. Every row is a probability distribution over tomorrow, so every row sums to one:</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rowSums</span>(P)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   happy neutral     sad </span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;       1       1       1</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>The column sums need not equal one. A matrix with non-negative entries and row sums of one is called a <strong>stochastic matrix</strong>. Together with an initial distribution, it specifies a time-homogeneous Markov chain.</p>
+<p>A note on notation. In this chapter the states are moods, so we call the chain <span class="math inline">\(X^{(t)}\)</span> and the states <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span>. From <a href="#sec-transition-kernels" class="quarto-xref"><span>Section 3.6</span></a> onward, the states are candidate values of a parameter, and we write the chain as <span class="math inline">\(\theta^{(t)}\)</span>, as in <a href="../appendices/B-notation.html" class="quarto-xref"><span>Appendix B</span></a>. The states then describe a computational sequence rather than an observed sequence of moods. We use bold <span class="math inline">\(\boldsymbol{\pi}\)</span> for a vector of stationary probabilities and plain <span class="math inline">\(\pi\)</span> for an unknown proportion.</p>
+<section id="simulating-the-chain" class="level3" data-number="3.1.1">
+<h3 data-number="3.1.1" class="anchored" data-anchor-id="simulating-the-chain"><span class="header-section-number">3.1.1</span> Simulating the chain</h3>
+<p>At each transition, select the row for the current mood and draw the next mood using that row’s probabilities. <code>sample()</code> takes the state labels, the number of draws, and the probabilities. For example, <code>sample(moods, 1, prob = P["happy", ])</code> generates a possible next state after a happy day.</p>
+<p>A simulated chain of length <span class="math inline">\(N\)</span> contains the states <span class="math inline">\(X^{(0)},\ldots,X^{(N-1)}\)</span>, including the initial state. The function below makes <code>n_iter</code> transitions and returns one state more than that, because the initial state is included. With <code>n_iter = 60</code>, it returns 61 states at times 0 through 60. The first stored element, <code>x[1]</code>, represents <span class="math inline">\(X^{(0)}\)</span>.</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>simulate_chain <span class="ot">&lt;-</span> <span class="cf">function</span>(P, init, n_iter) {</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  states <span class="ot">&lt;-</span> <span class="fu">rownames</span>(P)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="fu">character</span>(n_iter <span class="sc">+</span> <span class="dv">1</span>)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  x[<span class="dv">1</span>] <span class="ot">&lt;-</span> init</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (t <span class="cf">in</span> <span class="fu">seq_len</span>(n_iter)) {</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    x[t <span class="sc">+</span> <span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="fu">sample</span>(states, <span class="at">size =</span> <span class="dv">1</span>, <span class="at">prob =</span> P[x[t], ])</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  x</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">84735</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>diary <span class="ot">&lt;-</span> <span class="fu">simulate_chain</span>(P, <span class="at">init =</span> <span class="st">"happy"</span>, <span class="at">n_iter =</span> <span class="dv">60</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(diary, <span class="dv">14</span>)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [1] "happy"   "neutral" "sad"     "sad"     "happy"   "neutral" "neutral"</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [8] "sad"     "sad"     "sad"     "neutral" "happy"   "happy"   "happy"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Consecutive entries can repeat. For example, the probability of remaining happy for one more day is <span class="math inline">\(P_{11}=0.70\)</span>. <a href="#fig-mood-diary" class="quarto-xref">Figure&nbsp;<span>3.1</span></a> shows the resulting path. Each point is one realized state, not a probability distribution.</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tibble</span>(<span class="at">day =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">60</span>, <span class="at">mood =</span> <span class="fu">factor</span>(diary, <span class="at">levels =</span> <span class="fu">rev</span>(moods))) <span class="sc">|&gt;</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(day, mood, <span class="at">group =</span> <span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_step</span>(<span class="at">color =</span> <span class="st">"#552E6B"</span>) <span class="sc">+</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">"#552E6B"</span>, <span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Day"</span>, <span class="at">y =</span> <span class="cn">NULL</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div id="fig-mood-diary" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-mood-diary-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="03-markov-chains_files/figure-html/fig-mood-diary-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-mood-diary-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3.1: A mood diary simulated for 60 transitions, with its happy initial state shown at day zero. Consecutive states can be identical. The path records one sequence of outcomes.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="where-will-the-chain-be-in-t-days" class="level3" data-number="3.1.2">
+<h3 data-number="3.1.2" class="anchored" data-anchor-id="where-will-the-chain-be-in-t-days"><span class="header-section-number">3.1.2</span> Where will the chain be in <span class="math inline">\(t\)</span> days?</h3>
+<p>The transition matrix answers questions about tomorrow. To ask about the day after tomorrow, we sum over what can happen in between. Starting from state <span class="math inline">\(i\)</span>, the chain reaches state <span class="math inline">\(j\)</span> in two steps by passing through some state <span class="math inline">\(k\)</span> on day one, so <span class="math display">\[
+P\!\left(X^{(t+2)} = j \mid X^{(t)} = i\right) = \sum_{k} P_{ik} P_{kj},
+\]</span> The index <span class="math inline">\(k\)</span> runs over the possible intermediate states. Each product describes a two-step route, and summing the products accounts for all those routes. This is the <span class="math inline">\((i,j)\)</span> entry of <span class="math inline">\(\mathbf P^2\)</span>. More generally, entry <span class="math inline">\((i,j)\)</span> of <span class="math inline">\(\mathbf P^t\)</span> is the probability of reaching <span class="math inline">\(j\)</span> after <span class="math inline">\(t\)</span> transitions from <span class="math inline">\(i\)</span>.</p>
+<p>In R, <code>%*%</code> performs matrix multiplication, whereas <code>P^2</code> squares each entry separately. The function below begins with the identity matrix, representing zero transitions, and multiplies by <code>P</code> once per transition. With <code>t = 0</code>, <code>seq_len(t)</code> is empty and the identity is returned.</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>mat_power <span class="ot">&lt;-</span> <span class="cf">function</span>(P, t) {</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  out <span class="ot">&lt;-</span> <span class="fu">diag</span>(<span class="fu">nrow</span>(P))</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">dimnames</span>(out) <span class="ot">&lt;-</span> <span class="fu">dimnames</span>(P)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (k <span class="cf">in</span> <span class="fu">seq_len</span>(t)) out <span class="ot">&lt;-</span> out <span class="sc">%*%</span> P</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  out</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="fu">mat_power</span>(P, <span class="dv">2</span>)</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;         happy neutral  sad</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; happy    0.55    0.32 0.13</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; neutral  0.30    0.42 0.28</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; sad      0.30    0.41 0.29</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="quiz bookgraybox">
+<div class="title">
+<p>Quiz yourself!</p>
+</div>
+<p>Today is a happy day. Compute by hand, from <span class="math inline">\(\mathbf{P}\)</span>, the probability that the day after tomorrow is sad. Check your answer against <code>mat_power(P, 2)</code>.</p>
+</div>
+<p>The distribution at a given time is a different object from one realized state. The vector <span class="math display">\[
+\boldsymbol\mu^{(t)}=
+\big(P(X^{(t)}=\text{happy}),P(X^{(t)}=\text{neutral}),P(X^{(t)}=\text{sad})\big)
+\]</span> lists the probabilities of the three possible moods at time <span class="math inline">\(t\)</span>. Its entries sum to one. Starting happy with certainty gives <span class="math inline">\(\boldsymbol\mu^{(0)}=(1,0,0)\)</span>; one transition gives <span class="math inline">\((0.70,0.25,0.05)\)</span>.</p>
+<p>For a less certain start, suppose <span class="math inline">\(\boldsymbol\mu^{(0)}=(0.2,0.5,0.3)\)</span>. The probability of a happy day after one transition is <span class="math display">\[
+0.2\times0.70+0.5\times0.20+0.3\times0.20=0.30.
+\]</span> The other entries are calculated in the same way. Matrix multiplication performs all three weighted sums:</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>mu0 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">happy =</span> <span class="fl">0.2</span>, <span class="at">neutral =</span> <span class="fl">0.5</span>, <span class="at">sad =</span> <span class="fl">0.3</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>mu0 <span class="sc">%*%</span> P</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      happy neutral  sad</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1,]   0.3    0.42 0.28</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>The result is <span class="math inline">\((0.30,0.42,0.28)\)</span>. It describes probabilities across possible realizations of the chain, not three moods experienced simultaneously by one person. We use row vectors, so the update is <span id="eq-state-distribution"><span class="math display">\[
+\boldsymbol\mu^{(t+1)}=\boldsymbol\mu^{(t)}\mathbf P,
+\qquad
+\boldsymbol\mu^{(t)}=\boldsymbol\mu^{(0)}\mathbf P^t.
+\tag{3.1}\]</span></span></p>
+<p>Each row of <span class="math inline">\(\mathbf P^t\)</span> corresponds to a different fixed starting state. Compare the rows after five and twenty transitions:</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">mat_power</span>(P, <span class="dv">5</span>), <span class="dv">4</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;          happy neutral    sad</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; happy   0.4187  0.3707 0.2105</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; neutral 0.3875  0.3825 0.2300</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; sad     0.3875  0.3825 0.2300</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">mat_power</span>(P, <span class="dv">20</span>), <span class="dv">4</span>)</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;         happy neutral    sad</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; happy     0.4  0.3778 0.2222</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; neutral   0.4  0.3778 0.2222</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; sad       0.4  0.3778 0.2222</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>After twenty transitions, the rows agree to four decimal places. The probability of a happy state is approximately 0.4 for any of the three starts. This is approximate agreement of state distributions; the individual paths still fluctuate.</p>
+</section>
+</section>
+<section id="stationary-distributions" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="stationary-distributions"><span class="header-section-number">3.2</span> Stationary distributions</h2>
+<div class="bookbox bookgraybox">
+<div class="title">
+<p>Stationary distribution</p>
+</div>
+<p>A probability vector <span class="math inline">\(\boldsymbol{\pi} = (\pi_1, \ldots, \pi_S)\)</span> over the <span class="math inline">\(S\)</span> states is a <strong>stationary distribution</strong> of the chain with transition matrix <span class="math inline">\(\mathbf{P}\)</span> if <span class="math display">\[
+\boldsymbol{\pi} \mathbf{P} = \boldsymbol{\pi}, \qquad \text{that is,} \qquad \sum_{i} \pi_i P_{ij} = \pi_j \quad \text{for every state } j.
+\]</span> If <span class="math inline">\(X^{(t)}\)</span> is distributed according to <span class="math inline">\(\boldsymbol{\pi}\)</span>, then so is <span class="math inline">\(X^{(t+1)}\)</span>, and so is every later state.</p>
+</div>
+<p>The definition says that <span class="math inline">\(\boldsymbol{\pi}\)</span> is a fixed point of the update <span class="math inline">\(\boldsymbol{\mu} \mapsto \boldsymbol{\mu} \mathbf{P}\)</span>. If you start the chain by drawing <span class="math inline">\(X^{(0)}\)</span> from <span class="math inline">\(\boldsymbol{\pi}\)</span>, the distribution of the state never changes, even though the state itself keeps moving. For a population of diary keepers following this model, the expected proportions in the three moods would then remain constant. Realized proportions in a finite population can still fluctuate. The word stationary describes the distribution, not an unchanging individual mood. We first solve its defining equations, then compare matrix powers and simulated frequencies.</p>
+<p><strong>Solve the equation.</strong> Write <span class="math inline">\(h\)</span>, <span class="math inline">\(u\)</span>, and <span class="math inline">\(s\)</span> for the stationary probabilities of happy, neutral, and sad. The first stationary equation and <span class="math inline">\(h+u+s=1\)</span> give <span class="math display">\[
+h=0.70h+0.20u+0.20s=0.70h+0.20(1-h),
+\qquad 0.50h=0.20,
+\]</span> so <span class="math inline">\(h=0.40\)</span>. The neutral equation is <span class="math display">\[
+u=0.25(0.40)+0.50u+0.40(0.60-u)
+=0.34+0.10u.
+\]</span> Thus <span class="math inline">\(u=0.34/0.90=17/45\)</span>, and <span class="math inline">\(s=0.60-17/45=2/9\)</span>. The stationary vector is <span class="math inline">\((0.40,17/45,2/9)\)</span>.</p>
+<p>For a larger matrix, eigenvectors provide a numerical way to solve the same equation. The condition <span class="math inline">\(\boldsymbol{\pi} \mathbf{P} = \boldsymbol{\pi}\)</span> says that <span class="math inline">\(\boldsymbol{\pi}\)</span> is a <em>left</em> eigenvector of <span class="math inline">\(\mathbf{P}\)</span> with eigenvalue 1. Equivalently, transposing both sides, <span class="math inline">\(\boldsymbol{\pi}^\top\)</span> is an ordinary (right) eigenvector of <span class="math inline">\(\mathbf{P}^\top\)</span>, which is what <code>eigen()</code> computes. If you have encountered principal component analysis (PCA), the operation may be familiar. PCA finds eigenvectors of a covariance matrix to identify directions of variation. Here the matrix is <span class="math inline">\(\mathbf P^\top\)</span>, and an eigenvalue of one identifies a vector unchanged by the probability update. We rescale that eigenvector so its entries sum to one; no knowledge of PCA is needed for this calculation.</p>
+<p>The function below is used for chains with a unique stationary distribution. If there are several stationary distributions, the eigenvalue-one condition alone does not select a particular mixture.</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>stationary <span class="ot">&lt;-</span> <span class="cf">function</span>(P) {</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  e <span class="ot">&lt;-</span> <span class="fu">eigen</span>(<span class="fu">t</span>(P))</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  k <span class="ot">&lt;-</span> <span class="fu">which.min</span>(<span class="fu">abs</span>(e<span class="sc">$</span>values <span class="sc">-</span> <span class="dv">1</span>))     <span class="co"># the eigenvalue equal to 1</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  v <span class="ot">&lt;-</span> <span class="fu">Re</span>(e<span class="sc">$</span>vectors[, k])</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">setNames</span>(v <span class="sc">/</span> <span class="fu">sum</span>(v), <span class="fu">rownames</span>(P))</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>pi_mood <span class="ot">&lt;-</span> <span class="fu">stationary</span>(P)</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>pi_mood</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     happy   neutral       sad </span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 0.4000000 0.3777778 0.2222222</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>For this chain, long-run frequencies approach about 40% of days are happy, 38% neutral, and 22% sad. We can check the defining equation directly:</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>pi_mood <span class="sc">%*%</span> P</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      happy   neutral       sad</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1,]   0.4 0.3777778 0.2222222</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><strong>Raise <span class="math inline">\(\mathbf{P}\)</span> to a large power.</strong> For this chain, each row approaches the stationary vector as the power increases. The rows agree approximately, rather than becoming exactly equal after a finite number of transitions. The conditions supporting this approximation are stated in the next section.</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mat_power</span>(P, <span class="dv">50</span>)[<span class="dv">1</span>, ]</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     happy   neutral       sad </span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 0.4000000 0.3777778 0.2222222</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><strong>Run the chain and count.</strong> The third way is the one that matters for the rest of the book. Simulate a long diary, and count how often each mood occurs:</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">84735</span>)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>long_diary <span class="ot">&lt;-</span> <span class="fu">simulate_chain</span>(P, <span class="at">init =</span> <span class="st">"sad"</span>, <span class="at">n_iter =</span> <span class="dv">20000</span>)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>freq_mood <span class="ot">&lt;-</span> <span class="fu">table</span>(<span class="fu">factor</span>(long_diary[<span class="sc">-</span><span class="dv">1</span>], <span class="at">levels =</span> moods)) <span class="sc">/</span> (<span class="fu">length</span>(long_diary) <span class="sc">-</span> <span class="dv">1</span>)</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>freq_mood</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   happy neutral     sad </span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 0.39535 0.37980 0.22485</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>The simulated frequencies approximate <span class="math inline">\(\boldsymbol{\pi}\)</span> (<a href="#fig-three-ways" class="quarto-xref">Figure&nbsp;<span>3.2</span></a>). We omit the initial state when counting the 20,000 generated states. Unlike the eigenvector and matrix-power calculations, these estimates vary from simulation to simulation. The ergodic theorem below explains why averaging along an appropriate chain can estimate properties of its stationary distribution.</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tibble</span>(<span class="at">mood =</span> <span class="fu">factor</span>(<span class="fu">rep</span>(moods, <span class="dv">3</span>), <span class="at">levels =</span> moods),</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>       <span class="at">method =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"Eigenvector"</span>, <span class="st">"Matrix power"</span>, <span class="st">"Simulated frequencies"</span>), <span class="at">each =</span> <span class="dv">3</span>),</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>       <span class="at">probability =</span> <span class="fu">c</span>(pi_mood, <span class="fu">mat_power</span>(P, <span class="dv">50</span>)[<span class="dv">1</span>, ], <span class="fu">as.numeric</span>(freq_mood))) <span class="sc">|&gt;</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(mood, probability, <span class="at">fill =</span> method)) <span class="sc">+</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> <span class="fl">0.7</span>), <span class="at">width =</span> <span class="fl">0.6</span>) <span class="sc">+</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"#552E6B"</span>, <span class="st">"#9E7BB5"</span>, <span class="st">"#ECECEC"</span>), <span class="at">name =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="st">"Probability"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div id="fig-three-ways" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-three-ways-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="03-markov-chains_files/figure-html/fig-three-ways-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-three-ways-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3.2: Stationary probabilities from an eigenvector calculation and a large matrix power, compared with frequency estimates from 20,000 generated states. The simulated frequencies have Monte Carlo error.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>How quickly does the starting distribution matter less? <a href="#fig-forgetting" class="quarto-xref">Figure&nbsp;<span>3.3</span></a> follows all three mood probabilities from each possible initial state, using <a href="#eq-state-distribution" class="quarto-xref">Equation&nbsp;<span>3.1</span></a>. These are calculated probabilities, not three simulated diary paths.</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>forgetting <span class="ot">&lt;-</span> <span class="fu">expand_grid</span>(<span class="at">start =</span> moods, <span class="at">day =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">12</span>) <span class="sc">|&gt;</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">distribution =</span> <span class="fu">map2</span>(start, day, \(s, t) {</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    mu0 <span class="ot">&lt;-</span> <span class="fu">setNames</span>(<span class="fu">as.numeric</span>(moods <span class="sc">==</span> s), moods)</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">drop</span>(mu0 <span class="sc">%*%</span> <span class="fu">mat_power</span>(P, t))</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  })) <span class="sc">|&gt;</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest_wider</span>(distribution) <span class="sc">|&gt;</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="fu">all_of</span>(moods), <span class="at">names_to =</span> <span class="st">"mood"</span>, <span class="at">values_to =</span> <span class="st">"probability"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">mood =</span> <span class="fu">factor</span>(mood, <span class="at">levels =</span> moods, <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Happy"</span>, <span class="st">"Neutral"</span>, <span class="st">"Sad"</span>)))</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>stationary_lines <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">mood =</span> <span class="fu">factor</span>(<span class="fu">c</span>(<span class="st">"Happy"</span>, <span class="st">"Neutral"</span>, <span class="st">"Sad"</span>),</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>                                        <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Happy"</span>, <span class="st">"Neutral"</span>, <span class="st">"Sad"</span>)),</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>                           <span class="at">probability =</span> <span class="fu">as.numeric</span>(pi_mood))</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(forgetting, <span class="fu">aes</span>(day, probability, <span class="at">color =</span> start, <span class="at">linetype =</span> start)) <span class="sc">+</span></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">data =</span> stationary_lines, <span class="fu">aes</span>(<span class="at">yintercept =</span> probability),</span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>             <span class="at">linetype =</span> <span class="st">"dotted"</span>, <span class="at">inherit.aes =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> mood) <span class="sc">+</span></span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"happy"</span> <span class="ot">=</span> <span class="st">"#552E6B"</span>, <span class="st">"neutral"</span> <span class="ot">=</span> <span class="st">"#9E7BB5"</span>, <span class="st">"sad"</span> <span class="ot">=</span> <span class="st">"gray50"</span>), <span class="at">name =</span> <span class="st">"Initial mood"</span>) <span class="sc">+</span></span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_linetype_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"happy"</span> <span class="ot">=</span> <span class="st">"solid"</span>, <span class="st">"neutral"</span> <span class="ot">=</span> <span class="st">"dashed"</span>, <span class="st">"sad"</span> <span class="ot">=</span> <span class="st">"dotdash"</span>), <span class="at">name =</span> <span class="st">"Initial mood"</span>) <span class="sc">+</span></span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">6</span>, <span class="dv">12</span>)) <span class="sc">+</span></span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Day t"</span>, <span class="at">y =</span> <span class="st">"State probability"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div id="fig-forgetting" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-forgetting-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="03-markov-chains_files/figure-html/fig-forgetting-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-forgetting-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3.3: State probabilities from each of the three fixed initial moods. Thin black dotted lines mark the stationary probabilities. In the Happy panel, the neutral and sad starts produce exactly the same curve, so only two distinct colored curves are visible. The other panels show how these starts differ for the remaining moods.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>The overlapping curves in the Happy panel have a numerical explanation. A neutral or sad day is followed by a happy day with the same probability, 0.20. If <span class="math inline">\(p_t=P(X^{(t)}=\text{happy})\)</span>, then <span class="math display">\[
+p_{t+1}=0.70p_t+0.20(1-p_t)=0.20+0.50p_t.
+\]</span> Neutral and sad starts both have <span class="math inline">\(p_0=0\)</span>, so their happy-state probabilities agree at every time. Subtract the stationary happy probability, 0.40, from the update: <span class="math display">\[
+p_{t+1}-0.40=0.50(p_t-0.40),
+\qquad
+p_t=0.40+0.50^t(p_0-0.40).
+\]</span> For a happy start, the sequence begins <span class="math inline">\(1,0.70,0.55,0.475\)</span>. The difference from 0.40 halves at each transition. This explains the rate in this particular panel.</p>
+<p>Eigenvalues connect this repeated multiplication to the matrix calculation. The eigenvalues of <span class="math inline">\(\mathbf P\)</span> are 1, 0.5, and 0.1. The eigenvalue 1 corresponds to the stationary vector. In this example, the other components shrink at rates <span class="math inline">\(0.5^t\)</span> and <span class="math inline">\(0.1^t\)</span>. A component multiplied by 0.99 at each transition would decline much more slowly; after 100 transitions it would retain about 37% of its initial size, because <span class="math inline">\(0.99^{100}\approx0.37\)</span>. Eigenvalues near one in absolute value can therefore indicate slow decay of initial differences.</p>
+<p>Discarding initial states is one way to reduce the effect of an arbitrary start when estimating posterior summaries. It does not make later states independent. In <a href="04-diagnosing-markov-chains.html" class="quarto-xref"><span>Chapter 4</span></a>, warm-up also includes the adaptation of sampler settings.</p>
+</section>
+<section id="irreducibility-aperiodicity-and-convergence" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="irreducibility-aperiodicity-and-convergence"><span class="header-section-number">3.3</span> Irreducibility, aperiodicity, and convergence</h2>
+<p>The mood chain has a unique stationary distribution, and its state distribution approaches that distribution from every start. Every finite-state chain has at least one stationary distribution, but uniqueness and convergence require further conditions. The following examples separate those questions.</p>
+<p><strong>A chain with two closed groups of states.</strong> Consider a model with two types of diary keepers. Type A can be happy or neutral; type B can be sad or gloomy. In this model a person’s type stays fixed. Combining the four moods into one transition matrix gives two groups between which an individual chain cannot move:</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>P_split <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="fl">0.7</span>, <span class="fl">0.3</span>, <span class="fl">0.0</span>, <span class="fl">0.0</span>,</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>                    <span class="fl">0.4</span>, <span class="fl">0.6</span>, <span class="fl">0.0</span>, <span class="fl">0.0</span>,</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>                    <span class="fl">0.0</span>, <span class="fl">0.0</span>, <span class="fl">0.5</span>, <span class="fl">0.5</span>,</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>                    <span class="fl">0.0</span>, <span class="fl">0.0</span>, <span class="fl">0.2</span>, <span class="fl">0.8</span>),</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>                  <span class="at">nrow =</span> <span class="dv">4</span>, <span class="at">byrow =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>                  <span class="at">dimnames =</span> <span class="fu">list</span>(<span class="fu">c</span>(<span class="st">"happy"</span>, <span class="st">"neutral"</span>, <span class="st">"sad"</span>, <span class="st">"gloomy"</span>),</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>                                  <span class="fu">c</span>(<span class="st">"happy"</span>, <span class="st">"neutral"</span>, <span class="st">"sad"</span>, <span class="st">"gloomy"</span>)))</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="fu">mat_power</span>(P_split, <span class="dv">50</span>)</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;             happy   neutral       sad    gloomy</span></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; happy   0.5714286 0.4285714 0.0000000 0.0000000</span></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; neutral 0.5714286 0.4285714 0.0000000 0.0000000</span></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; sad     0.0000000 0.0000000 0.2857143 0.7142857</span></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; gloomy  0.0000000 0.0000000 0.2857143 0.7142857</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Rows for type A approach <span class="math inline">\((4/7,3/7,0,0)\)</span>, while rows for type B approach <span class="math inline">\((0,0,2/7,5/7)\)</span>. Each vector is stationary, and any weighted average of the two is stationary as well. Starting in one group does not tell us the distribution of states in the other group.</p>
+<p>This chain is <strong>reducible</strong>. A chain is <strong>irreducible</strong> if every state can be reached from every other in some finite number of transitions with positive probability. The mood chain with three states is irreducible, because every entry of its matrix is positive.</p>
+<p><strong>A chain that never settles.</strong> Now suppose a diary keeper’s moods alternate: a happy day is always followed by a sad one, and a sad day by a happy one.</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>P_swing <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>,</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>                    <span class="dv">1</span>, <span class="dv">0</span>),</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>                  <span class="at">nrow =</span> <span class="dv">2</span>, <span class="at">byrow =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>                  <span class="at">dimnames =</span> <span class="fu">list</span>(<span class="fu">c</span>(<span class="st">"happy"</span>, <span class="st">"sad"</span>), <span class="fu">c</span>(<span class="st">"happy"</span>, <span class="st">"sad"</span>)))</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="fu">mat_power</span>(P_swing, <span class="dv">7</span>)</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;       happy sad</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; happy     0   1</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; sad       1   0</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a><span class="fu">mat_power</span>(P_swing, <span class="dv">8</span>)</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;       happy sad</span></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; happy     1   0</span></span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; sad       0   1</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>This chain is irreducible and has the unique stationary distribution <span class="math inline">\((0.5,0.5)\)</span>. Check it by multiplication: <span class="math display">\[
+(0.5,0.5)\begin{pmatrix}0&amp;1\\1&amp;0\end{pmatrix}=(0.5,0.5).
+\]</span> The stationary equation can hold even when the distribution from a fixed starting state oscillates. But <span class="math inline">\(\mathbf{P}^t\)</span> never converges: it is <span class="math inline">\(\mathbf{P}\)</span> for odd <span class="math inline">\(t\)</span> and the identity for even <span class="math inline">\(t\)</span>. Started on a happy day, the chain is happy on every even day with certainty, forever (<a href="#fig-periodic" class="quarto-xref">Figure&nbsp;<span>3.4</span></a>). From that fixed initial state, the distribution of <span class="math inline">\(X^{(t)}\)</span> does not approach <span class="math inline">\(\boldsymbol{\pi}\)</span>. Starting with <span class="math inline">\(\boldsymbol\pi=(0.5,0.5)\)</span> would be different: That distribution is already stationary.</p>
+<p>This chain is <strong>periodic</strong> with period 2: it can only return to a state after an even number of steps.</p>
+<p>The period of a state is the greatest common divisor of its possible positive return times: The largest integer dividing every such time. Return times 2, 4, 6, and so on have common divisor 2. If returns are possible in both 2 and 3 transitions, their greatest common divisor is 1. A chain is <strong>aperiodic</strong> when every state has period 1.</p>
+<p>A useful sufficient condition in an irreducible chain is a self-loop. If some <span class="math inline">\(P_{ii} &gt; 0\)</span>, the chain can return to <span class="math inline">\(i\)</span> in one step, so the period of <span class="math inline">\(i\)</span> is 1, and in an irreducible chain all states share the same period. The mood chain has positive entries on its diagonal, so it is aperiodic.</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>p_happy <span class="ot">&lt;-</span> <span class="cf">function</span>(P, start, t) {</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  mu0 <span class="ot">&lt;-</span> <span class="fu">setNames</span>(<span class="fu">as.numeric</span>(<span class="fu">rownames</span>(P) <span class="sc">==</span> start), <span class="fu">rownames</span>(P))</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  (mu0 <span class="sc">%*%</span> <span class="fu">mat_power</span>(P, t))[<span class="dv">1</span>, <span class="st">"happy"</span>]</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="fu">bind_rows</span>(</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tibble</span>(<span class="at">chain =</span> <span class="st">"Mood chain"</span>, <span class="at">day =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">12</span>,</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">p =</span> <span class="fu">map_dbl</span>(day, \(t) <span class="fu">p_happy</span>(P, <span class="st">"happy"</span>, t)), <span class="at">pi =</span> pi_mood[<span class="st">"happy"</span>]),</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tibble</span>(<span class="at">chain =</span> <span class="st">"Alternating chain"</span>, <span class="at">day =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">12</span>,</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>         <span class="at">p =</span> <span class="fu">map_dbl</span>(day, \(t) <span class="fu">p_happy</span>(P_swing, <span class="st">"happy"</span>, t)), <span class="at">pi =</span> <span class="fl">0.5</span>)</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">chain =</span> <span class="fu">factor</span>(chain, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Mood chain"</span>, <span class="st">"Alternating chain"</span>))) <span class="sc">|&gt;</span></span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(day, p)) <span class="sc">+</span></span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="fu">aes</span>(<span class="at">yintercept =</span> pi), <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">color =</span> <span class="st">"#552E6B"</span>) <span class="sc">+</span> <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">"#552E6B"</span>) <span class="sc">+</span></span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> chain) <span class="sc">+</span></span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">12</span>, <span class="at">by =</span> <span class="dv">2</span>)) <span class="sc">+</span></span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Day t"</span>, <span class="at">y =</span> <span class="fu">expression</span>(<span class="fu">P</span>(X<span class="sc">^</span>(t) <span class="sc">==</span> <span class="st">"happy"</span>)))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div id="fig-periodic" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-periodic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="03-markov-chains_files/figure-html/fig-periodic-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-periodic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3.4: <span class="math inline">\(P(X^{(t)} = \text{happy})\)</span> for a chain started on a happy day: the mood chain (left) converges to <span class="math inline">\(\pi_{\text{happy}}\)</span>, the alternating chain (right) swings between 1 and 0 forever, even though <span class="math inline">\(\boldsymbol{\pi} = (0.5, 0.5)\)</span> is its stationary distribution.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="bookbox bookgraybox">
+<div class="title">
+<p>The convergence theorem</p>
+</div>
+<p>Let <span class="math inline">\(\mathbf{P}\)</span> be the transition matrix of a Markov chain on a finite state space.</p>
+<ul>
+<li>If the chain is <strong>irreducible</strong>, it has exactly one stationary distribution <span class="math inline">\(\boldsymbol{\pi}\)</span>, and every state has <span class="math inline">\(\pi_i &gt; 0\)</span>.</li>
+<li>If the chain is also <strong>aperiodic</strong>, then <span class="math inline">\(\boldsymbol{\mu}^{(0)} \mathbf{P}^t \to \boldsymbol{\pi}\)</span> as <span class="math inline">\(t \to \infty\)</span> for every starting distribution <span class="math inline">\(\boldsymbol{\mu}^{(0)}\)</span>. Equivalently, every row of <span class="math inline">\(\mathbf{P}^t\)</span> converges to <span class="math inline">\(\boldsymbol{\pi}\)</span>.</li>
+</ul>
+</div>
+<p>These finite-state results are developed in <span class="citation" data-cites="norris1997markov">Norris (<a href="../references.html#ref-norris1997markov" role="doc-biblioref">1997</a>)</span> and <span class="citation" data-cites="robert2004monte">Robert &amp; Casella (<a href="../references.html#ref-robert2004monte" role="doc-biblioref">2004, Chapter 6</a>)</span>. The examples illustrate why both conditions matter. The split chain has more than one stationary distribution; the alternating chain has one, but does not converge to it from a fixed state. In the sampling construction later in this chapter, we check stationarity, irreducibility, and aperiodicity separately.</p>
+<div class="quiz bookgraybox">
+<div class="title">
+<p>Quiz yourself!</p>
+</div>
+<p>A chain on three states has transition matrix <span class="math display">\[
+\mathbf{P} = \begin{pmatrix} 0 &amp; 1 &amp; 0 \\ 0 &amp; 0 &amp; 1 \\ 1 &amp; 0 &amp; 0 \end{pmatrix}.
+\]</span> Is it irreducible? What are the possible return times, and is it aperiodic? Check whether <span class="math inline">\((1/3,1/3,1/3)\)</span> is stationary by multiplying it by <span class="math inline">\(\mathbf P\)</span>. Starting from <span class="math inline">\(\boldsymbol\mu^{(0)}=(1,0,0)\)</span>, does the state distribution converge to that vector? Use the theorem to explain your conclusions.</p>
+</div>
+</section>
+<section id="the-ergodic-theorem" class="level2" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="the-ergodic-theorem"><span class="header-section-number">3.4</span> The ergodic theorem</h2>
+<p>Convergence of <span class="math inline">\(\boldsymbol{\mu}^{(t)}\)</span> to <span class="math inline">\(\boldsymbol{\pi}\)</span> is a statement about the distribution of the state on a single day <span class="math inline">\(t\)</span>. For Monte Carlo estimation, we usually average over many states from one chain, as in the calculation of <code>freq_mood</code>. The <strong>ergodic theorem</strong> establishes the convergence of these time averages. It is the Markov chain version of the law of large numbers from <a href="01-probability-and-simulation.html" class="quarto-xref"><span>Chapter 1</span></a>.</p>
+<div class="bookbox bookgraybox">
+<div class="title">
+<p>The ergodic theorem (informal)</p>
+</div>
+<p>Let <span class="math inline">\(X^{(0)}, X^{(1)}, \ldots\)</span> be an irreducible Markov chain on a finite state space with stationary distribution <span class="math inline">\(\boldsymbol{\pi}\)</span>, and let <span class="math inline">\(h\)</span> be any function of the state. Then, whatever the starting state, <span class="math display">\[
+\frac{1}{N} \sum_{t=1}^{N} h\!\left(X^{(t)}\right) \;\longrightarrow\; \sum_{i} h(i)\, \pi_i \qquad \text{as } N \to \infty.
+\]</span> <span class="math inline">\(N\)</span> is the number of sampled states included in the average. Long-run averages along one chain converge to expectations under the stationary distribution.</p>
+</div>
+<p>Take <span class="math inline">\(h(i) = 1\)</span> if <span class="math inline">\(i\)</span> is happy and <span class="math inline">\(0\)</span> otherwise. The theorem says that the fraction of happy days in a long diary converges to <span class="math inline">\(\pi_{\text{happy}}\)</span>, which is what <a href="#fig-three-ways" class="quarto-xref">Figure&nbsp;<span>3.2</span></a> showed. <a href="#fig-running-average" class="quarto-xref">Figure&nbsp;<span>3.5</span></a> shows the convergence in progress: three diaries of 2,000 transitions, started in the three moods, and for each the running fraction of happy days over the 2,001 days including day zero. Here the running fractions include the initial state, so they begin at 1, 0, and 0. Including one initial value does not change their limiting values, although finite-simulation estimates differ.</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">84735</span>)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>running <span class="ot">&lt;-</span> <span class="fu">map</span>(moods, \(s) {</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="fu">simulate_chain</span>(P, <span class="at">init =</span> s, <span class="at">n_iter =</span> <span class="dv">2000</span>)</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tibble</span>(<span class="at">start =</span> s, <span class="at">day =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">2000</span>, <span class="at">running_mean =</span> <span class="fu">cummean</span>(x <span class="sc">==</span> <span class="st">"happy"</span>))</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>}) <span class="sc">|&gt;</span> <span class="fu">list_rbind</span>()</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(running, <span class="fu">aes</span>(day, running_mean, <span class="at">color =</span> start)) <span class="sc">+</span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> pi_mood[<span class="st">"happy"</span>], <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"#552E6B"</span>, <span class="st">"#9E7BB5"</span>, <span class="st">"gray50"</span>), <span class="at">name =</span> <span class="st">"Started"</span>) <span class="sc">+</span></span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_cartesian</span>(<span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Day"</span>, <span class="at">y =</span> <span class="st">"Fraction of happy days"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div id="fig-running-average" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-running-average-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="03-markov-chains_files/figure-html/fig-running-average-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-running-average-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3.5: Running fraction of happy days in three simulated diaries of 2,000 transitions, one started in each mood. The dashed line is <span class="math inline">\(\pi_{\text{happy}}\)</span>. The finite-run estimates fluctuate; the finite-state ergodic theorem establishes their common limiting value.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>The alternating chain illustrates the difference between the two kinds of convergence. Starting happy, its state distribution alternates forever between <span class="math inline">\((1,0)\)</span> and <span class="math inline">\((0,1)\)</span>. Its time average of the happy-state indicator nevertheless approaches 0.5. Aperiodicity is needed for the finite-state distribution-convergence result, but not for this finite-state ergodic theorem.</p>
+<p>Dependence also does not invalidate the time-average result. It does affect numerical precision. To isolate that effect, compare 365 observations from the mood chain with 365 independent draws from its stationary distribution. We draw the chain’s initial state from <span class="math inline">\(\boldsymbol\pi\)</span> so that all 365 states have that marginal distribution and the comparison is not confounded by a fixed starting mood.</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">84735</span>)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>one_year <span class="ot">&lt;-</span> <span class="cf">function</span>() {</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  initial_mood <span class="ot">&lt;-</span> <span class="fu">sample</span>(moods, <span class="at">size =</span> <span class="dv">1</span>, <span class="at">prob =</span> pi_mood)</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  chain <span class="ot">&lt;-</span> <span class="fu">simulate_chain</span>(P, <span class="at">init =</span> initial_mood, <span class="at">n_iter =</span> <span class="dv">364</span>)</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>  iid   <span class="ot">&lt;-</span> <span class="fu">sample</span>(moods, <span class="at">size =</span> <span class="dv">365</span>, <span class="at">replace =</span> <span class="cn">TRUE</span>, <span class="at">prob =</span> pi_mood)</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="at">chain =</span> <span class="fu">mean</span>(chain <span class="sc">==</span> <span class="st">"happy"</span>), <span class="at">iid =</span> <span class="fu">mean</span>(iid <span class="sc">==</span> <span class="st">"happy"</span>))</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>years <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">500</span>, \(i) <span class="fu">one_year</span>()) <span class="sc">|&gt;</span> <span class="fu">bind_rows</span>()</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>years <span class="sc">|&gt;</span> <span class="fu">summarize</span>(<span class="fu">across</span>(<span class="fu">everything</span>(), <span class="fu">list</span>(<span class="at">mean =</span> mean, <span class="at">sd =</span> sd)))</span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 1 × 4</span></span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   chain_mean chain_sd iid_mean iid_sd</span></span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;        &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt;</span></span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1      0.401   0.0422    0.401 0.0247</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Both estimates have expectation <span class="math inline">\(\pi_{\text{happy}}\)</span>. In this experiment, the standard deviation across the dependent-chain estimates is about 1.7 times the standard deviation across the independent estimates. The persistence of moods makes the chain estimates more variable. The ergodic theorem establishes their limiting behavior, but does not supply a standard error for a finite run. <a href="04-diagnosing-markov-chains.html" class="quarto-xref"><span>Chapter 4</span></a> develops effective sample size and Monte Carlo standard errors for dependent draws.</p>
+</section>
+<section id="detailed-balance" class="level2" data-number="3.5">
+<h2 data-number="3.5" class="anchored" data-anchor-id="detailed-balance"><span class="header-section-number">3.5</span> Detailed balance</h2>
+<p>So far, we have specified a transition matrix and investigated its stationary distribution. For posterior simulation, we work in the other direction. We specify the target distribution and choose transitions that preserve it. Many different transition matrices can have the same stationary distribution. <strong>Detailed balance</strong> provides a convenient way to construct one of them.</p>
+<p>Suppose the current state has distribution <span class="math inline">\(\boldsymbol\pi\)</span>. The product <span class="math inline">\(\pi_iP_{ij}\)</span> is the joint probability of being in <span class="math inline">\(i\)</span> now and in <span class="math inline">\(j\)</span> next. It can also be interpreted as an expected fraction of transitions in a large population of diary keepers. We call it the probability <strong>flow</strong> from <span class="math inline">\(i\)</span> to <span class="math inline">\(j\)</span> <span class="citation" data-cites="hanada2022mcmc">(<a href="../references.html#ref-hanada2022mcmc" role="doc-biblioref">Hanada &amp; Matsuura, 2022, Section 3.4</a>)</span>. Stationarity says that the total flow into each state equals the total flow out of it, so that no state gains or loses probability: <span class="math display">\[
+\underbrace{\sum_{i} \pi_i P_{ij}}_{\text{flow into } j} = \pi_j = \underbrace{\sum_{k} \pi_j P_{jk}}_{\text{flow out of } j}.
+\]</span> This is a <strong>balance</strong> condition: it constrains the sums. <strong>Detailed</strong> balance asks for more, namely that the flow between each <em>pair</em> of states is the same in both directions.</p>
+<div class="bookbox bookgraybox">
+<div class="title">
+<p>Detailed balance</p>
+</div>
+<p>A transition matrix <span class="math inline">\(\mathbf{P}\)</span> satisfies <strong>detailed balance</strong> with respect to a probability vector <span class="math inline">\(\boldsymbol{\pi}\)</span> if <span class="math display">\[
+\pi_i P_{ij} = \pi_j P_{ji} \qquad \text{for all states } i, j.
+\]</span> If detailed balance holds, then <span class="math inline">\(\boldsymbol{\pi}\)</span> is a stationary distribution of the chain.</p>
+</div>
+<p>To show why detailed balance implies stationarity, fix any next state <span class="math inline">\(j\)</span> and sum over the current states <span class="math inline">\(i\)</span>: <span class="math display">\[
+\sum_{i} \pi_i P_{ij} = \sum_{i} \pi_j P_{ji} = \pi_j \sum_{i} P_{ji} = \pi_j.
+\]</span> The first equality is detailed balance, applied to every term. The second pulls <span class="math inline">\(\pi_j\)</span> out of the sum, because it does not depend on <span class="math inline">\(i\)</span>. The third uses that row <span class="math inline">\(j\)</span> of <span class="math inline">\(\mathbf{P}\)</span> sums to one. The left-hand side is the <span class="math inline">\(j\)</span>th entry of <span class="math inline">\(\boldsymbol{\pi} \mathbf{P}\)</span>, so we have shown <span class="math inline">\(\boldsymbol{\pi} \mathbf{P} = \boldsymbol{\pi}\)</span>. Thus pairwise balance ensures that the total probability arriving in each state equals its stationary probability. The proof uses the row-sum condition as well as detailed balance.</p>
+<p>Detailed balance is <em>sufficient</em> for stationarity, not necessary. The mood chain is an example. Its stationary distribution certainly balances, but look at the flows in each direction:</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>flow <span class="ot">&lt;-</span> P</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_len</span>(<span class="fu">nrow</span>(P))) {</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  flow[i, ] <span class="ot">&lt;-</span> pi_mood[i] <span class="sc">*</span> P[i, ]</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(flow, <span class="dv">3</span>)</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;         happy neutral   sad</span></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; happy   0.280   0.100 0.020</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; neutral 0.076   0.189 0.113</span></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; sad     0.044   0.089 0.089</span></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(flow <span class="sc">-</span> <span class="fu">t</span>(flow), <span class="dv">3</span>)       <span class="co"># zero everywhere if detailed balance holds</span></span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;          happy neutral    sad</span></span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; happy    0.000   0.024 -0.024</span></span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; neutral -0.024   0.000  0.024</span></span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; sad      0.024  -0.024  0.000</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>The loop multiplies every entry in row <span class="math inline">\(i\)</span> by <span class="math inline">\(\pi_i\)</span>. For example, the happy-to-neutral flow is <span class="math inline">\(0.40\times0.25=0.10\)</span>, whereas the neutral-to-happy flow is <span class="math inline">\((17/45)\times0.20\approx0.0756\)</span>. Transposing the matrix reverses each pair of states, so <code>flow - t(flow)</code> compares the two directions.</p>
+<div class="quiz bookgraybox">
+<div class="title">
+<p>Quiz yourself!</p>
+</div>
+<p>What does a positive entry in <code>flow - t(flow)</code> mean? Why are its diagonal entries zero even when detailed balance fails? Would zero column sums of this difference be enough to establish detailed balance?</p>
+</div>
+<p>More diary keepers go from happy to neutral each day than from neutral to happy, more go from neutral to sad than back, and more go from sad to happy than the other way. The flows do not match pairwise; instead there is a steady circulation happy <span class="math inline">\(\to\)</span> neutral <span class="math inline">\(\to\)</span> sad <span class="math inline">\(\to\)</span> happy, of about 0.024 of the population per day, and every state still receives as much as it gives. A chain satisfying detailed balance is <strong>reversible</strong> when started in its stationary distribution. Reversing the order of a stationary sequence does not change its joint probability law. The mood model has a stationary distribution but does not satisfy detailed balance, so reversibility is not required for stationarity.</p>
+<section id="what-detailed-balance-guarantees" class="level3" data-number="3.5.1">
+<h3 data-number="3.5.1" class="anchored" data-anchor-id="what-detailed-balance-guarantees"><span class="header-section-number">3.5.1</span> What detailed balance guarantees</h3>
+<p>Detailed balance implies that the specified target distribution is stationary. It does <strong>not</strong> imply irreducibility or aperiodicity.</p>
+<ul>
+<li>The identity matrix leaves every state where it is. It satisfies detailed balance for any target vector, because all flows between different states are zero. Yet it is reducible and cannot explore the target.</li>
+<li>The alternating two-state chain satisfies detailed balance for <span class="math inline">\((0.5,0.5)\)</span>, because the flow in either direction is 0.5. It is irreducible but periodic.</li>
+</ul>
+<p>For a finite-state sampler, the checks therefore serve different purposes:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Check</th>
+<th>What it establishes</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Detailed balance with the target</td>
+<td>The target is stationary</td>
+</tr>
+<tr class="even">
+<td>Irreducibility</td>
+<td>There is a unique stationary distribution; time averages converge to its expectations</td>
+</tr>
+<tr class="odd">
+<td>Irreducibility and aperiodicity</td>
+<td>State distributions approach the stationary distribution from any start</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="choosing-transitions-for-a-target" class="level3" data-number="3.5.2">
+<h3 data-number="3.5.2" class="anchored" data-anchor-id="choosing-transitions-for-a-target"><span class="header-section-number">3.5.2</span> Choosing transitions for a target</h3>
+<p>Consider a target with two states and probabilities <span class="math inline">\(\boldsymbol\pi=(0.25,0.75)\)</span>. We can choose <span class="math inline">\(P_{12}=0.30\)</span> and determine the reverse probability from detailed balance: <span class="math display">\[
+0.25\times0.30=0.75\times P_{21},\qquad P_{21}=0.10.
+\]</span> Complete each row by assigning its remaining probability to staying in the same state: <span class="math display">\[
+\mathbf P_* =\begin{pmatrix}0.70&amp;0.30\\0.10&amp;0.90\end{pmatrix}.
+\]</span> Both cross-state flows are 0.075. Direct multiplication confirms that <span class="math inline">\((0.25,0.75)\mathbf P_*=(0.25,0.75)\)</span>. The chain is also irreducible, because both cross-state transitions have positive probability, and aperiodic, because it can stay in a state.</p>
+<p>The choice is not unique. Smaller cross-state transition probabilities can satisfy the same equation but produce a slower-moving chain. In general, for positive target probabilities and a pair of permitted moves, detailed balance can be written <span class="math display">\[
+\frac{P_{ij}}{P_{ji}}=\frac{\pi_j}{\pi_i}.
+\]</span> If the target is known up to a common normalizing constant, that constant cancels in the ratio on the right. We can therefore design transitions using relative target weights. The grid construction below applies this idea to a posterior.</p>
+<div class="quiz bookgraybox">
+<div class="title">
+<p>Quiz yourself!</p>
+</div>
+<p>A chain has only two states, with <span class="math inline">\(P_{12} = a\)</span> and <span class="math inline">\(P_{21} = b\)</span>, both positive. Find its stationary distribution, and show that every such two-state chain satisfies detailed balance. Why is the three-state mood chain different?</p>
+</div>
+</section>
+</section>
+<section id="sec-transition-kernels" class="level2" data-number="3.6">
+<h2 data-number="3.6" class="anchored" data-anchor-id="sec-transition-kernels"><span class="header-section-number">3.6</span> From transition matrices to transition kernels</h2>
+<p>Most parameters in this book take values in intervals or in a continuous space with several coordinates. We can no longer list a transition probability for each possible next value in a finite matrix. Instead, a <strong>transition kernel</strong> specifies the distribution of the next state given the current state.</p>
+<section id="a-normal-transition-example" class="level3" data-number="3.6.1">
+<h3 data-number="3.6.1" class="anchored" data-anchor-id="a-normal-transition-example"><span class="header-section-number">3.6.1</span> A Normal transition example</h3>
+<p>Suppose the transition rule is <span class="math display">\[
+\theta^{(t+1)}=0.6\theta^{(t)}+0.8Z^{(t+1)},
+\qquad Z^{(t+1)}\sim\text{N}(0,1),
+\]</span> where each new <span class="math inline">\(Z^{(t+1)}\)</span> is independent of the earlier states and random draws. Given a current value <span class="math inline">\(\theta\)</span>, the next state has a Normal distribution with mean <span class="math inline">\(0.6\theta\)</span> and standard deviation <span class="math inline">\(0.8\)</span>: <span class="math display">\[
+\theta^{(t+1)}\mid\theta^{(t)}=\theta
+\sim\text{N}(0.6\theta,0.8^2).
+\]</span> For example, from <span class="math inline">\(\theta=1\)</span>, the next-state distribution is <span class="math inline">\(\text{N}(0.6,0.8^2)\)</span>. We can generate possible next values or calculate an interval probability:</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">84735</span>)</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>current <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="fu">rnorm</span>(<span class="dv">5</span>, <span class="at">mean =</span> <span class="fl">0.6</span> <span class="sc">*</span> current, <span class="at">sd =</span> <span class="fl">0.8</span>)</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 1.1337862 0.5009278 1.2246941 0.7895346 1.2372088</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="fu">pnorm</span>(<span class="dv">1</span>, <span class="at">mean =</span> <span class="fl">0.6</span> <span class="sc">*</span> current, <span class="at">sd =</span> <span class="fl">0.8</span>) <span class="sc">-</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pnorm</span>(<span class="dv">0</span>, <span class="at">mean =</span> <span class="fl">0.6</span> <span class="sc">*</span> current, <span class="at">sd =</span> <span class="fl">0.8</span>)</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.4648351</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>The five draws are independent possible next states from the <strong>same</strong> current value; they are not five consecutive states of a chain. The last calculation gives a probability of about 0.465 that the next state lies between zero and one. To generate a chain, use each new state as the current value for the next transition.</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>kernel_curves <span class="ot">&lt;-</span> <span class="fu">crossing</span>(<span class="at">current =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>), <span class="at">next_value =</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">3</span>, <span class="dv">3</span>, <span class="at">length.out =</span> <span class="dv">501</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">density =</span> <span class="fu">dnorm</span>(next_value, <span class="at">mean =</span> <span class="fl">0.6</span> <span class="sc">*</span> current, <span class="at">sd =</span> <span class="fl">0.8</span>),</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">current =</span> <span class="fu">factor</span>(current))</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(kernel_curves, <span class="fu">aes</span>(next_value, density, <span class="at">color =</span> current, <span class="at">linetype =</span> current)) <span class="sc">+</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"#9E7BB5"</span>, <span class="st">"#552E6B"</span>, <span class="st">"gray40"</span>), <span class="at">name =</span> <span class="st">"Current state"</span>) <span class="sc">+</span></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Next state"</span>, <span class="at">y =</span> <span class="st">"Conditional density"</span>, <span class="at">linetype =</span> <span class="st">"Current state"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div id="fig-normal-kernel" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-normal-kernel-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="03-markov-chains_files/figure-html/fig-normal-kernel-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:60.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-normal-kernel-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3.6: Conditional densities for the Normal transition rule, from current states -1, 0, and 1. Each curve integrates to one and describes a possible next value. Changing the current state shifts the mean to 0.6 times that state. These conditional densities are different from a stationary density.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="bookbox bookgraybox">
+<div class="title">
+<p>A useful property of Normal variables</p>
+</div>
+<p>If <span class="math inline">\(X\)</span> and <span class="math inline">\(Z\)</span> are independent Normal variables, then <span class="math inline">\(aX+bZ\)</span> is also Normal. Its mean and variance are <span class="math display">\[
+\mathbb E[aX+bZ]=a\,\mathbb E[X]+b\,\mathbb E[Z],
+\]</span> <span class="math display">\[
+\operatorname{Var}(aX+bZ)=a^2\operatorname{Var}(X)+b^2\operatorname{Var}(Z).
+\]</span> Independence is essential here: without it, the variance also includes a covariance term.</p>
+</div>
+<p>To check whether the standard Normal distribution is stationary, suppose the current state has distribution <span class="math inline">\(\theta^{(t)}\sim\text{N}(0,1)\)</span>. The new draw <span class="math inline">\(Z^{(t+1)}\sim\text{N}(0,1)\)</span> is independent of that state. By the property above, the next state, <span class="math display">\[
+\theta^{(t+1)}=0.6\theta^{(t)}+0.8Z^{(t+1)},
+\]</span> is also Normal. Its mean is zero, and its variance is <span class="math display">\[
+0.6^2\times1+0.8^2\times1=0.36+0.64=1.
+\]</span> Thus <span class="math inline">\(\theta^{(t+1)}\sim\text{N}(0,1)\)</span>: one transition preserves the standard Normal distribution, establishing stationarity. The individual values still change; it is their distribution that stays the same.</p>
+</section>
+<section id="when-a-transition-has-a-density" class="level3" data-number="3.6.2">
+<h3 data-number="3.6.2" class="anchored" data-anchor-id="when-a-transition-has-a-density"><span class="header-section-number">3.6.2</span> When a transition has a density</h3>
+<p>When the next-state distribution has a density, write it as <span class="math inline">\(K(\theta,\theta')\)</span>, with <span class="math inline">\(\theta\)</span> the current state and <span class="math inline">\(\theta'\)</span> the next state. Fixing <span class="math inline">\(\theta\)</span> gives the continuous counterpart of one row of a transition matrix. For the Normal example, <span class="math display">\[
+K(\theta,\theta')=\frac{1}{0.8\sqrt{2\pi}}
+\exp\!\left[-\frac{(\theta'-0.6\theta)^2}{2(0.8)^2}\right].
+\]</span> A density value is not a transition probability. The probability of reaching an interval is an area: <span class="math display">\[
+P(a&lt;\theta^{(t+1)}&lt;b\mid\theta^{(t)}=\theta)
+=\int_a^b K(\theta,\theta')\,d\theta'.
+\]</span> For kernels that have such a density, the finite-state equations take the following forms:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Finite states</th>
+<th>Transitions with a density</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><span class="math inline">\(P_{ij}\)</span> is a probability of the next state</td>
+<td><span class="math inline">\(K(\theta,\theta')\)</span> is a density for the next state</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(\sum_jP_{ij}=1\)</span></td>
+<td><span class="math inline">\(\int K(\theta,\theta')\,d\theta'=1\)</span></td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(\sum_i\pi_iP_{ij}=\pi_j\)</span></td>
+<td><span class="math inline">\(\int f(\theta)K(\theta,\theta')\,d\theta=f(\theta')\)</span></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(\pi_iP_{ij}=\pi_jP_{ji}\)</span></td>
+<td><span class="math inline">\(f(\theta)K(\theta,\theta')=f(\theta')K(\theta',\theta)\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>Here <span class="math inline">\(f\)</span> is the candidate stationary density. Detailed balance implies stationarity by integration, just as it did by summation: <span class="math display">\[
+\begin{aligned}
+\int f(\theta)K(\theta,\theta')\,d\theta
+&amp;=\int f(\theta')K(\theta',\theta)\,d\theta\\
+&amp;=f(\theta')\int K(\theta',\theta)\,d\theta
+=f(\theta').
+\end{aligned}
+\]</span> The final integral is one because, with <span class="math inline">\(\theta'\)</span> fixed, <span class="math inline">\(K(\theta',\theta)\)</span> integrates over all possible next states <span class="math inline">\(\theta\)</span>.</p>
+</section>
+</section>
+<section id="a-first-hand-built-chain" class="level2" data-number="3.7">
+<h2 data-number="3.7" class="anchored" data-anchor-id="a-first-hand-built-chain"><span class="header-section-number">3.7</span> A first hand-built chain</h2>
+<p>We now use a Markov chain as a computational tool. Its states will be candidate parameter values, rather than observed moods. We use detailed balance to preserve a target posterior approximation, then check irreducibility and aperiodicity. Keeping the state space finite lets us verify the complete transition matrix.</p>
+<p>Consider a survey asking what proportion <span class="math inline">\(\pi\)</span> of students had a sad day yesterday. You ask <span class="math inline">\(n=100\)</span> students and 14 say yes, so <span class="math inline">\(Y \mid \pi \sim \text{Bin}(100, \pi)\)</span> with <span class="math inline">\(Y = 14\)</span>. For a prior, suppose you expected sad days to be fairly common, say around 40% but with real uncertainty, and chose <span class="math inline">\(\pi \sim \text{Beta}(4, 6)\)</span>. The Beta-Binomial model then gives the posterior <span class="math inline">\(\pi \mid Y = 14 \sim \text{Beta}(18, 92)\)</span>. The known Beta posterior provides a benchmark for the numerical calculation. This survey model is separate from the transition model for an individual’s daily moods.</p>
+<p>Use <span class="math inline">\(G=100\)</span> grid midpoints between zero and one, as in <a href="02-bayesian-inference-recap.html" class="quarto-xref"><span>Chapter 2</span></a>. Evaluate the unnormalized posterior on the log scale. For plotting and matrix checks, also form relative weights by subtracting their maximum before exponentiating:</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>G <span class="ot">&lt;-</span> <span class="dv">100</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>grid <span class="ot">&lt;-</span> (<span class="fu">seq_len</span>(G) <span class="sc">-</span> <span class="fl">0.5</span>) <span class="sc">/</span> G</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>log_target <span class="ot">&lt;-</span> <span class="fu">dbeta</span>(grid, <span class="dv">4</span>, <span class="dv">6</span>, <span class="at">log =</span> <span class="cn">TRUE</span>) <span class="sc">+</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">dbinom</span>(<span class="dv">14</span>, <span class="at">size =</span> <span class="dv">100</span>, <span class="at">prob =</span> grid, <span class="at">log =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>target <span class="ot">&lt;-</span> <span class="fu">exp</span>(log_target <span class="sc">-</span> <span class="fu">max</span>(log_target))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Index <span class="math inline">\(g\)</span> labels a <strong>position</strong> on the grid, whereas <code>grid[g]</code> is the corresponding <strong>parameter value</strong>. For example, index 51 corresponds to <span class="math inline">\(\pi=0.505\)</span>. These density evaluations provide approximate cell weights; the equal cell widths cancel when the weights are normalized. Normalizing them gives <code>target / sum(target)</code>, but the transition rule will use only differences of <code>log_target</code> values.</p>
+<section id="the-design" class="level3" data-number="3.7.1">
+<h3 data-number="3.7.1" class="anchored" data-anchor-id="the-design"><span class="header-section-number">3.7.1</span> The design</h3>
+<p>A small example makes the rule concrete. Suppose three grid positions have relative target weights <span class="math inline">\((1,2,1)\)</span>, or normalized probabilities <span class="math inline">\((0.25,0.50,0.25)\)</span>. At each transition, propose one position to the left or right, each with probability <span class="math inline">\(1/2\)</span>.</p>
+<ul>
+<li>From position 1, a left proposal is outside the grid, so the chain stays at 1. A right proposal reaches the larger weight at position 2 and is always accepted. Thus <span class="math inline">\(P_{11}=0.5\)</span> and <span class="math inline">\(P_{12}=0.5\)</span>.</li>
+<li>From position 2, either neighbor has half the current weight. Accept either proposal with probability <span class="math inline">\(1/2\)</span>. The probability of reaching each neighbor is therefore <span class="math inline">\((1/2)(1/2)=0.25\)</span>. The remaining probability, 0.50, belongs to staying at position 2.</li>
+<li>Position 3 is the mirror image of position 1.</li>
+</ul>
+<p>The resulting matrix is <span class="math display">\[
+\mathbf P_{\text{small}}=
+\begin{pmatrix}0.50&amp;0.50&amp;0\\0.25&amp;0.50&amp;0.25\\0&amp;0.50&amp;0.50\end{pmatrix}.
+\]</span> For positions 1 and 2, the two stationary flows are <span class="math inline">\(0.25\times0.50=0.125\)</span> and <span class="math inline">\(0.50\times0.25=0.125\)</span>. The same equality holds for positions 2 and 3. There are no direct moves between positions 1 and 3. Detailed balance therefore holds for the target vector.</p>
+<p>The same construction works with <span class="math inline">\(G\)</span> grid positions and positive weights <span class="math inline">\(w_g\)</span>. From the current index <span class="math inline">\(g\)</span>:</p>
+<ol type="1">
+<li><strong>Propose.</strong> Draw <span class="math inline">\(g^\star=g-1\)</span> or <span class="math inline">\(g^\star=g+1\)</span> with equal probability. If the proposal is outside <span class="math inline">\(1,\ldots,G\)</span>, record <span class="math inline">\(g\)</span> again.</li>
+<li><strong>Accept or repeat.</strong> For a valid proposal, move with probability <span class="math inline">\(\min\{1,w_{g^\star}/w_g\}\)</span>. If it is not accepted, record <span class="math inline">\(g\)</span> again.</li>
+</ol>
+<p>For neighboring indices <span class="math inline">\(g\)</span> and <span class="math inline">\(j\)</span>, the proposal probability is <span class="math inline">\(1/2\)</span> in both directions. Multiplying by the target weight gives <span class="math display">\[
+w_gP_{gj}
+=\tfrac12 w_g\min\{1,w_j/w_g\}
+=\tfrac12\min\{w_g,w_j\}
+=w_jP_{jg}.
+\]</span> Normalizing the weights would divide both sides by the same sum, so detailed balance holds for the normalized target. Non-neighboring pairs have zero transition probability in both directions, and self-transitions satisfy the equality automatically.</p>
+<p>Two additional checks complete the finite-state argument. Positive weights make every neighbor move possible, so sequences of neighbor moves connect all grid positions: The chain is irreducible. An outward proposal at either endpoint leaves the state unchanged with positive probability. Since the chain is irreducible and has a self-loop, it is aperiodic. The state distribution therefore approaches the normalized grid target from any start.</p>
+</section>
+<section id="checking-the-design" class="level3" data-number="3.7.2">
+<h3 data-number="3.7.2" class="anchored" data-anchor-id="checking-the-design"><span class="header-section-number">3.7.2</span> Checking the design</h3>
+<p>For the three-position example, we can verify the stationary equation directly:</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>P_small <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="fl">0.50</span>, <span class="fl">0.50</span>, <span class="dv">0</span>,</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>                    <span class="fl">0.25</span>, <span class="fl">0.50</span>, <span class="fl">0.25</span>,</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>                    <span class="dv">0</span>, <span class="fl">0.50</span>, <span class="fl">0.50</span>), <span class="at">nrow =</span> <span class="dv">3</span>, <span class="at">byrow =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="fl">0.25</span>, <span class="fl">0.50</span>, <span class="fl">0.25</span>) <span class="sc">%*%</span> P_small</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      [,1] [,2] [,3]</span></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1,] 0.25  0.5 0.25</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>For the posterior grid, the following function builds the full transition matrix. Each off-diagonal neighbor probability is the proposal probability, <span class="math inline">\(1/2\)</span>, multiplied by the acceptance probability. The remaining row probability is assigned to staying at the current index. The function takes a vector of log weights, so an acceptance probability is computed as <code>exp(min(0, log_ratio))</code>.</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>build_walk <span class="ot">&lt;-</span> <span class="cf">function</span>(log_target) {</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  G <span class="ot">&lt;-</span> <span class="fu">length</span>(log_target)</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  P <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="dv">0</span>, <span class="at">nrow =</span> G, <span class="at">ncol =</span> G)</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (g <span class="cf">in</span> <span class="fu">seq_len</span>(G)) {</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (g <span class="sc">&gt;</span> <span class="dv">1</span>) {</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>      P[g, g <span class="sc">-</span> <span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="fl">0.5</span> <span class="sc">*</span> <span class="fu">exp</span>(<span class="fu">min</span>(<span class="dv">0</span>, log_target[g <span class="sc">-</span> <span class="dv">1</span>] <span class="sc">-</span> log_target[g]))</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (g <span class="sc">&lt;</span> G) {</span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>      P[g, g <span class="sc">+</span> <span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="fl">0.5</span> <span class="sc">*</span> <span class="fu">exp</span>(<span class="fu">min</span>(<span class="dv">0</span>, log_target[g <span class="sc">+</span> <span class="dv">1</span>] <span class="sc">-</span> log_target[g]))</span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>    P[g, g] <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">-</span> <span class="fu">sum</span>(P[g, ])</span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>  P</span>
+<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a>P_walk <span class="ot">&lt;-</span> <span class="fu">build_walk</span>(log_target)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Check the row sums, the stationary equation, and the stationary vector calculated independently by <code>stationary()</code>:</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>grid_prob <span class="ot">&lt;-</span> target <span class="sc">/</span> <span class="fu">sum</span>(target)</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="fu">range</span>(<span class="fu">rowSums</span>(P_walk))</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 1 1</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="fu">max</span>(<span class="fu">abs</span>(grid_prob <span class="sc">%*%</span> P_walk <span class="sc">-</span> grid_prob))</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 1.387779e-17</span></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a><span class="fu">max</span>(<span class="fu">abs</span>(<span class="fu">stationary</span>(P_walk) <span class="sc">-</span> grid_prob))</span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 1.026956e-15</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>The first result should be a range whose endpoints are both one. The other two results should be close to zero, up to numerical rounding. These calculations check the transition rule on the finite grid; they do not remove the approximation involved in representing a continuous posterior by grid cells.</p>
+</section>
+<section id="running-the-chain" class="level3" data-number="3.7.3">
+<h3 data-number="3.7.3" class="anchored" data-anchor-id="running-the-chain"><span class="header-section-number">3.7.3</span> Running the chain</h3>
+<p>The matrix is useful for verification, but simulation can apply the transition rule directly. The function below first records the current index as the next one. It changes that entry only if a valid proposal is accepted. Repeated values are therefore included automatically.</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>walk_grid <span class="ot">&lt;-</span> <span class="cf">function</span>(log_target, init, n_iter) {</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  G <span class="ot">&lt;-</span> <span class="fu">length</span>(log_target)</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  g <span class="ot">&lt;-</span> <span class="fu">integer</span>(n_iter <span class="sc">+</span> <span class="dv">1</span>)</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  g[<span class="dv">1</span>] <span class="ot">&lt;-</span> init</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (t <span class="cf">in</span> <span class="fu">seq_len</span>(n_iter)) {</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>    g[t <span class="sc">+</span> <span class="dv">1</span>] <span class="ot">&lt;-</span> g[t]</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>    proposal <span class="ot">&lt;-</span> g[t] <span class="sc">+</span> <span class="fu">sample</span>(<span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>L, <span class="dv">1</span>L), <span class="at">size =</span> <span class="dv">1</span>)</span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (proposal <span class="sc">&gt;=</span> <span class="dv">1</span> <span class="sc">&amp;&amp;</span> proposal <span class="sc">&lt;=</span> G) {</span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>      log_alpha <span class="ot">&lt;-</span> <span class="fu">min</span>(<span class="dv">0</span>, log_target[proposal] <span class="sc">-</span> log_target[g[t]])</span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> (<span class="fu">log</span>(<span class="fu">runif</span>(<span class="dv">1</span>)) <span class="sc">&lt;</span> log_alpha) g[t <span class="sc">+</span> <span class="dv">1</span>] <span class="ot">&lt;-</span> proposal</span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>  g</span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>When the proposed log weight is at least the current one, <code>log_alpha</code> is zero and the proposal is always accepted. Otherwise, the comparison accepts with the appropriate weight ratio. No normalizing constant is needed. The samplers of later chapters follow the same calling pattern, <code>sampler(log_target, init, n_iter, ...)</code>, but return a tibble of draws rather than a bare vector.</p>
+<p>Start at index 51, corresponding to <span class="math inline">\(\pi=0.505\)</span>, and make <code>n_iter = 50000</code> transitions. The returned vector includes the initial state, so it contains 50,001 indices.</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">84735</span>)</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>walk <span class="ot">&lt;-</span> <span class="fu">walk_grid</span>(log_target, <span class="at">init =</span> <span class="dv">51</span>, <span class="at">n_iter =</span> <span class="dv">50000</span>)</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>draws <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">step =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">50000</span>, <span class="at">pi =</span> grid[walk])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>p_trace <span class="ot">&lt;-</span> draws <span class="sc">|&gt;</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(step <span class="sc">&lt;=</span> <span class="dv">500</span>) <span class="sc">|&gt;</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(step, pi)) <span class="sc">+</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">color =</span> <span class="st">"#552E6B"</span>, <span class="at">linewidth =</span> <span class="fl">0.4</span>) <span class="sc">+</span></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Step"</span>, <span class="at">y =</span> <span class="fu">expression</span>(pi))</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>p_hist <span class="ot">&lt;-</span> draws <span class="sc">|&gt;</span></span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(step <span class="sc">&gt;</span> <span class="dv">500</span>) <span class="sc">|&gt;</span></span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(pi, <span class="at">name =</span> <span class="st">"count"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">frequency =</span> count <span class="sc">/</span> <span class="fu">sum</span>(count)) <span class="sc">|&gt;</span></span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(pi, frequency)) <span class="sc">+</span></span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">fill =</span> <span class="st">"#ECECEC"</span>, <span class="at">color =</span> <span class="st">"white"</span>, <span class="at">width =</span> <span class="fl">0.01</span>) <span class="sc">+</span></span>
+<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> <span class="fu">tibble</span>(<span class="at">pi =</span> grid, <span class="at">frequency =</span> grid_prob), <span class="at">color =</span> <span class="st">"#552E6B"</span>) <span class="sc">+</span></span>
+<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> <span class="fu">tibble</span>(<span class="at">pi =</span> grid, <span class="at">frequency =</span> grid_prob), <span class="at">color =</span> <span class="st">"#552E6B"</span>, <span class="at">size =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_cartesian</span>(<span class="at">xlim =</span> <span class="fu">c</span>(<span class="fl">0.05</span>, <span class="fl">0.35</span>)) <span class="sc">+</span></span>
+<span id="cb30-16"><a href="#cb30-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="fu">expression</span>(pi), <span class="at">y =</span> <span class="st">"Probability"</span>)</span>
+<span id="cb30-17"><a href="#cb30-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-18"><a href="#cb30-18" aria-hidden="true" tabindex="-1"></a><span class="fu">wrap_plots</span>(p_trace, p_hist)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div id="fig-grid-walk" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-grid-walk-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="03-markov-chains_files/figure-html/fig-grid-walk-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-grid-walk-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3.7: Left: steps 0 to 500 of the hand-built chain, started at <span class="math inline">\(\pi = 0.505\)</span>. Repeated values appear as horizontal stretches. Right: frequencies after the first 500 transitions (bars), compared with the normalized grid target (line and dots).
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Compare the empirical frequencies in <a href="#fig-grid-walk" class="quarto-xref">Figure&nbsp;<span>3.7</span></a> with the normalized grid target. The following code also compares posterior summaries after omitting the first 500 transitions with the continuous Beta benchmark. The initial omission is illustrative; <a href="04-diagnosing-markov-chains.html" class="quarto-xref"><span>Chapter 4</span></a> develops ways to assess simulations more systematically.</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>draws <span class="sc">|&gt;</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(step <span class="sc">&gt;</span> <span class="dv">500</span>) <span class="sc">|&gt;</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">mean =</span> <span class="fu">mean</span>(pi), <span class="at">lower =</span> <span class="fu">quantile</span>(pi, <span class="fl">0.025</span>), <span class="at">upper =</span> <span class="fu">quantile</span>(pi, <span class="fl">0.975</span>))</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 1 × 3</span></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    mean lower upper</span></span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span></span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 0.162 0.105 0.235</span></span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="at">mean =</span> <span class="dv">18</span> <span class="sc">/</span> <span class="dv">110</span>, <span class="at">lower =</span> <span class="fu">qbeta</span>(<span class="fl">0.025</span>, <span class="dv">18</span>, <span class="dv">92</span>), <span class="at">upper =</span> <span class="fu">qbeta</span>(<span class="fl">0.975</span>, <span class="dv">18</span>, <span class="dv">92</span>))</span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      mean     lower     upper </span></span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 0.1636364 0.1009084 0.2379286</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Differences from the continuous Beta values can arise from the finite grid, Monte Carlo variation, and any remaining effect of the starting state. Neighbor moves also produce persistent successive values, so counting <span class="math inline">\(N=49{,}500\)</span> retained states does not describe their precision as if they were independent. <a href="04-diagnosing-markov-chains.html" class="quarto-xref"><span>Chapter 4</span></a> develops the corresponding Monte Carlo error calculations.</p>
+<p>The construction used relative log weights, neighbor proposals, and an acceptance step. The normalization was needed for the matrix check and the plotted benchmark, but not inside <code>walk_grid()</code>. For a different prior and likelihood, the same transition rule can be applied to new finite log weights. Its target would still be a grid approximation. <a href="05-metropolis.html" class="quarto-xref"><span>Chapter 5</span></a> develops the corresponding method on a continuous parameter space.</p>
+<div class="quiz bookgraybox">
+<div class="title">
+<p>Quiz yourself!</p>
+</div>
+<p>Suppose you replaced the coin flip in step 1 by a biased one that proposes <span class="math inline">\(g + 1\)</span> with probability <span class="math inline">\(0.7\)</span> and <span class="math inline">\(g - 1\)</span> with probability <span class="math inline">\(0.3\)</span>, keeping the acceptance rule the same. Does detailed balance still hold? What would the chain’s stationary distribution look like relative to the target?</p>
+</div>
+</section>
+</section>
+<section id="chapter-summary" class="level2" data-number="3.8">
+<h2 data-number="3.8" class="anchored" data-anchor-id="chapter-summary"><span class="header-section-number">3.8</span> Chapter summary</h2>
+<p>A Markov chain can describe a sequence of observations or serve as a computational sequence for sampling a target distribution.</p>
+<ul>
+<li>A finite-state chain is specified by its states, <strong>initial distribution</strong>, and <strong>transition matrix</strong>. Given the current state, the next-state distribution does not depend on the earlier history. Entry <span class="math inline">\((i,j)\)</span> of <span class="math inline">\(\mathbf P^t\)</span> gives a <span class="math inline">\(t\)</span>-transition probability.</li>
+<li>The row vector <span class="math inline">\(\boldsymbol\mu^{(t)}=\boldsymbol\mu^{(0)}\mathbf P^t\)</span> describes the distribution at time <span class="math inline">\(t\)</span>. It is distinct from the realized state of an individual chain.</li>
+<li>A <strong>stationary distribution</strong> satisfies <span class="math inline">\(\boldsymbol\pi\mathbf P=\boldsymbol\pi\)</span>. A finite irreducible chain has a unique stationary distribution. With aperiodicity as well, state distributions approach it from any start.</li>
+<li>The finite-state <strong>ergodic theorem</strong> establishes convergence of time averages under irreducibility, even for periodic chains. It does not by itself quantify error in a finite simulation.</li>
+<li><strong>Detailed balance</strong> equates the target-weighted flows for each pair of states and implies stationarity. It implies neither irreducibility nor aperiodicity; those require separate checks.</li>
+<li>A <strong>transition kernel</strong> specifies a next-state distribution. When that distribution has a density, sums in the finite-state balance equations become integrals. A rule that can repeat the current value also requires a point mass.</li>
+<li>The grid construction preserves its normalized target using only relative weights. Its output approximates continuous posterior summaries with both discretization and simulation error.</li>
+</ul>
+</section>
+<section id="quiz-answers" class="level2" data-number="3.9">
+<h2 data-number="3.9" class="anchored" data-anchor-id="quiz-answers"><span class="header-section-number">3.9</span> Quiz answers</h2>
+<p><strong>Quiz 1.</strong> Sum over the intermediate day: <span class="math inline">\(P_{\text{happy},\text{happy}} P_{\text{happy},\text{sad}} + P_{\text{happy},\text{neutral}} P_{\text{neutral},\text{sad}} + P_{\text{happy},\text{sad}} P_{\text{sad},\text{sad}} = 0.70 \times 0.05 + 0.25 \times 0.30 + 0.05 \times 0.40 = 0.035 + 0.075 + 0.020 = 0.13\)</span>, which is the (happy, sad) entry of <code>mat_power(P, 2)</code>.</p>
+<p><strong>Quiz 2.</strong> The chain cycles <span class="math inline">\(1 \to 2 \to 3 \to 1\)</span> with certainty, so every state is reachable from every other and the chain is irreducible. Returns to a state take exactly 3, 6, 9, … steps, so the period is 3 and the chain is not aperiodic. It has a unique stationary distribution, <span class="math inline">\(\boldsymbol{\pi} = (1/3, 1/3, 1/3)\)</span>, but <span class="math inline">\(\boldsymbol{\mu}^{(0)} \mathbf{P}^t\)</span> does not converge to it: started in state 1, the chain is in state 1 with certainty at <span class="math inline">\(t = 0, 3, 6, \ldots\)</span>. The long-run fraction of time in each state does converge to <span class="math inline">\(1/3\)</span>.</p>
+<p><strong>Quiz 3.</strong> Entry <span class="math inline">\((i,j)\)</span> compares the stationary flow from <span class="math inline">\(i\)</span> to <span class="math inline">\(j\)</span> with the reverse flow. A positive difference means the former is larger. Diagonal entries subtract a value from itself and are always zero, so they cannot establish detailed balance. Zero column sums express overall flow balance at each state, not equality for every pair; the mood chain demonstrates this distinction.</p>
+<p><strong>Quiz 4.</strong> Stationarity requires <span class="math inline">\(\pi_1 (1 - a) + \pi_2 b = \pi_1\)</span>, that is <span class="math inline">\(\pi_1 a = \pi_2 b\)</span>, together with <span class="math inline">\(\pi_1 + \pi_2 = 1\)</span>, which gives <span class="math inline">\(\boldsymbol{\pi} = (b, a) / (a + b)\)</span>. The equation <span class="math inline">\(\pi_1 a = \pi_2 b\)</span> is exactly detailed balance for the only pair of distinct states, so every two-state chain with positive <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span> is reversible. With three states, balance only constrains the sum of the flows into each state, and a circulation <span class="math inline">\(1 \to 2 \to 3 \to 1\)</span> can balance every state without balancing any pair; the mood chain has such a circulation.</p>
+<p><strong>Quiz 5.</strong> No.&nbsp;With the biased coin, <span class="math inline">\(P_{g,g+1} = 0.7 \min\{1, \text{target}[g+1]/\text{target}[g]\}\)</span> but <span class="math inline">\(P_{g+1,g} = 0.3 \min\{1, \text{target}[g]/\text{target}[g+1]\}\)</span>, so <span class="math inline">\(\text{target}[g] P_{g,g+1} = 0.7 \min\{\cdot\}\)</span> while <span class="math inline">\(\text{target}[g+1] P_{g+1,g} = 0.3 \min\{\cdot\}\)</span> with the same minimum; they differ by a factor <span class="math inline">\(7/3\)</span>. The chain is pushed to the right, so its stationary distribution is shifted toward larger <span class="math inline">\(\pi\)</span> relative to the target. The proposal must be symmetric for this acceptance rule to work; Chapter 6 (Metropolis–Hastings and Adaptive Proposals) shows how to fix the rule when it is not.</p>
+</section>
+<section id="exercises" class="level2" data-number="3.10">
+<h2 data-number="3.10" class="anchored" data-anchor-id="exercises"><span class="header-section-number">3.10</span> Exercises</h2>
+<section id="conceptual-exercises" class="level3" data-number="3.10.1">
+<h3 data-number="3.10.1" class="anchored" data-anchor-id="conceptual-exercises"><span class="header-section-number">3.10.1</span> Conceptual exercises</h3>
+<div class="exercise bookgraybox">
+<p><strong>Exercise 3.1 (Stationary or not?)</strong> For each of the following transition matrices, state whether the chain is irreducible, whether it is aperiodic, and whether the given vector is a stationary distribution. Justify each answer in one sentence.</p>
+<ol type="a">
+<li><span class="math inline">\(\mathbf{P} = \begin{pmatrix} 0.5 &amp; 0.5 \\ 0.5 &amp; 0.5 \end{pmatrix}\)</span>, <span class="math inline">\(\boldsymbol{\pi} = (0.5, 0.5)\)</span>.</li>
+<li><span class="math inline">\(\mathbf{P} = \begin{pmatrix} 1 &amp; 0 \\ 0.3 &amp; 0.7 \end{pmatrix}\)</span>, <span class="math inline">\(\boldsymbol{\pi} = (1, 0)\)</span>.</li>
+<li><span class="math inline">\(\mathbf{P} = \begin{pmatrix} 0 &amp; 0.5 &amp; 0.5 \\ 0.5 &amp; 0 &amp; 0.5 \\ 0.5 &amp; 0.5 &amp; 0 \end{pmatrix}\)</span>, <span class="math inline">\(\boldsymbol{\pi} = (1/3, 1/3, 1/3)\)</span>.</li>
+<li><span class="math inline">\(\mathbf{P} = \begin{pmatrix} 0 &amp; 1 \\ 1 &amp; 0 \end{pmatrix}\)</span>, <span class="math inline">\(\boldsymbol{\pi} = (0.3, 0.7)\)</span>.</li>
+</ol>
+</div>
+<div class="exercise bookgraybox">
+<p><strong>Exercise 3.2 (Markov or not?)</strong> For each sequence below, say whether it is a Markov chain on the state space indicated, and if it is not, whether it becomes one after enlarging the state.</p>
+<ol type="a">
+<li>Your running total of correct answers on a 40-item test, one item at a time, with each item answered correctly with probability <span class="math inline">\(0.8\)</span> independently of the others. State space: the integers <span class="math inline">\(0, \ldots, 40\)</span>.</li>
+<li>Your mood each day, when tomorrow’s mood depends on today’s <em>and</em> yesterday’s. State space: <span class="math inline">\(\{\text{happy}, \text{neutral}, \text{sad}\}\)</span>.</li>
+<li>The number of distinct participants who have shown up so far, as a study recruits one participant at a time from a pool of 50, each time picking uniformly from the whole pool (so repeats are possible). State space: <span class="math inline">\(0, \ldots, 50\)</span>.</li>
+<li>The current streak of consecutive happy days in the mood chain of this chapter. State space: <span class="math inline">\(0,1,2,\ldots\)</span>. For a zero streak, compare the probabilities of a happy next day from the neutral and sad states before deciding whether additional information is needed.</li>
+</ol>
+</div>
+<div class="exercise bookgraybox">
+<p><strong>Exercise 3.3 (Balance without detailed balance)</strong> Consider the chain on three states with <span class="math inline">\(P_{12} = P_{23} = P_{31} = 0.9\)</span> and <span class="math inline">\(P_{11} = P_{22} = P_{33} = 0.1\)</span>, all other entries zero.</p>
+<ol type="a">
+<li>Show that <span class="math inline">\(\boldsymbol{\pi} = (1/3, 1/3, 1/3)\)</span> is stationary by checking <span class="math inline">\(\boldsymbol{\pi} \mathbf{P} = \boldsymbol{\pi}\)</span>.</li>
+<li>Show that detailed balance fails for the pair <span class="math inline">\((1, 2)\)</span>.</li>
+<li>Describe in words what a film of this chain run backwards would look like, and why it would be recognizably different from the forward film.</li>
+</ol>
+</div>
+<div class="exercise bookgraybox">
+<p><strong>Exercise 3.4 (Rewriting the proof)</strong> Assume the transition kernel has an ordinary conditional density, as in the Normal example. The detailed balance proof for finite states summed over the <em>first</em> index. Redo it for a continuous state space by starting from <span class="math inline">\(f(\theta') K(\theta', \theta) = f(\theta) K(\theta, \theta')\)</span> and integrating over <span class="math inline">\(\theta'\)</span> instead of <span class="math inline">\(\theta\)</span>. Which stationarity equation do you get, and is it the same one?</p>
+</div>
+</section>
+<section id="practical-exercises" class="level3" data-number="3.10.2">
+<h3 data-number="3.10.2" class="anchored" data-anchor-id="practical-exercises"><span class="header-section-number">3.10.2</span> Practical exercises</h3>
+<div class="exercise bookgraybox">
+<p><strong>Exercise 3.5 (How long to forget?)</strong> Use <code>mat_power()</code> and the mood transition matrix <code>P</code> of this chapter.</p>
+<ol type="a">
+<li>Find the smallest <span class="math inline">\(t\)</span> for which every entry in each row of <span class="math inline">\(\mathbf P^t\)</span> differs from the corresponding entry of its first row by less than 0.001. Use the same numerical criterion in part b.</li>
+<li>Change the first row of <span class="math inline">\(\mathbf P\)</span> to <span class="math inline">\(P_{\text{happy},\text{happy}} = 0.95\)</span>, <span class="math inline">\(P_{\text{happy},\text{neutral}} = 0.04\)</span>, and <span class="math inline">\(P_{\text{happy},\text{sad}} = 0.01\)</span>, so that the row still sums to one, and repeat. Explain the difference in terms of how sticky the happy state has become.</li>
+<li>For both matrices, compute the largest absolute value among the eigenvalues other than 1 with <code>eigen()</code> and relate it to your answers in a. and b.</li>
+</ol>
+</div>
+<div class="exercise bookgraybox">
+<p><strong>Exercise 3.6 (Averages along a periodic chain)</strong> Simulate the alternating chain <code>P_swing</code> from a happy initial state for 1,000 transitions, retaining the initial state at time zero.</p>
+<ol type="a">
+<li>Plot <span class="math inline">\(P(X^{(t)} = \text{happy})\)</span> from <code>mat_power()</code> for <span class="math inline">\(t = 0, \ldots, 10\)</span> and the running fraction of happy days from your simulation on separate panels.</li>
+<li>One converges and one does not. Which is which, and which theorem of this chapter explains each?</li>
+<li>Now let <span class="math inline">\(P_{\text{happy},\text{happy}} = 0.01\)</span> and <span class="math inline">\(P_{\text{happy},\text{sad}} = 0.99\)</span>, keeping the second row equal to <span class="math inline">\((1,0)\)</span>. Repeat a. Check the new stationary distribution; do not assume it remains exactly <span class="math inline">\((0.5,0.5)\)</span>. What changed and why?</li>
+</ol>
+</div>
+<div class="exercise bookgraybox">
+<p><strong>Exercise 3.7 (A wider step on the grid)</strong> Modify <code>walk_grid()</code> so that each transition proposes one of <span class="math inline">\(g - 2, g - 1, g + 1, g + 2\)</span> with equal probability.</p>
+<ol type="a">
+<li>Show, by the argument of the chapter, that detailed balance still holds.</li>
+<li>Modify <code>build_walk()</code> to match, and check numerically that <code>grid_prob</code> is stationary for the new matrix. Both functions take <code>log_target</code>. Keep the probability of each of the four proposed offsets equal to 1/4, including offsets that leave the grid; such proposals leave the state unchanged.</li>
+<li>Run both versions for 50,000 transitions from <code>init = 51</code> and compare the first time each reaches a grid point below <span class="math inline">\(\pi=0.25\)</span>. Repeat with several seeds. Explain why a shorter first-passage time alone does not establish convergence of the full state distribution.</li>
+</ol>
+</div>
+<div class="exercise bookgraybox">
+<p><strong>Exercise 3.8 (A chain for a bimodal target)</strong> Define a log target on the same grid with <code>log_target2 &lt;- log(dnorm(grid, 0.25, 0.04) + dnorm(grid, 0.75, 0.04))</code>. It represents two separated modes with equal target probability.</p>
+<ol type="a">
+<li>Build the matrix with <code>build_walk(log_target2)</code> and check that its stationary distribution is proportional to <code>exp(log_target2)</code>. Normalize by subtracting the maximum log weight before exponentiating.</li>
+<li>Run <code>walk_grid(log_target2, init = 25, n_iter = 20000)</code> and plot the trace. How often does the chain cross from one bump to the other?</li>
+<li>Compute the fraction of steps spent below <span class="math inline">\(\pi = 0.5\)</span> and compare it with the target’s mass there. Explain the discrepancy using the distinction between a stationary distribution existing and a chain having reached it.</li>
+</ol>
+</div>
+</section>
+<section id="applied-exercises" class="level3" data-number="3.10.3">
+<h3 data-number="3.10.3" class="anchored" data-anchor-id="applied-exercises"><span class="header-section-number">3.10.3</span> Applied exercises</h3>
+<div class="exercise bookgraybox">
+<p><strong>Exercise 3.9 (Estimating a transition matrix)</strong> The <code>weather_australia</code> data in the <code>bayesrules</code> package record, for sampled days in three Australian locations, whether it rained today (<code>raintoday</code>) and the next day (<code>raintomorrow</code>). Load them with <code>data("weather_australia", package = "bayesrules")</code>, inspect the category labels, and omit pairs with either rain indicator missing before tabulating transitions. Treat each pair as one observed transition of a two-state chain with states <em>rain</em> and <em>no rain</em>.</p>
+<ol type="a">
+<li>For Wollongong, tabulate the transitions and estimate the transition matrix <span class="math inline">\(\mathbf{P}\)</span> from the row proportions.</li>
+<li>Compute the stationary distribution of your estimated chain with <code>stationary()</code> and compare <span class="math inline">\(\pi_{\text{rain}}\)</span> with the overall proportion of rainy days among <code>raintoday</code>. Should they agree exactly? Why or why not?</li>
+<li>Each row contains a probability of rain tomorrow given today’s weather and its complement. For this exercise, use an independent Beta<span class="math inline">\((1,1)\)</span> prior for each of these two rain probabilities and update it with the corresponding row counts, as in <a href="02-bayesian-inference-recap.html" class="quarto-xref"><span>Chapter 2</span></a>. This is a time-homogeneous two-state working model for the sampled transitions. Draw 1,000 transition matrices from the two posteriors, compute the stationary distribution of each, and report a 95% posterior interval for <span class="math inline">\(\pi_{\text{rain}}\)</span>.</li>
+<li>Repeat for Uluru. Which location’s chain forgets yesterday’s weather faster, and how can you tell from the transition matrices alone?</li>
+</ol>
+</div>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" data-line-spacing="2" role="list" style="display: none">
+<div id="ref-hanada2022mcmc" class="csl-entry" role="listitem">
+Hanada, M., &amp; Matsuura, S. (2022). <em><span>MCMC</span> from scratch: A practical introduction to markov chain monte carlo</em>. Springer.
+</div>
+<div id="ref-norris1997markov" class="csl-entry" role="listitem">
+Norris, J. R. (1997). <em>Markov chains</em>. Cambridge University Press.
+</div>
+<div id="ref-robert2004monte" class="csl-entry" role="listitem">
+Robert, C. P., &amp; Casella, G. (2004). <em>Monte <span>C</span>arlo statistical methods</em> (2nd ed.). Springer.
+</div>
+</div>
+</section>
+</section>
+
+</main> <!-- /main -->
+<!-- Version switcher: a dropdown in the sidebar header, built from versions.json
+     at the site root. Every published version of the book lives in its own
+     folder on the gh-pages branch (latest release at the root, the development
+     build under dev/, older releases under v<version>/). When the file is missing,
+     as in a local preview, no dropdown is shown. Adapted from the bgms site. -->
+<style>
+.book-version { margin: 0.4em 0 0 0; position: relative; font-size: 0.85rem; }
+.book-version > button {
+  background: none; border: 1px solid var(--bayespurple); border-radius: 4px;
+  color: var(--bayespurple); padding: 0.1em 0.6em; cursor: pointer; font: inherit;
+}
+.book-version > button::after { content: " \25BE"; }
+.book-version ul {
+  display: none; position: absolute; left: 0; z-index: 1000; min-width: 14em;
+  margin: 0.2em 0 0 0; padding: 0.3em 0; list-style: none; background: white;
+  border: 1px solid #ccc; border-radius: 4px; box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+.book-version.open ul { display: block; }
+.book-version li a {
+  display: flex; justify-content: space-between; gap: 1em; padding: 0.25em 0.8em;
+  color: #222; text-decoration: none;
+}
+.book-version li a:hover { background: var(--quizgray); }
+.book-version li a.active { font-weight: bold; }
+.book-version .book-version-kind { color: #777; font-size: 0.8em; }
+</style>
+<script>
+(function () {
+  const header = document.querySelector("#quarto-sidebar .sidebar-header");
+  if (!header) return;
+
+  // Where this build's own root is: /computational-methods-book/, .../dev/, .../v0.1/
+  const offset = document.querySelector('meta[name="quarto:offset"]');
+  let buildBase;
+  if (offset) {
+    buildBase = new URL(offset.content, window.location.href).pathname;
+  } else {
+    const lib = document.querySelector('link[href*="site_libs/"]');
+    if (!lib) return;
+    buildBase = new URL(lib.getAttribute("href").split("site_libs/")[0], window.location.href).pathname;
+  }
+  const parentOf = (path) => path.replace(/[^/]+\/$/, "");
+
+  const readJson = async (url) => {
+    try {
+      const response = await fetch(url, { cache: "no-cache" });
+      return response.ok ? await response.json() : null;
+    } catch (e) { return null; }
+  };
+  const exists = async (url) => {
+    try { return (await fetch(url, { method: "HEAD" })).ok; } catch (e) { return false; }
+  };
+
+  const label = (entry) => entry.kind === "release" ? "Version " + entry.version : "Development version";
+
+  const render = (siteRoot, entries, current) => {
+    const pagePath = window.location.pathname.slice(buildBase.length);
+    const box = document.createElement("div");
+    box.className = "book-version";
+    const button = document.createElement("button");
+    button.type = "button";
+    button.setAttribute("aria-haspopup", "true");
+    button.setAttribute("aria-expanded", "false");
+    button.title = "Switch to another version of the book";
+    button.textContent = label(current);
+    const menu = document.createElement("ul");
+    entries.forEach(entry => {
+      const li = document.createElement("li");
+      const link = document.createElement("a");
+      link.className = entry === current ? "active" : "";
+      link.href = siteRoot + entry.dir;
+      const name = document.createElement("span");
+      name.textContent = label(entry);
+      const kind = document.createElement("span");
+      kind.className = "book-version-kind";
+      kind.textContent = entry.kind === "release" ? "release" : "in preparation";
+      link.append(name, kind);
+      // Stay on the same page when that version has it; otherwise go to its welcome page.
+      link.addEventListener("click", async (event) => {
+        event.preventDefault();
+        const home = siteRoot + entry.dir;
+        if (!pagePath) { window.location.href = home; return; }
+        const target = home + pagePath;
+        window.location.href = (await exists(target)) ? target + window.location.hash : home;
+      });
+      li.appendChild(link);
+      menu.appendChild(li);
+    });
+    const close = () => { box.classList.remove("open"); button.setAttribute("aria-expanded", "false"); };
+    button.addEventListener("click", (event) => {
+      event.stopPropagation();
+      const open = box.classList.toggle("open");
+      button.setAttribute("aria-expanded", open ? "true" : "false");
+    });
+    document.addEventListener("click", (event) => { if (!box.contains(event.target)) close(); });
+    document.addEventListener("keydown", (event) => { if (event.key === "Escape") close(); });
+    box.append(button, menu);
+    header.appendChild(box);
+  };
+
+  (async function () {
+    // versions.json lives at the site root; a build one folder down finds it one level up.
+    let base = buildBase;
+    let index = await readJson(base + "versions.json");
+    if (!index) {
+      const up = parentOf(buildBase);
+      if (!up || up === buildBase) return;
+      base = up;
+      index = await readJson(base + "versions.json");
+    }
+    if (!index || typeof index.root !== "string" || !Array.isArray(index.versions)) return;
+    const siteRoot = index.root;
+    // Readers only see released versions; the development build (our staging
+    // area) lists itself only when you are already on it.
+    const onDevelopment = buildBase.slice(siteRoot.length) === "dev/";
+    const entries = index.versions
+      .filter(entry => typeof entry.path === "string" && entry.path.startsWith(siteRoot))
+      .filter(entry => entry.kind === "release" || onDevelopment)
+      .map(entry => ({ version: entry.version, kind: entry.kind, dir: entry.path.slice(siteRoot.length) }));
+    if (entries.length === 0) return;
+    const current = entries.find(entry => entry.dir === buildBase.slice(siteRoot.length));
+    if (!current) return;
+    render(siteRoot, entries, current);
+  })();
+})();
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/maartenmarsman\.github\.io\/computational-methods-book\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../chapters/02-bayesian-inference-recap.html" class="pagination-link" aria-label="Bayesian Inference, Revisited">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Bayesian Inference, Revisited</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../chapters/04-diagnosing-markov-chains.html" class="pagination-link" aria-label="Diagnosing Markov Chains">
+        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Diagnosing Markov Chains</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>Stochastic Simulation for Bayesian Modeling in Psychology, Maarten Marsman and Lourens Waldorp.</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/MaartenMarsman/computational-methods-book/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></div>
+    <div class="nav-footer-right">
+<p>Published with <a href="https://quarto.org">Quarto</a>.</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

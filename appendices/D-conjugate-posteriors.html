@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.20">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Appendix D — Deriving Conjugate Posteriors – Stochastic Simulation for Bayesian Modeling in Psychology</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../appendices/C-mcmc-diagnostics.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-3f446edc70b0757b4dde2b060815ebc9.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-2fcf8a0ee316d604ebc18c0691cf69d6.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../style/bayesrules.css">
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../appendices/A-software-setup.html">Appendices</a></li><li class="breadcrumb-item"><a href="../appendices/D-conjugate-posteriors.html"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Deriving Conjugate Posteriors</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">Stochastic Simulation for Bayesian Modeling in Psychology</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/MaartenMarsman/computational-methods-book" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+    <a href="../Stochastic-Simulation-for-Bayesian-Modeling.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Welcome</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Foundations</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/01-probability-and-simulation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Probability and Simulation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/02-bayesian-inference-recap.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Bayesian Inference, Revisited</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Markov Chains</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/03-markov-chains.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Markov Chains</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/04-diagnosing-markov-chains.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Diagnosing Markov Chains</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">Sampling Algorithms</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/05-metropolis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">The Metropolis Algorithm</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../news.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">News</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendices/A-software-setup.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Software Setup</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendices/B-notation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Notation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendices/C-mcmc-diagnostics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Technical Notes on MCMC</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendices/D-conjugate-posteriors.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Deriving Conjugate Posteriors</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#what-we-need-to-recognize" id="toc-what-we-need-to-recognize" class="nav-link active" data-scroll-target="#what-we-need-to-recognize"><span class="header-section-number">D.1</span> What we need to recognize</a></li>
+  <li><a href="#sec-conjugate-beta-binomial" id="toc-sec-conjugate-beta-binomial" class="nav-link" data-scroll-target="#sec-conjugate-beta-binomial"><span class="header-section-number">D.2</span> A Binomial likelihood and a Beta prior</a></li>
+  <li><a href="#sec-conjugate-gamma-poisson" id="toc-sec-conjugate-gamma-poisson" class="nav-link" data-scroll-target="#sec-conjugate-gamma-poisson"><span class="header-section-number">D.3</span> A Poisson likelihood and a Gamma prior</a></li>
+  <li><a href="#sec-conjugate-normal-normal" id="toc-sec-conjugate-normal-normal" class="nav-link" data-scroll-target="#sec-conjugate-normal-normal"><span class="header-section-number">D.4</span> A Normal likelihood and a Normal prior</a>
+  <ul class="collapse">
+  <li><a href="#collecting-the-terms-in-the-unknown-mean" id="toc-collecting-the-terms-in-the-unknown-mean" class="nav-link" data-scroll-target="#collecting-the-terms-in-the-unknown-mean"><span class="header-section-number">D.4.1</span> Collecting the terms in the unknown mean</a></li>
+  <li><a href="#completing-the-square" id="toc-completing-the-square" class="nav-link" data-scroll-target="#completing-the-square"><span class="header-section-number">D.4.2</span> Completing the square</a></li>
+  <li><a href="#interpreting-the-update" id="toc-interpreting-the-update" class="nav-link" data-scroll-target="#interpreting-the-update"><span class="header-section-number">D.4.3</span> Interpreting the update</a></li>
+  </ul></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/MaartenMarsman/computational-methods-book/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../appendices/A-software-setup.html">Appendices</a></li><li class="breadcrumb-item"><a href="../appendices/D-conjugate-posteriors.html"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Deriving Conjugate Posteriors</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span id="sec-conjugate-derivations" class="quarto-section-identifier">Appendix D — Deriving Conjugate Posteriors</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<!-- SOURCES: Chapter 2, Table tbl-conjugate; derivations from the Binomial, Beta, Poisson, Gamma, and Normal probability functions, using the parameterizations in that table. -->
+<p>In the modern art example in <a href="../chapters/02-bayesian-inference-recap.html" class="quarto-xref"><span>Chapter 2</span></a>, a Beta prior and a Binomial likelihood give a Beta posterior. The same kind of calculation gives the other two updates in <a href="../chapters/02-bayesian-inference-recap.html#tbl-conjugate" class="quarto-xref">Table&nbsp;<span>2.1</span></a>. Here we work through all three, beginning with the probability functions and ending with the posterior parameters.</p>
+<section id="what-we-need-to-recognize" class="level2" data-number="D.1">
+<h2 data-number="D.1" class="anchored" data-anchor-id="what-we-need-to-recognize"><span class="header-section-number">D.1</span> What we need to recognize</h2>
+<p>Bayes’ rule says that the posterior is proportional to the likelihood times the prior. To identify its distribution, we first keep all the factors that depend on the unknown parameter. Their product is a <strong>kernel</strong>: it gives the shape of a density without necessarily including the constant that makes its integral equal to one.</p>
+<p>For example, multiplying a function of <span class="math inline">\(\pi\)</span> by 10 changes its height at every <span class="math inline">\(\pi\)</span> by the same factor. Once we divide by its integral, that factor cancels. Multiplying by <span class="math inline">\(\pi\)</span>, however, changes the relative heights at different values of <span class="math inline">\(\pi\)</span> and therefore changes the distribution. This is why we can set aside factors that are constant with respect to the parameter, but must retain factors that vary with it.</p>
+<p>We then compare the kernel with a familiar density on the same range of possible parameter values. If they match, the familiar density supplies both the distribution’s name and its normalizing constant. On the log scale, constant factors become additive terms. We write these as <span class="math inline">\(C\)</span>, allowing its value to change as we collect terms. Such constants may depend on the observed data; they must not depend on the parameter whose posterior we are finding.</p>
+<p>The constants can be set aside when identifying the posterior. Computing the marginal likelihood requires the full likelihood and prior, including their constants, as in the model comparisons in <a href="../chapters/02-bayesian-inference-recap.html" class="quarto-xref"><span>Chapter 2</span></a>.</p>
+</section>
+<section id="sec-conjugate-beta-binomial" class="level2" data-number="D.2">
+<h2 data-number="D.2" class="anchored" data-anchor-id="sec-conjugate-beta-binomial"><span class="header-section-number">D.2</span> A Binomial likelihood and a Beta prior</h2>
+<p>Let <span class="math inline">\(y\)</span> be the observed number of successes in <span class="math inline">\(n\)</span> trials, with common success probability <span class="math inline">\(\pi\)</span>. Under the Binomial model, <span class="math display">\[
+f(y\mid\pi)=\binom{n}{y}\pi^y(1-\pi)^{n-y},
+\qquad 0&lt;\pi&lt;1.
+\]</span> Here <span class="math inline">\(n\)</span> and <span class="math inline">\(y\)</span> are known. The factor <span class="math inline">\(\binom{n}{y}\)</span> counts how many trial sequences give <span class="math inline">\(y\)</span> successes; it does not change as we vary <span class="math inline">\(\pi\)</span>.</p>
+<p>Assign <span class="math inline">\(\pi\)</span> a <span class="math inline">\(\text{Beta}(\alpha,\beta)\)</span> prior, with <span class="math inline">\(\alpha&gt;0\)</span> and <span class="math inline">\(\beta&gt;0\)</span>. Its density is <span class="math display">\[
+f(\pi)=\frac{1}{B(\alpha,\beta)}
+\pi^{\alpha-1}(1-\pi)^{\beta-1},
+\qquad 0&lt;\pi&lt;1.
+\]</span> The Beta function <span class="math inline">\(B(\alpha,\beta)\)</span> is the integral of <span class="math inline">\(\pi^{\alpha-1}(1-\pi)^{\beta-1}\)</span> over <span class="math inline">\((0,1)\)</span>. Dividing by it makes the prior integrate to one. Since <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\beta\)</span> are fixed prior parameters, it too is constant with respect to <span class="math inline">\(\pi\)</span>.</p>
+<p>Multiplying the likelihood and prior, and setting aside these constant factors, gives <span class="math display">\[
+\begin{aligned}
+f(\pi\mid y)
+&amp;\propto \pi^y(1-\pi)^{n-y}
+          \pi^{\alpha-1}(1-\pi)^{\beta-1}\\
+&amp;=\pi^{\alpha+y-1}(1-\pi)^{\beta+n-y-1}.
+\end{aligned}
+\]</span> The second line uses the rule that exponents add when we multiply powers with the same base. The <span class="math inline">\(y\)</span> successes add <span class="math inline">\(y\)</span> to the exponent of <span class="math inline">\(\pi\)</span>; the <span class="math inline">\(n-y\)</span> failures add <span class="math inline">\(n-y\)</span> to the exponent of <span class="math inline">\(1-\pi\)</span>.</p>
+<p>A Beta density with parameters <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span> has exponents <span class="math inline">\(a-1\)</span> and <span class="math inline">\(b-1\)</span>. Matching them gives <span class="math inline">\(a=\alpha+y\)</span> and <span class="math inline">\(b=\beta+n-y\)</span>. The range is still <span class="math inline">\((0,1)\)</span>, so <span class="math display">\[
+\pi\mid y\sim\text{Beta}(\alpha+y,\;\beta+n-y).
+\]</span> We can now write the normalized posterior explicitly: <span class="math display">\[
+f(\pi\mid y)=
+\frac{\pi^{\alpha+y-1}(1-\pi)^{\beta+n-y-1}}
+{B(\alpha+y,\beta+n-y)},
+\qquad 0&lt;\pi&lt;1.
+\]</span> The denominator uses the <strong>updated</strong> parameters. Reusing the prior’s normalizing constant would not make this new density integrate to one.</p>
+<p>For the modern art data, <span class="math inline">\(\alpha=4\)</span>, <span class="math inline">\(\beta=6\)</span>, <span class="math inline">\(n=100\)</span>, and <span class="math inline">\(y=14\)</span>. The posterior is therefore <span class="math inline">\(\text{Beta}(18,92)\)</span>. Its mean is <span class="math inline">\(18/(18+92)\approx0.164\)</span>, between the prior mean <span class="math inline">\(0.4\)</span> and the sample proportion <span class="math inline">\(0.14\)</span>. More generally, for <span class="math inline">\(n&gt;0\)</span>, <span class="math display">\[
+E[\pi\mid y]
+=\frac{\alpha+y}{\alpha+\beta+n}
+=\frac{\alpha+\beta}{\alpha+\beta+n}
+  \frac{\alpha}{\alpha+\beta}
++\frac{n}{\alpha+\beta+n}\frac{y}{n}.
+\]</span> The last expression is a weighted average of the prior mean and the sample proportion. The weights add to one, and the data receive more weight as <span class="math inline">\(n\)</span> increases while the prior stays fixed.</p>
+</section>
+<section id="sec-conjugate-gamma-poisson" class="level2" data-number="D.3">
+<h2 data-number="D.3" class="anchored" data-anchor-id="sec-conjugate-gamma-poisson"><span class="header-section-number">D.3</span> A Poisson likelihood and a Gamma prior</h2>
+<p>Now suppose <span class="math inline">\(y_1,\ldots,y_n\)</span> are counts from <span class="math inline">\(n\)</span> observation periods of equal length. We model them as independent given a common expected count <span class="math inline">\(\lambda\)</span>: <span class="math display">\[
+Y_i\mid\lambda\sim\text{Pois}(\lambda),
+\qquad i=1,\ldots,n.
+\]</span> For a single observation, the probability is <span class="math inline">\(\lambda^{y_i}e^{-\lambda}/y_i!\)</span>. Conditional independence lets us multiply these probabilities to obtain the joint likelihood: <span class="math display">\[
+\begin{aligned}
+f(\mathbf y\mid\lambda)
+&amp;=\prod_{i=1}^n\frac{\lambda^{y_i}e^{-\lambda}}{y_i!}\\
+&amp;=\frac{\lambda^{\sum_{i=1}^n y_i}e^{-n\lambda}}
+         {\prod_{i=1}^n y_i!}.
+\end{aligned}
+\]</span> There are two combinations to notice. Multiplying the powers of <span class="math inline">\(\lambda\)</span> adds the observed counts in the exponent. Multiplying <span class="math inline">\(n\)</span> copies of <span class="math inline">\(e^{-\lambda}\)</span> gives <span class="math inline">\(e^{-n\lambda}\)</span>. The factorials in the denominator involve only the observed counts, so the likelihood kernel is <span class="math display">\[
+\lambda^{\sum_i y_i}e^{-n\lambda},\qquad \lambda&gt;0.
+\]</span></p>
+<p>Use a <span class="math inline">\(\text{Gamma}(s,r)\)</span> prior with shape <span class="math inline">\(s&gt;0\)</span> and <strong>rate</strong> <span class="math inline">\(r&gt;0\)</span>: <span class="math display">\[
+f(\lambda)=\frac{r^s}{\Gamma(s)}\lambda^{s-1}e^{-r\lambda},
+\qquad \lambda&gt;0.
+\]</span> Here <span class="math inline">\(\Gamma(s)\)</span> is the Gamma function; together with <span class="math inline">\(r^s\)</span> it supplies the normalizing constant. To recognize the distribution we need the power <span class="math inline">\(s-1\)</span> and the coefficient <span class="math inline">\(r\)</span> in the exponential. The rate convention matters: a Gamma density written using a scale parameter would instead have <span class="math inline">\(e^{-\lambda/\text{scale}}\)</span>.</p>
+<p>Multiplying the two kernels gives <span class="math display">\[
+\begin{aligned}
+f(\lambda\mid\mathbf y)
+&amp;\propto \lambda^{\sum_i y_i}e^{-n\lambda}
+          \lambda^{s-1}e^{-r\lambda}\\
+&amp;=\lambda^{s+\sum_i y_i-1}e^{-(r+n)\lambda}.
+\end{aligned}
+\]</span> This has the Gamma form again: the shape is <span class="math inline">\(s+\sum_i y_i\)</span>, and the rate is <span class="math inline">\(r+n\)</span>. Thus <span class="math display">\[
+\lambda\mid\mathbf y\sim
+\text{Gamma}\!\left(s+\sum_{i=1}^n y_i,\;r+n\right).
+\]</span> The sum of the counts updates the shape; the number of observation periods updates the rate. Substituting these two parameters into the Gamma density above gives the normalized posterior: <span class="math display">\[
+f(\lambda\mid\mathbf y)
+=\frac{(r+n)^{s+\sum_i y_i}}{\Gamma(s+\sum_i y_i)}
+\lambda^{s+\sum_i y_i-1}e^{-(r+n)\lambda},
+\qquad \lambda&gt;0.
+\]</span></p>
+<p>For example, suppose four equal-length task sessions produce counts of <span class="math inline">\(2,0,3,1\)</span> attention lapses, and we use a <span class="math inline">\(\text{Gamma}(2,1)\)</span> prior for the expected count per session. There are <span class="math inline">\(n=4\)</span> sessions and <span class="math inline">\(\sum_i y_i=6\)</span> lapses, giving a <span class="math inline">\(\text{Gamma}(8,5)\)</span> posterior. The prior mean is <span class="math inline">\(2/1=2\)</span>, the observed average is <span class="math inline">\(6/4=1.5\)</span>, and the posterior mean is <span class="math inline">\(8/5=1.6\)</span>.</p>
+<p>The weighted-average interpretation is visible algebraically as well: <span class="math display">\[
+E[\lambda\mid\mathbf y]
+=\frac{s+\sum_i y_i}{r+n}
+=\frac{r}{r+n}\frac{s}{r}
++\frac{n}{r+n}\bar y.
+\]</span> Here <span class="math inline">\(s/r\)</span> is the prior mean and <span class="math inline">\(\bar y\)</span> is the average observed count. With the prior fixed, more observation periods give the observed average more weight.</p>
+</section>
+<section id="sec-conjugate-normal-normal" class="level2" data-number="D.4">
+<h2 data-number="D.4" class="anchored" data-anchor-id="sec-conjugate-normal-normal"><span class="header-section-number">D.4</span> A Normal likelihood and a Normal prior</h2>
+<p>Suppose the observations are independent given their common mean <span class="math inline">\(\mu\)</span>, with a known sampling variance <span class="math inline">\(\sigma^2&gt;0\)</span>: <span class="math display">\[
+Y_i\mid\mu\sim\text{N}(\mu,\sigma^2),
+\qquad i=1,\ldots,n.
+\]</span> Assign <span class="math inline">\(\mu\)</span> a <span class="math inline">\(\text{N}(\theta,\tau^2)\)</span> prior, where <span class="math inline">\(\theta\)</span> is the prior mean and <span class="math inline">\(\tau^2&gt;0\)</span> is the prior variance. Here <span class="math inline">\(\mu\)</span> is the unknown parameter. The quantities <span class="math inline">\(\theta\)</span>, <span class="math inline">\(\tau^2\)</span>, and <span class="math inline">\(\sigma^2\)</span> are specified by the model.</p>
+<p>The likelihood and prior are <span class="math display">\[
+\begin{aligned}
+f(\mathbf y\mid\mu)
+&amp;=(2\pi\sigma^2)^{-n/2}
+  \exp\!\left[-\frac{1}{2\sigma^2}\sum_{i=1}^n(y_i-\mu)^2\right],\\
+f(\mu)
+&amp;=(2\pi\tau^2)^{-1/2}
+  \exp\!\left[-\frac{(\mu-\theta)^2}{2\tau^2}\right].
+\end{aligned}
+\]</span> The factors in front of the exponentials do not depend on <span class="math inline">\(\mu\)</span>. Taking logs turns multiplication of the kernels into addition: <span class="math display">\[
+\log f(\mu\mid\mathbf y)
+=-\frac12\left[
+\frac{\sum_i(y_i-\mu)^2}{\sigma^2}
++\frac{(\mu-\theta)^2}{\tau^2}
+\right]+C.
+\]</span></p>
+<section id="collecting-the-terms-in-the-unknown-mean" class="level3" data-number="D.4.1">
+<h3 data-number="D.4.1" class="anchored" data-anchor-id="collecting-the-terms-in-the-unknown-mean"><span class="header-section-number">D.4.1</span> Collecting the terms in the unknown mean</h3>
+<p>To recognize a Normal density, we want one squared expression of the form <span class="math inline">\((\mu-m)^2\)</span>. First expand the squares already present: <span class="math display">\[
+\begin{aligned}
+\sum_{i=1}^n(y_i-\mu)^2
+&amp;=\sum_{i=1}^n y_i^2-2\mu\sum_{i=1}^n y_i+n\mu^2,\\
+(\mu-\theta)^2&amp;=\mu^2-2\theta\mu+\theta^2.
+\end{aligned}
+\]</span> The first line contains <span class="math inline">\(n\mu^2\)</span> because each of the <span class="math inline">\(n\)</span> squared differences contributes one copy of <span class="math inline">\(\mu^2\)</span>. The terms <span class="math inline">\(\sum_i y_i^2\)</span> and <span class="math inline">\(\theta^2\)</span> do not depend on <span class="math inline">\(\mu\)</span> and can be included in <span class="math inline">\(C\)</span>. Using <span class="math inline">\(\sum_i y_i=n\bar y\)</span>, the log posterior becomes <span class="math display">\[
+\log f(\mu\mid\mathbf y)
+=-\frac12\left[
+\left(\frac{n}{\sigma^2}+\frac{1}{\tau^2}\right)\mu^2
+-2\left(\frac{n\bar y}{\sigma^2}+\frac{\theta}{\tau^2}\right)\mu
+\right]+C.
+\]</span></p>
+</section>
+<section id="completing-the-square" class="level3" data-number="D.4.2">
+<h3 data-number="D.4.2" class="anchored" data-anchor-id="completing-the-square"><span class="header-section-number">D.4.2</span> Completing the square</h3>
+<p>To make the next algebraic step easier to follow, name the two coefficients <span class="math display">\[
+A=\frac{n}{\sigma^2}+\frac{1}{\tau^2},
+\qquad
+h=\frac{n\bar y}{\sigma^2}+\frac{\theta}{\tau^2}.
+\]</span> The expression in brackets is <span class="math inline">\(A\mu^2-2h\mu\)</span>. Factor out <span class="math inline">\(A\)</span> and add and subtract <span class="math inline">\((h/A)^2\)</span> inside the brackets: <span class="math display">\[
+\begin{aligned}
+A\mu^2-2h\mu
+&amp;=A\left[\mu^2-2\frac{h}{A}\mu\right]\\
+&amp;=A\left[\mu^2-2\frac{h}{A}\mu
+          +\left(\frac{h}{A}\right)^2
+          -\left(\frac{h}{A}\right)^2\right]\\
+&amp;=A\left(\mu-\frac{h}{A}\right)^2-\frac{h^2}{A}.
+\end{aligned}
+\]</span> Adding and subtracting the same quantity leaves the expression unchanged, while the first three terms inside the brackets form a square. Since <span class="math inline">\(h^2/A\)</span> does not depend on <span class="math inline">\(\mu\)</span>, it joins the constant in the log posterior. We are left with <span class="math display">\[
+\log f(\mu\mid\mathbf y)
+=-\frac{A}{2}\left(\mu-\frac{h}{A}\right)^2+C.
+\]</span> A Normal log density with mean <span class="math inline">\(m\)</span> and variance <span class="math inline">\(v\)</span> has the form <span class="math inline">\(-(\mu-m)^2/(2v)+C\)</span>. Comparing the two expressions shows that <span class="math inline">\(m=h/A\)</span> and <span class="math inline">\(v=1/A\)</span>. The parameter <span class="math inline">\(\mu\)</span> can take any real value, as required for a Normal distribution. Thus <span class="math display">\[
+\begin{aligned}
+\mu\mid\mathbf y&amp;\sim\text{N}(m,v),\\
+m&amp;=\frac{\theta/\tau^2+n\bar y/\sigma^2}{1/\tau^2+n/\sigma^2},
+\qquad
+v=\frac{1}{1/\tau^2+n/\sigma^2}.
+\end{aligned}
+\]</span> The normalized posterior density is therefore <span class="math display">\[
+f(\mu\mid\mathbf y)=\frac{1}{\sqrt{2\pi v}}
+\exp\!\left[-\frac{(\mu-m)^2}{2v}\right].
+\]</span></p>
+</section>
+<section id="interpreting-the-update" class="level3" data-number="D.4.3">
+<h3 data-number="D.4.3" class="anchored" data-anchor-id="interpreting-the-update"><span class="header-section-number">D.4.3</span> Interpreting the update</h3>
+<p>The reciprocal of a variance is called <strong>precision</strong>. A small variance corresponds to high precision. The prior precision is <span class="math inline">\(1/\tau^2\)</span>. The sample mean has sampling variance <span class="math inline">\(\sigma^2/n\)</span>, so its precision is <span class="math inline">\(n/\sigma^2\)</span>. The posterior precision adds these contributions: <span class="math display">\[
+\frac1v=\frac1{\tau^2}+\frac n{\sigma^2}.
+\]</span> The posterior mean is a weighted average of <span class="math inline">\(\theta\)</span> and <span class="math inline">\(\bar y\)</span>, with each weight proportional to its precision. A tightly concentrated prior gives <span class="math inline">\(\theta\)</span> more weight. More observations, or less sampling variability, give <span class="math inline">\(\bar y\)</span> more weight.</p>
+<p>For the well-being example in Exercise 2.4, <span class="math inline">\(n=25\)</span>, <span class="math inline">\(\bar y=5.735\)</span>, and <span class="math inline">\(\sigma=0.5\)</span>. Taking the prior <span class="math inline">\(\mu\sim\text{N}(6.5,1^2)\)</span> gives prior precision 1 and sample-mean precision <span class="math inline">\(25/0.5^2=100\)</span>. Hence <span class="math display">\[
+m=\frac{1\times6.5+100\times5.735}{101}
+=\frac{580}{101}\approx5.743,
+\qquad
+v=\frac1{101}\approx0.00990.
+\]</span> The posterior mean lies close to the observed mean because the sample mean has much greater precision than the prior. The posterior standard deviation is <span class="math inline">\(\sqrt{v}\approx0.0995\)</span>; this is the value to pass to <code>dnorm()</code> as <code>sd</code>, whereas the Normal notation in the table uses the variance <span class="math inline">\(v\)</span>.</p>
+<p>This derivation treats <span class="math inline">\(\sigma^2\)</span> as known throughout. If the sampling variance is also unknown, it needs its own prior, and this one-parameter update no longer describes the full posterior.</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<!-- Version switcher: a dropdown in the sidebar header, built from versions.json
+     at the site root. Every published version of the book lives in its own
+     folder on the gh-pages branch (latest release at the root, the development
+     build under dev/, older releases under v<version>/). When the file is missing,
+     as in a local preview, no dropdown is shown. Adapted from the bgms site. -->
+<style>
+.book-version { margin: 0.4em 0 0 0; position: relative; font-size: 0.85rem; }
+.book-version > button {
+  background: none; border: 1px solid var(--bayespurple); border-radius: 4px;
+  color: var(--bayespurple); padding: 0.1em 0.6em; cursor: pointer; font: inherit;
+}
+.book-version > button::after { content: " \25BE"; }
+.book-version ul {
+  display: none; position: absolute; left: 0; z-index: 1000; min-width: 14em;
+  margin: 0.2em 0 0 0; padding: 0.3em 0; list-style: none; background: white;
+  border: 1px solid #ccc; border-radius: 4px; box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+.book-version.open ul { display: block; }
+.book-version li a {
+  display: flex; justify-content: space-between; gap: 1em; padding: 0.25em 0.8em;
+  color: #222; text-decoration: none;
+}
+.book-version li a:hover { background: var(--quizgray); }
+.book-version li a.active { font-weight: bold; }
+.book-version .book-version-kind { color: #777; font-size: 0.8em; }
+</style>
+<script>
+(function () {
+  const header = document.querySelector("#quarto-sidebar .sidebar-header");
+  if (!header) return;
+
+  // Where this build's own root is: /computational-methods-book/, .../dev/, .../v0.1/
+  const offset = document.querySelector('meta[name="quarto:offset"]');
+  let buildBase;
+  if (offset) {
+    buildBase = new URL(offset.content, window.location.href).pathname;
+  } else {
+    const lib = document.querySelector('link[href*="site_libs/"]');
+    if (!lib) return;
+    buildBase = new URL(lib.getAttribute("href").split("site_libs/")[0], window.location.href).pathname;
+  }
+  const parentOf = (path) => path.replace(/[^/]+\/$/, "");
+
+  const readJson = async (url) => {
+    try {
+      const response = await fetch(url, { cache: "no-cache" });
+      return response.ok ? await response.json() : null;
+    } catch (e) { return null; }
+  };
+  const exists = async (url) => {
+    try { return (await fetch(url, { method: "HEAD" })).ok; } catch (e) { return false; }
+  };
+
+  const label = (entry) => entry.kind === "release" ? "Version " + entry.version : "Development version";
+
+  const render = (siteRoot, entries, current) => {
+    const pagePath = window.location.pathname.slice(buildBase.length);
+    const box = document.createElement("div");
+    box.className = "book-version";
+    const button = document.createElement("button");
+    button.type = "button";
+    button.setAttribute("aria-haspopup", "true");
+    button.setAttribute("aria-expanded", "false");
+    button.title = "Switch to another version of the book";
+    button.textContent = label(current);
+    const menu = document.createElement("ul");
+    entries.forEach(entry => {
+      const li = document.createElement("li");
+      const link = document.createElement("a");
+      link.className = entry === current ? "active" : "";
+      link.href = siteRoot + entry.dir;
+      const name = document.createElement("span");
+      name.textContent = label(entry);
+      const kind = document.createElement("span");
+      kind.className = "book-version-kind";
+      kind.textContent = entry.kind === "release" ? "release" : "in preparation";
+      link.append(name, kind);
+      // Stay on the same page when that version has it; otherwise go to its welcome page.
+      link.addEventListener("click", async (event) => {
+        event.preventDefault();
+        const home = siteRoot + entry.dir;
+        if (!pagePath) { window.location.href = home; return; }
+        const target = home + pagePath;
+        window.location.href = (await exists(target)) ? target + window.location.hash : home;
+      });
+      li.appendChild(link);
+      menu.appendChild(li);
+    });
+    const close = () => { box.classList.remove("open"); button.setAttribute("aria-expanded", "false"); };
+    button.addEventListener("click", (event) => {
+      event.stopPropagation();
+      const open = box.classList.toggle("open");
+      button.setAttribute("aria-expanded", open ? "true" : "false");
+    });
+    document.addEventListener("click", (event) => { if (!box.contains(event.target)) close(); });
+    document.addEventListener("keydown", (event) => { if (event.key === "Escape") close(); });
+    box.append(button, menu);
+    header.appendChild(box);
+  };
+
+  (async function () {
+    // versions.json lives at the site root; a build one folder down finds it one level up.
+    let base = buildBase;
+    let index = await readJson(base + "versions.json");
+    if (!index) {
+      const up = parentOf(buildBase);
+      if (!up || up === buildBase) return;
+      base = up;
+      index = await readJson(base + "versions.json");
+    }
+    if (!index || typeof index.root !== "string" || !Array.isArray(index.versions)) return;
+    const siteRoot = index.root;
+    // Readers only see released versions; the development build (our staging
+    // area) lists itself only when you are already on it.
+    const onDevelopment = buildBase.slice(siteRoot.length) === "dev/";
+    const entries = index.versions
+      .filter(entry => typeof entry.path === "string" && entry.path.startsWith(siteRoot))
+      .filter(entry => entry.kind === "release" || onDevelopment)
+      .map(entry => ({ version: entry.version, kind: entry.kind, dir: entry.path.slice(siteRoot.length) }));
+    if (entries.length === 0) return;
+    const current = entries.find(entry => entry.dir === buildBase.slice(siteRoot.length));
+    if (!current) return;
+    render(siteRoot, entries, current);
+  })();
+})();
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/maartenmarsman\.github\.io\/computational-methods-book\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../appendices/C-mcmc-diagnostics.html" class="pagination-link" aria-label="Technical Notes on MCMC">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Technical Notes on MCMC</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>Stochastic Simulation for Bayesian Modeling in Psychology, Maarten Marsman and Lourens Waldorp.</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/MaartenMarsman/computational-methods-book/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></div>
+    <div class="nav-footer-right">
+<p>Published with <a href="https://quarto.org">Quarto</a>.</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>
