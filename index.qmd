@@ -1,11 +1,7 @@
 # Welcome {.unnumbered}
 
-::: {.callout-note appearance="simple"}
-**Work in progress.** This website holds the chapters of the book that are ready for readers. Online now: [Chapter 1](chapters/01-probability-and-simulation.qmd) (Probability and Simulation), [Chapter 2](chapters/02-bayesian-inference-recap.qmd) (Bayesian Inference, Revisited), [Chapter 3](chapters/03-markov-chains.qmd) (Markov Chains), [Chapter 4](chapters/04-diagnosing-markov-chains.qmd) (Diagnosing Markov Chains) and [Chapter 5](chapters/05-metropolis.qmd) (The Metropolis Algorithm). Further chapters are added as they are completed, and the chapters already online may still change.
-
 ::: {.content-visible when-format="html"}
-[Download the PDF](Stochastic-Simulation-for-Bayesian-Modeling.pdf) of the chapters that are online.
-:::
+This website holds the released chapters of the book. You can also [download it as a PDF](Stochastic-Simulation-for-Bayesian-Modeling.pdf).
 :::
 
 Stochastic simulation provides a way to study Bayesian models when the quantities of interest are difficult to calculate directly. By generating draws from a probability distribution, we can estimate posterior means, probabilities, and predictions. This book develops the methods behind those calculations and shows how to implement them in R. Implementing the algorithms helps reveal how they work, why they sometimes perform poorly, and how to assess the results produced by statistical software.
