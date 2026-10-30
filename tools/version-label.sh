@@ -10,4 +10,7 @@ case "$tag" in
   *)       label="Development version" ;;
 esac
 printf 'format:\n  pdf:\n    date: "%s"\n    date-format: "[%s,] D MMMM YYYY"\n' "$(date -u +%F)" "$label" > _version.yml
+# The development build (our staging area) also shows the changes in preparation on the News page.
+ref="${GITHUB_REF:-$(git symbolic-ref -q --short HEAD || true)}"
+case "$ref" in refs/heads/development|development) echo 'dev-build: true' >> _version.yml ;; esac
 echo "$label, $(date -u +%F)"

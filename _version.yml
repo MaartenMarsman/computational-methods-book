@@ -2,3 +2,4 @@ format:
   pdf:
     date: "2026-10-30"
     date-format: "[Development version,] D MMMM YYYY"
+dev-build: true

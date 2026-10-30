@@ -5,15 +5,17 @@ Each released version of the book has an entry here that says what changed since
 <!--
 For us: whenever something a reader may already have read changes (a correction,
 a changed number, a renamed function, a reworded exercise), add a line to the
-"Changes" list of the development entry below. Write it for students: the
-chapter, what changed, and why it matters to them. When we release,
-tools/release.sh turns this entry into a numbered version and starts a new one.
+"Changes" list of the block below. Readers never see that block: it is shown
+only on the development site, our staging area. Write the lines for students:
+the chapter, what changed, and why it matters to them. When we release,
+tools/release.sh turns the block into the entry for the new version.
 -->
 
 <!-- dev-start -->
-## Development version {.unnumbered}
+::: {.content-visible when-meta="dev-build"}
+## In preparation {.unnumbered}
 
-The version we are working on. Nothing has been released yet. Online now: the welcome page, Chapters 1 to 5, and Appendices A to D.
+What the next release will contain. Nothing has been released yet; the welcome page, Chapters 1 to 5, and Appendices A to D are ready for review.
 
 Changes so far:
 
@@ -22,4 +24,5 @@ Changes so far:
 - 30 October 2026. Chapter 3: the chain and grid-walk functions take `n_iter` instead of `T`, the same argument name as the samplers of later chapters; Exercise 3.5b now says that the entry $P_{\text{happy},\text{sad}}$ is changed to 0.01, and Exercise 3.8b uses `n_iter`.
 - 30 October 2026. Chapter 4: the precision target for the endpoints of the credible interval is now 0.01 instead of 0.005, and the output of Stan's diagnostic check is shown.
 - 30 October 2026. Chapter 5: the two-mode example now has its modes at $-5$ and $5$ instead of $-3$ and $3$, so that a small step size really does trap the chain; Exercise 5.7a starts its chains at $-5$ and $5$. The Metropolis sampler now stops with a clear message when the log target returns `NaN`.
+:::
 <!-- dev-end -->

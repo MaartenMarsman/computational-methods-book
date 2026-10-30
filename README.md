@@ -6,4 +6,4 @@ Read it at <https://maartenmarsman.github.io/computational-methods-book/>. Comme
 
 ## Versions
 
-Nothing is released yet; the chapters appear in the development version of the website as they are ready. Once chapters are released, each version gets a number, stays online, and has an entry on the News page that says what changed since the version before it. A correction to released text is itself a new version, so nothing changes silently under a reader.
+Nothing is released yet. Each released version of the book gets a number, stays online, and has an entry on the News page that says what changed since the version before it. A correction to released text is itself a new version, so nothing changes silently under a reader.

@@ -3,7 +3,7 @@
 #
 #   bash tools/release.sh 0.1
 #
-# Turns the development entry of news.qmd into the entry for version 0.1,
+# Turns the "In preparation" block of news.qmd into the entry for version 0.1,
 # dated today, with a link to every changed line since the previous version;
 # starts a fresh development entry; commits; merges development into main;
 # tags v0.1. It does not push: it prints the push command at the end.
@@ -23,13 +23,14 @@ m = re.search(r"<!-- dev-start -->\n(.*?)<!-- dev-end -->\n", s, re.S)
 if not m: raise SystemExit("news.qmd has no development entry between <!-- dev-start --> and <!-- dev-end -->")
 dev = m.group(1)
 changes = dev[dev.index("\n- "):] if "\n- " in dev else "\n"
+changes = changes[:changes.index("\n:::")] + "\n" if "\n:::" in changes else changes
 link = (f" Every changed line since version {previous[1:]}: [compare on GitHub]"
         f"(https://github.com/MaartenMarsman/computational-methods-book/compare/{previous}...v{version})." if previous else "")
 release = (f"## Version {version} ({today}) {{.unnumbered}}\n\n"
            f"Released {today}.{link}\n\nChanges" + (f" since version {previous[1:]}" if previous else "") + ":\n" + changes)
-newdev = (f"<!-- dev-start -->\n## Development version {{.unnumbered}}\n\n"
-          f"The version we are working on: everything in version {version} plus the changes below.\n\n"
-          f"Changes since version {version}:\n\n- Nothing yet.\n<!-- dev-end -->\n")
+newdev = (f"<!-- dev-start -->\n::: {{.content-visible when-meta=\"dev-build\"}}\n## In preparation {{.unnumbered}}\n\n"
+          f"What the next release will contain: everything in version {version} plus the changes below.\n\n"
+          f"Changes since version {version}:\n\n- Nothing yet.\n:::\n<!-- dev-end -->\n")
 p.write_text(s[:m.start()] + newdev + "\n" + release + "\n" + s[m.end():])
 PY
 git add news.qmd
