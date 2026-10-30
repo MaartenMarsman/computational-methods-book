@@ -934,7 +934,7 @@ Figure&nbsp;5.7: Metropolis on an equal mixture of two Normal distributions cent
 <p><a href="#fig-bivariate" class="quarto-xref">Figure&nbsp;<span>5.8</span></a> shows the resulting draws against contours of equal target density. The elongated contours show combinations of the parameters that receive similar density.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
-<div id="fig-bivariate" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center" data-fig-pos="H">
+<div id="fig-bivariate" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-pos="H" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-bivariate-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="05-metropolis_files/figure-html/fig-bivariate-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:75.0%" data-fig-pos="H">
@@ -1171,7 +1171,7 @@ Roberts, G. O., &amp; Rosenthal, J. S. (2001). Optimal scaling for various <span
       name.textContent = label(entry);
       const kind = document.createElement("span");
       kind.className = "book-version-kind";
-      kind.textContent = entry.kind === "release" ? "release" : "latest changes";
+      kind.textContent = entry.kind === "release" ? "release" : "in preparation";
       link.append(name, kind);
       // Stay on the same page when that version has it; otherwise go to its welcome page.
       link.addEventListener("click", async (event) => {
@@ -1208,8 +1208,12 @@ Roberts, G. O., &amp; Rosenthal, J. S. (2001). Optimal scaling for various <span
     }
     if (!index || typeof index.root !== "string" || !Array.isArray(index.versions)) return;
     const siteRoot = index.root;
+    // Readers only see released versions; the development build (our staging
+    // area) lists itself only when you are already on it.
+    const onDevelopment = buildBase.slice(siteRoot.length) === "dev/";
     const entries = index.versions
       .filter(entry => typeof entry.path === "string" && entry.path.startsWith(siteRoot))
+      .filter(entry => entry.kind === "release" || onDevelopment)
       .map(entry => ({ version: entry.version, kind: entry.kind, dir: entry.path.slice(siteRoot.length) }));
     if (entries.length === 0) return;
     const current = entries.find(entry => entry.dir === buildBase.slice(siteRoot.length));

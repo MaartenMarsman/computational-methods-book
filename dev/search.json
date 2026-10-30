@@ -676,17 +676,27 @@
     "href": "news.html",
     "title": "News",
     "section": "",
-    "text": "Development version\nVersions of this website, newest first. Every version remains available through the version menu in the sidebar, and every change to the text and code is recorded in the GitHub repository.\nNot yet released. Online in the development version:\nThe appendices now include updated setup instructions and package lists, revised notation, and a step-by-step derivation of the variance of a dependent average.",
+    "text": "In preparation\nEach released version of the book has an entry here that says what changed since the version before it, so you can check whether something you read has since been corrected. Earlier versions stay online and can be opened from the version menu in the sidebar.\nWhat the next release will contain: everything in version 0.1 plus the changes below.\nChanges since version 0.1:",
     "crumbs": [
       "News"
     ]
   },
   {
-    "objectID": "news.html#development-version",
-    "href": "news.html#development-version",
+    "objectID": "news.html#in-preparation",
+    "href": "news.html#in-preparation",
     "title": "News",
     "section": "",
-    "text": "the welcome page;\nChapter 1, Probability and Simulation;\nChapter 2, Bayesian Inference, Revisited;\nChapter 3, Markov Chains;\nChapter 4, Diagnosing Markov Chains;\nChapter 5, The Metropolis Algorithm;\nAppendices A–D: software setup, notation, technical notes on MCMC (including the acceptance-probability derivation), and conjugate-posterior derivations.",
+    "text": "30 October 2026. Welcome page: who the book is for and how it teaches, rewritten.\n30 October 2026. Appendices: updated setup instructions and package lists, revised notation, and a step-by-step derivation of the variance of a dependent average.\n30 October 2026. Chapters 4 and 5: clearer exercise instructions and stronger simulation comparisons.",
+    "crumbs": [
+      "News"
+    ]
+  },
+  {
+    "objectID": "news.html#version-0.1-30-october-2026",
+    "href": "news.html#version-0.1-30-october-2026",
+    "title": "News",
+    "section": "Version 0.1 (30 October 2026)",
+    "text": "Version 0.1 (30 October 2026)\nReleased 30 October 2026.\nFirst release. Contents:\n\nThe welcome page.\nChapter 1, Probability and Simulation.\nChapter 2, Bayesian Inference, Revisited.\nChapter 3, Markov Chains.\nChapter 4, Diagnosing Markov Chains.\nChapter 5, The Metropolis Algorithm.\nAppendices A to D: software setup, notation, technical notes on MCMC, and conjugate-posterior derivations.",
     "crumbs": [
       "News"
     ]

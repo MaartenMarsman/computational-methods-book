@@ -767,7 +767,7 @@ window.Quarto = {
       name.textContent = label(entry);
       const kind = document.createElement("span");
       kind.className = "book-version-kind";
-      kind.textContent = entry.kind === "release" ? "release" : "latest changes";
+      kind.textContent = entry.kind === "release" ? "release" : "in preparation";
       link.append(name, kind);
       // Stay on the same page when that version has it; otherwise go to its welcome page.
       link.addEventListener("click", async (event) => {
@@ -804,8 +804,12 @@ window.Quarto = {
     }
     if (!index || typeof index.root !== "string" || !Array.isArray(index.versions)) return;
     const siteRoot = index.root;
+    // Readers only see released versions; the development build (our staging
+    // area) lists itself only when you are already on it.
+    const onDevelopment = buildBase.slice(siteRoot.length) === "dev/";
     const entries = index.versions
       .filter(entry => typeof entry.path === "string" && entry.path.startsWith(siteRoot))
+      .filter(entry => entry.kind === "release" || onDevelopment)
       .map(entry => ({ version: entry.version, kind: entry.kind, dir: entry.path.slice(siteRoot.length) }));
     if (entries.length === 0) return;
     const current = entries.find(entry => entry.dir === buildBase.slice(siteRoot.length));

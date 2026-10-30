@@ -244,7 +244,8 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#development-version" id="toc-development-version" class="nav-link active" data-scroll-target="#development-version">Development version</a></li>
+  <li><a href="#in-preparation" id="toc-in-preparation" class="nav-link active" data-scroll-target="#in-preparation">In preparation</a></li>
+  <li><a href="#version-0.1-30-october-2026" id="toc-version-0.1-30-october-2026" class="nav-link" data-scroll-target="#version-0.1-30-october-2026">Version 0.1 (30 October 2026)</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/MaartenMarsman/computational-methods-book/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -270,20 +271,40 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>Versions of this website, newest first. Every version remains available through the version menu in the sidebar, and every change to the text and code is recorded in the <a href="https://github.com/MaartenMarsman/computational-methods-book">GitHub repository</a>.</p>
-<section id="development-version" class="level2 unnumbered">
-<h2 class="unnumbered anchored" data-anchor-id="development-version">Development version</h2>
-<p>Not yet released. Online in the development version:</p>
+<p>Each released version of the book has an entry here that says what changed since the version before it, so you can check whether something you read has since been corrected. Earlier versions stay online and can be opened from the version menu in the sidebar.</p>
+<!--
+For us: whenever something a reader may already have read changes (a correction,
+a changed number, a renamed function, a reworded exercise), add a line to the
+"Changes" list of the block below. Readers never see that block: it is shown
+only on the development site, our staging area. Write the lines for students:
+the chapter, what changed, and why it matters to them. When we release,
+tools/release.sh turns the block into the entry for the new version.
+-->
+<!-- dev-start -->
+<section id="in-preparation" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="in-preparation">In preparation</h2>
+<p>What the next release will contain: everything in version 0.1 plus the changes below.</p>
+<p>Changes since version 0.1:</p>
 <ul>
-<li>the welcome page;</li>
-<li>Chapter 1, Probability and Simulation;</li>
-<li>Chapter 2, Bayesian Inference, Revisited;</li>
-<li>Chapter 3, Markov Chains;</li>
-<li>Chapter 4, Diagnosing Markov Chains;</li>
-<li>Chapter 5, The Metropolis Algorithm;</li>
-<li>Appendices A–D: software setup, notation, technical notes on MCMC (including the acceptance-probability derivation), and conjugate-posterior derivations.</li>
+<li>30 October 2026. Welcome page: who the book is for and how it teaches, rewritten.</li>
+<li>30 October 2026. Appendices: updated setup instructions and package lists, revised notation, and a step-by-step derivation of the variance of a dependent average.</li>
+<li>30 October 2026. Chapters 4 and 5: clearer exercise instructions and stronger simulation comparisons.</li>
 </ul>
-<p>The appendices now include updated setup instructions and package lists, revised notation, and a step-by-step derivation of the variance of a dependent average.</p>
+<!-- dev-end -->
+</section>
+<section id="version-0.1-30-october-2026" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="version-0.1-30-october-2026">Version 0.1 (30 October 2026)</h2>
+<p>Released 30 October 2026.</p>
+<p>First release. Contents:</p>
+<ul>
+<li>The welcome page.</li>
+<li>Chapter 1, Probability and Simulation.</li>
+<li>Chapter 2, Bayesian Inference, Revisited.</li>
+<li>Chapter 3, Markov Chains.</li>
+<li>Chapter 4, Diagnosing Markov Chains.</li>
+<li>Chapter 5, The Metropolis Algorithm.</li>
+<li>Appendices A to D: software setup, notation, technical notes on MCMC, and conjugate-posterior derivations.</li>
+</ul>
 
 
 </section>
@@ -364,7 +385,7 @@ ul.task-list li input[type="checkbox"] {
       name.textContent = label(entry);
       const kind = document.createElement("span");
       kind.className = "book-version-kind";
-      kind.textContent = entry.kind === "release" ? "release" : "latest changes";
+      kind.textContent = entry.kind === "release" ? "release" : "in preparation";
       link.append(name, kind);
       // Stay on the same page when that version has it; otherwise go to its welcome page.
       link.addEventListener("click", async (event) => {
@@ -401,8 +422,12 @@ ul.task-list li input[type="checkbox"] {
     }
     if (!index || typeof index.root !== "string" || !Array.isArray(index.versions)) return;
     const siteRoot = index.root;
+    // Readers only see released versions; the development build (our staging
+    // area) lists itself only when you are already on it.
+    const onDevelopment = buildBase.slice(siteRoot.length) === "dev/";
     const entries = index.versions
       .filter(entry => typeof entry.path === "string" && entry.path.startsWith(siteRoot))
+      .filter(entry => entry.kind === "release" || onDevelopment)
       .map(entry => ({ version: entry.version, kind: entry.kind, dir: entry.path.slice(siteRoot.length) }));
     if (entries.length === 0) return;
     const current = entries.find(entry => entry.dir === buildBase.slice(siteRoot.length));
