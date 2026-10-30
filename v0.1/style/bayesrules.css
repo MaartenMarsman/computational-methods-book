@@ -1,0 +1,111 @@
+/* bayesrules.css  --  HTML styling for the Computational Methods book.
+   Ported from the 2025 Bayes Rules! addendum and adapted to Quarto's book
+   layout (theme: cosmo). Keep overrides minimal so Quarto's navigation,
+   search, and code tools keep working. */
+
+:root {
+  --bayespurple: #552E6B;
+  --quizgray: #ECECEC;
+}
+
+/* Body text: the same sans-serif stack, size, and line height as the Bayes Rules!
+   website (gitbook defaults), so the two sites read alike. */
+body {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 1rem;
+  line-height: 1.7;
+  color: #222;
+}
+
+/* Headings: purple with rules, as in Bayes Rules! */
+h1, h2, h3, h4,
+.quarto-title h1 {
+  color: var(--bayespurple);
+  font-weight: bold;
+}
+
+#quarto-content h1 {
+  border-top: 3px solid var(--bayespurple);
+  border-bottom: 3px solid var(--bayespurple);
+  padding: 0.25em 0;
+  margin-top: 1em;
+}
+
+#quarto-content h2 {
+  border-bottom: 2px solid var(--bayespurple);
+  padding-bottom: 0.15em;
+  margin-top: 1.6em;
+}
+
+/* Gray boxes: .bookbox, .quiz, .exercise (see style/bookbox.lua) */
+.bookgraybox {
+  background-color: var(--quizgray);
+  border: 1px solid var(--bayespurple);
+  border-radius: 8px;
+  padding: 0.6em 0.9em 0.4em 0.9em;
+  margin: 1.2em 0;
+  color: #333;
+}
+
+.bookgraybox .title p {
+  font-weight: bold;
+  margin: 0 0 0.5em 0;
+}
+
+.bookgraybox p:last-child {
+  margin-bottom: 0.2em;
+}
+
+.exercise {
+  background-color: white;
+  border-left: 4px solid var(--bayespurple);
+  border-top: none; border-right: none; border-bottom: none;
+  border-radius: 0;
+}
+
+/* Code blocks: white with a thin black frame */
+div.sourceCode {
+  background-color: white;
+  border: 1px solid #222;
+  border-radius: 0;
+}
+
+pre.sourceCode code, pre code {
+  font-size: 0.85em;
+}
+
+/* Output blocks: light gray, no frame */
+pre:not(.sourceCode) {
+  background-color: #f7f7f7;
+  border: none;
+}
+
+/* Sidebar and links */
+.sidebar-navigation .active,
+a {
+  color: var(--bayespurple);
+}
+
+/* References */
+div.csl-entry {
+  padding-left: 1.5em;
+  text-indent: -1.5em;
+  margin-bottom: 0.5em;
+}
+
+/* Title block of the landing page: title, subtitle and authors, nothing else */
+#quarto-content .quarto-title .subtitle.lead {
+  color: #222;
+  font-size: 1.35rem;
+  font-weight: 400;
+  margin-top: 0.4em;
+}
+
+.quarto-title-meta-heading {
+  display: none;
+}
+
+.quarto-title-meta,
+.quarto-title-meta-author {
+  margin-top: 0.4em;
+}
