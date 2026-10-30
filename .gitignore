@@ -1,14 +1,13 @@
-# Quarto build output (regenerated on render)
-/_book/
-/.quarto/
+
 # NOTE: keep /_freeze/ under version control; GitHub builds the site from it without R.
-
+# Quarto build output (regenerated on render)
 # R / RStudio
-.Rproj.user/
-.Rhistory
-.RData
-
 # macOS
-.DS_Store
-
 **/*.quarto_ipynb
+.DS_Store
+.RData
+.Rhistory
+.Rproj.user/
+/.quarto/
+/_book/
+chapters/*_files/
