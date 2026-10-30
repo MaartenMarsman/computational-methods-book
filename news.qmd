@@ -13,3 +13,5 @@ Not yet released. Online in the development version:
 - Chapter 4, Diagnosing Markov Chains;
 - Chapter 5, The Metropolis Algorithm;
 - Appendices A–D: software setup, notation, technical notes on MCMC (including the acceptance-probability derivation), and conjugate-posterior derivations.
+
+The appendices now include updated setup instructions and package lists, revised notation, and a step-by-step derivation of the variance of a dependent average.
