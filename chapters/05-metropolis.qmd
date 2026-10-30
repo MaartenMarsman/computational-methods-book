@@ -679,7 +679,7 @@ As shown in @sec-bayes-recap and @sec-conjugate-gamma-poisson, a Poisson rate $\
 
 a. Write `log_posterior(lambda)` for this model. What should it return for negative `lambda`?
 b. Run `metropolis()` for 10,000 iterations from `init = 1` with step size 0.5. Report the acceptance rate and compare the histogram of the draws with the exact Gamma posterior.
-c. Repeat with step sizes 0.05 and 5. Compare acceptance rates, trace plots, and effective sample sizes.
+c. Repeat with step sizes 0.05 and 50. Compare acceptance rates and trace plots for all three step sizes. Discard the first 500 draws of each run before computing their effective sample sizes. Explain why both very small and very large steps can be inefficient.
 :::
 
 ::: {.exercise}

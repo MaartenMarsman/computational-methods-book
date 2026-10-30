@@ -852,7 +852,7 @@ c. Run both versions for 50,000 transitions from `init = 51` and compare the fir
 **Exercise 3.8 (A chain for a bimodal target)**
 Define a log target on the same grid with `log_target2 <- log(dnorm(grid, 0.25, 0.04) + dnorm(grid, 0.75, 0.04))`. It represents two separated modes with equal target probability.
 
-a. Build the matrix with `build_walk(log_target2)` and check that its stationary distribution is proportional to `exp(log_target2)`. Normalize by subtracting the maximum log weight before exponentiating.
+a. Build the matrix `P_walk_bi <- build_walk(log_target2)`. Subtract the maximum log weight before exponentiating, then normalize the weights to obtain `grid_prob2`. Check stationarity directly with `max(abs(grid_prob2 %*% P_walk_bi - grid_prob2))`. Use this check rather than the eigenvector helper `stationary()`, which can be unreliable when movement between modes is extremely rare.
 b. Run `walk_grid(log_target2, init = 25, n_iter = 20000)` and plot the trace. How often does the chain cross from one bump to the other?
 c. Compute the fraction of steps spent below $\pi = 0.5$ and compare it with the target's mass there. Explain the discrepancy using the distinction between a stationary distribution existing and a chain having reached it.
 :::
