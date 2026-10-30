@@ -1041,7 +1041,7 @@ Figure&nbsp;1.8: A broad proposal with several parameters. Left: For two paramet
 <div class="exercise bookgraybox">
 <p><strong>Exercise 1.7 (The inhibition function)</strong> Return to the stop-signal race model of the chapter. The stop-signal delay was fixed at 250 ms. In an experiment it varies from trial to trial.</p>
 <ol type="a">
-<li>Write a function <code>p_stop(ssd, N_races = 100000)</code> that returns the Monte Carlo estimate of the probability of stopping for a given delay, together with its standard error.</li>
+<li>Write a function <code>p_stop(ssd, N_races = 100000, stop_mean = 200)</code> that returns the Monte Carlo estimate of the probability of stopping for a given delay, together with its standard error.</li>
 <li>Evaluate it for delays from 0 to 500 ms in steps of 50 ms and plot the probability of successful stopping. The inhibition function is often plotted instead as the complementary probability of responding, so label your vertical axis explicitly.</li>
 <li>Change the mean of the Normal component of the stop duration from 200 ms to 300 ms, keeping its standard deviation and Exponential component unchanged. Redraw the curve. Describe in words what a slower stop process does to the inhibition function.</li>
 </ol>

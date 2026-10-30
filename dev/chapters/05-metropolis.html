@@ -934,7 +934,7 @@ Figure&nbsp;5.7: Metropolis on an equal mixture of two Normal distributions cent
 <p><a href="#fig-bivariate" class="quarto-xref">Figure&nbsp;<span>5.8</span></a> shows the resulting draws against contours of equal target density. The elongated contours show combinations of the parameters that receive similar density.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
-<div id="fig-bivariate" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-pos="H" data-fig-align="center">
+<div id="fig-bivariate" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center" data-fig-pos="H">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-bivariate-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="05-metropolis_files/figure-html/fig-bivariate-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:75.0%" data-fig-pos="H">
@@ -1035,7 +1035,7 @@ Figure&nbsp;5.9: Plain Metropolis on a <span class="math inline">\(d\)</span>-di
 <ol type="a">
 <li>Write <code>log_posterior(lambda)</code> for this model. What should it return for negative <code>lambda</code>?</li>
 <li>Run <code>metropolis()</code> for 10,000 iterations from <code>init = 1</code> with step size 0.5. Report the acceptance rate and compare the histogram of the draws with the exact Gamma posterior.</li>
-<li>Repeat with step sizes 0.05 and 5. Compare acceptance rates, trace plots, and effective sample sizes.</li>
+<li>Repeat with step sizes 0.05 and 50. Compare acceptance rates and trace plots for all three step sizes. Discard the first 500 draws of each run before computing their effective sample sizes. Explain why both very small and very large steps can be inefficient.</li>
 </ol>
 </div>
 <div class="exercise bookgraybox">

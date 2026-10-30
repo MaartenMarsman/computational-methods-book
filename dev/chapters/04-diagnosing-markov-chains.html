@@ -1008,7 +1008,7 @@ Figure&nbsp;4.11: Four records representing exploration of only the left mode of
 <div class="exercise bookgraybox">
 <p><strong>Exercise 4.2 (Thinning by the numbers)</strong> A chain of <span class="math inline">\(N = 20{,}000\)</span> draws has autocorrelations <span class="math inline">\(\rho_k = 0.9^k\)</span>.</p>
 <ol type="a">
-<li>Compute its effective sample size.</li>
+<li>Approximate its effective sample size using the long-run formula.</li>
 <li>The chain is thinned by keeping every fifth draw. What are the autocorrelations of the thinned chain, and what is its effective sample size?</li>
 <li>A colleague argues that the thinned chain is better because its draws are “almost independent.” Explain what they have confused.</li>
 </ol>
@@ -1075,8 +1075,8 @@ Figure&nbsp;4.13: Density overlays for Exercise 4.5.
 <div class="exercise bookgraybox">
 <p><strong>Exercise 4.7 (<span class="math inline">\(\widehat{R}\)</span> by hand; optional)</strong> Optional extension: Use <code>rhat_by_hand()</code> and <code>split_halves()</code> from <a href="../appendices/C-mcmc-diagnostics.html#sec-rhat-calculations" class="quarto-xref"><span>Section C.2</span></a>.</p>
 <ol type="a">
-<li>Simulate four records of <span class="math inline">\(N=1{,}000\)</span> stored states from <code>ar1_chain()</code> with <span class="math inline">\(\phi=0.95\)</span>, each started at <code>init=0</code>. Compute unsplit and split basic R-hat by hand. Compare them with <code>rhat_basic(split=FALSE)</code> and <code>rhat_basic(split=TRUE)</code>, and also report <code>posterior::rhat()</code>. Are these fixed-start records stationary at time zero?</li>
-<li>Now start the four chains at <span class="math inline">\(-10, -5, 5\)</span>, and <span class="math inline">\(10\)</span>. Repeat the same comparisons. Then discard the first 200 iterations of each chain and compute them again. Explain what changed.</li>
+<li>Simulate four records of <span class="math inline">\(N=1{,}000\)</span> stored states from <code>ar1_chain()</code> with <span class="math inline">\(\phi=0.95\)</span>, each started at <code>init=0</code>. Compute unsplit and split basic R-hat by hand. Compare them with <code>rhat_basic(split=FALSE)</code> and <code>rhat_basic(split=TRUE)</code>, and also report <code>posterior::rhat()</code>. Are these fixed-start records stationary at time zero? Repeat with each initial state drawn independently from N<span class="math inline">\((0,1)\)</span>. Does starting in stationarity ensure that R-hat is below 1.01 in a run of this length? Explain the role of dependence.</li>
+<li>To examine a more persistent effect of initialization, use <span class="math inline">\(\phi=0.99\)</span> and <span class="math inline">\(N=2{,}000\)</span> stored states, starting the four chains at <span class="math inline">\(-50, -25, 25\)</span>, and <span class="math inline">\(50\)</span>. Plot the traces and repeat the R-hat comparisons. Discard the first 500 states of each chain, then plot and compute again. What changes, and why might R-hat still exceed 1.01 after the early movement toward the target region has disappeared?</li>
 <li>Construct four chains that have the same mean but where two chains have three times the spread of the other two, as in <a href="../appendices/C-mcmc-diagnostics.html#sec-rank-folding" class="quarto-xref"><span>Section C.3</span></a>. Compare <code>rhat_basic()</code> and <code>posterior::rhat()</code> and identify any difference in the values relative to 1.01, and explain which of the two ingredients of the rank-normalized <span class="math inline">\(\widehat{R}\)</span>, rank normalization or folding, is responsible.</li>
 </ol>
 </div>

@@ -1265,7 +1265,7 @@ Figure&nbsp;3.7: Left: steps 0 to 500 of the hand-built chain, started at <span 
 <div class="exercise bookgraybox">
 <p><strong>Exercise 3.8 (A chain for a bimodal target)</strong> Define a log target on the same grid with <code>log_target2 &lt;- log(dnorm(grid, 0.25, 0.04) + dnorm(grid, 0.75, 0.04))</code>. It represents two separated modes with equal target probability.</p>
 <ol type="a">
-<li>Build the matrix with <code>build_walk(log_target2)</code> and check that its stationary distribution is proportional to <code>exp(log_target2)</code>. Normalize by subtracting the maximum log weight before exponentiating.</li>
+<li>Build the matrix <code>P_walk_bi &lt;- build_walk(log_target2)</code>. Subtract the maximum log weight before exponentiating, then normalize the weights to obtain <code>grid_prob2</code>. Check stationarity directly with <code>max(abs(grid_prob2 %*% P_walk_bi - grid_prob2))</code>. Use this check rather than the eigenvector helper <code>stationary()</code>, which can be unreliable when movement between modes is extremely rare.</li>
 <li>Run <code>walk_grid(log_target2, init = 25, n_iter = 20000)</code> and plot the trace. How often does the chain cross from one bump to the other?</li>
 <li>Compute the fraction of steps spent below <span class="math inline">\(\pi = 0.5\)</span> and compare it with the target’s mass there. Explain the discrepancy using the distinction between a stationary distribution existing and a chain having reached it.</li>
 </ol>
