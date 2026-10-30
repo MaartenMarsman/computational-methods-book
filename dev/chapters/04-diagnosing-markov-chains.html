@@ -402,10 +402,9 @@ window.Quarto = {
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(bayesplot)</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(posterior)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">84735</span>)</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">rstan_options</span>(<span class="at">auto_write =</span> <span class="cn">TRUE</span>)  <span class="co"># reuse compiled Stan models</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">mc.cores =</span> <span class="dv">1</span>)             <span class="co"># run the Stan chains one after another</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">color_scheme_set</span>(<span class="st">"purple"</span>)       <span class="co"># colors for the diagnostic plots</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">rstan_options</span>(<span class="at">auto_write =</span> <span class="cn">TRUE</span>)  <span class="co"># reuse compiled Stan models</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">mc.cores =</span> <span class="dv">1</span>)             <span class="co"># run the Stan chains one after another</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">color_scheme_set</span>(<span class="st">"purple"</span>)       <span class="co"># colors for the diagnostic plots</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="bookbox bookgraybox">
 <div class="title">
@@ -442,14 +441,24 @@ window.Quarto = {
 </div>
 <p>We generate three chains, with <span class="math inline">\(\phi=0\)</span>, <span class="math inline">\(0.5\)</span>, and <span class="math inline">\(0.95\)</span>. Each starts with a draw from the target, so its distribution is stationary from the start. This lets us study dependence without also introducing an effect of a fixed starting point.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>phis <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.5</span>, <span class="fl">0.95</span>)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>N_ar1 <span class="ot">&lt;-</span> <span class="dv">20000</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>ar1_chains <span class="ot">&lt;-</span> <span class="fu">lapply</span>(phis, <span class="cf">function</span>(phi) {</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ar1_chain</span>(phi, N_ar1, <span class="at">init =</span> <span class="fu">rnorm</span>(<span class="dv">1</span>))</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">84735</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>phis <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.5</span>, <span class="fl">0.95</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>N_ar1 <span class="ot">&lt;-</span> <span class="dv">20000</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>ar1_chains <span class="ot">&lt;-</span> <span class="fu">lapply</span>(phis, <span class="cf">function</span>(phi) {</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ar1_chain</span>(phi, N_ar1, <span class="at">init =</span> <span class="fu">rnorm</span>(<span class="dv">1</span>))</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>A <strong>trace plot</strong> shows the sampled values in the order they were produced. In <a href="#fig-ar1-traces" class="quarto-xref">Figure&nbsp;<span>4.1</span></a>, the three chains all fluctuate around zero, but they do so quite differently.</p>
+<p>A <strong>trace plot</strong> shows the sampled values in the order they were produced. To draw one with <code>ggplot2</code>, put each chain in a tibble with an iteration column, stack the tibbles, and label each by its value of <span class="math inline">\(\phi\)</span>. In <a href="#fig-ar1-traces" class="quarto-xref">Figure&nbsp;<span>4.1</span></a>, the three chains all fluctuate around zero, but they do so quite differently.</p>
 <div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>ar1 <span class="ot">&lt;-</span> <span class="fu">map2</span>(ar1_chains, phis, \(theta, phi) <span class="fu">tibble</span>(<span class="at">iteration =</span> <span class="fu">seq_along</span>(theta), theta, phi)) <span class="sc">|&gt;</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list_rbind</span>() <span class="sc">|&gt;</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">phi =</span> <span class="fu">factor</span>(phi, <span class="at">labels =</span> <span class="fu">paste</span>(<span class="st">"phi ="</span>, phis)))</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>ar1 <span class="sc">|&gt;</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(iteration <span class="sc">&lt;=</span> <span class="dv">500</span>) <span class="sc">|&gt;</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(iteration, theta)) <span class="sc">+</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">color =</span> <span class="st">"#552E6B"</span>, <span class="at">linewidth =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> phi, <span class="at">ncol =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Iteration"</span>, <span class="at">y =</span> <span class="fu">expression</span>(theta))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div id="fig-ar1-traces" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center" data-fig-pos="H">
 <figure class="quarto-float quarto-float-fig figure">
@@ -544,8 +553,8 @@ Figure&nbsp;4.4: Estimated autocorrelations of the three Normal chains. Dependen
 <p>To see what this means for an estimate, imagine repeating each simulation 200 times and recording its average each time. We use 2,000 states per run, drawing each initial state from the standard Normal target. The target mean is zero; the spread of the 200 averages tells us how precisely each type of chain estimates it. Each value in the histograms below is an average from a whole run.</p>
 <p>The calculation for <span class="math inline">\(\phi=0.95\)</span> is:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">48105</span>)</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>means_95 <span class="ot">&lt;-</span> <span class="fu">replicate</span>(<span class="dv">200</span>, <span class="fu">mean</span>(<span class="fu">ar1_chain</span>(<span class="fl">0.95</span>, <span class="dv">2000</span>, <span class="at">init =</span> <span class="fu">rnorm</span>(<span class="dv">1</span>))))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">84735</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>means_95 <span class="ot">&lt;-</span> <span class="fu">replicate</span>(<span class="dv">200</span>, <span class="fu">mean</span>(<span class="fu">ar1_chain</span>(<span class="fl">0.95</span>, <span class="dv">2000</span>, <span class="at">init =</span> <span class="fu">rnorm</span>(<span class="dv">1</span>))))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p><a href="#fig-repeated-means" class="quarto-xref">Figure&nbsp;<span>4.5</span></a> compares these averages with those from <span class="math inline">\(\phi=0\)</span> and <span class="math inline">\(\phi=0.5\)</span>.</p>
 <div class="cell" data-layout-align="center">
@@ -582,17 +591,17 @@ N_{\mathrm{eff}}
 =\frac{N}{1+2\phi/(1-\phi)}
 =N\frac{1-\phi}{1+\phi}.
 \]</span> With <span class="math inline">\(\phi=0.95\)</span>, our 20,000-state chain has an effective sample size of approximately <span class="math inline">\(20{,}000\times0.05/1.95\approx513\)</span>. Its average is about as precise as an average of 513 independent standard Normal draws.</p>
-<p>In most applications we do not know the autocorrelations. The function <code>ess_basic()</code> in the <code>posterior</code> package estimates ESS from the sampled values. Compare those estimates with the known AR(1) formula:</p>
+<p>In most applications we do not know the autocorrelations. The function <code>ess_basic()</code> in the <code>posterior</code> package estimates ESS from the sampled values. By default it first splits each chain into two halves, a safeguard we return to when comparing chains; <code>split = FALSE</code> keeps each of our single chains whole. Compare the estimates with the known AR(1) formula:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tibble</span>(<span class="at">phi =</span> phis,</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>       <span class="at">ess_formula =</span> N_ar1 <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">-</span> phi) <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">+</span> phi),</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>       <span class="at">ess_estimated =</span> <span class="fu">sapply</span>(ar1_chains, ess_basic))</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 3 × 3</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     phi ess_formula ess_estimated</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;dbl&gt;       &lt;dbl&gt;         &lt;dbl&gt;</span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1  0         20000         19078.</span></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2  0.5        6667.         6692.</span></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3  0.95        513.          555.</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tibble</span>(<span class="at">phi =</span> phis,</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>       <span class="at">ess_formula =</span> N_ar1 <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">-</span> phi) <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">+</span> phi),</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>       <span class="at">ess_estimated =</span> <span class="fu">sapply</span>(ar1_chains, ess_basic, <span class="at">split =</span> <span class="cn">FALSE</span>))</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 3 × 3</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     phi ess_formula ess_estimated</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;dbl&gt;       &lt;dbl&gt;         &lt;dbl&gt;</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1  0         20000         19079.</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2  0.5        6667.         6706.</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3  0.95        513.          558.</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>The columns need not agree exactly. The formula uses known correlations and a long-run approximation; the function uses correlations estimated from a particular path. Repeating the simulation gives different ESS estimates, especially when dependence is strong. <a href="../appendices/C-mcmc-diagnostics.html#sec-mcmc-variance" class="quarto-xref"><span>Section C.1</span></a> derives the exact variance for a chain of <span class="math inline">\(N\)</span> states and explains the approximation.</p>
 <section id="expressing-precision-in-the-units-of-the-estimate" class="level3" data-number="4.3.1">
@@ -603,15 +612,15 @@ N_{\mathrm{eff}}
 <p>For the standard Normal target, <span class="math inline">\(\sigma=1\)</span>. The three 20,000-state runs therefore have approximate MCSEs of <span class="math inline">\(1/\sqrt{20{,}000}=0.007\)</span> when <span class="math inline">\(\phi=0\)</span>, <span class="math inline">\(1/\sqrt{6{,}667}=0.012\)</span> when <span class="math inline">\(\phi=0.5\)</span>, and <span class="math inline">\(1/\sqrt{513}=0.044\)</span> when <span class="math inline">\(\phi=0.95\)</span>.</p>
 <p>An estimated mean of 0.04 is thus less than one MCSE from zero for the slowest chain, but more than five MCSEs away for independent draws. An error of 0.04 would thus be quite ordinary for the slowest chain and unusual for independent draws. <code>mcse_mean()</code> estimates the MCSE from the draws:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tibble</span>(<span class="at">phi =</span> phis,</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>       <span class="at">estimated_mean =</span> <span class="fu">sapply</span>(ar1_chains, mean),</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>       <span class="at">mcse =</span> <span class="fu">sapply</span>(ar1_chains, mcse_mean))</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 3 × 3</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     phi estimated_mean    mcse</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;dbl&gt;          &lt;dbl&gt;   &lt;dbl&gt;</span></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1  0          -0.00160 0.00721</span></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2  0.5        -0.0211  0.0122 </span></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3  0.95        0.0517  0.0417</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tibble</span>(<span class="at">phi =</span> phis,</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>       <span class="at">estimated_mean =</span> <span class="fu">sapply</span>(ar1_chains, mean),</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>       <span class="at">mcse =</span> <span class="fu">sapply</span>(ar1_chains, mcse_mean))</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 3 × 3</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     phi estimated_mean    mcse</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;dbl&gt;          &lt;dbl&gt;   &lt;dbl&gt;</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1  0          -0.00160 0.00721</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2  0.5        -0.0211  0.0122 </span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3  0.95        0.0517  0.0417</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>An MCSE is not a bound on the error in one run. Differences of one or two MCSEs from the target mean are unsurprising, and larger differences sometimes occur. We use MCSE to judge the expected scale of numerical error and to decide whether further simulation is worthwhile.</p>
 <p>Suppose we need an MCSE of 0.02 for the Normal mean. We need approximately <span class="math inline">\(N_{\mathrm{eff}}=(1/0.02)^2=2{,}500\)</span>. For <span class="math inline">\(\phi=0.95\)</span>, this requires <span class="math display">\[
@@ -627,11 +636,11 @@ N\approx2{,}500\frac{1+0.95}{1-0.95}=97{,}500
 \]</span> slightly below the full run’s ESS of 513. The two effects nearly cancel, leaving a slightly less precise average.</p>
 <p>We can make the same comparison with estimated ESS:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>theta_95 <span class="ot">&lt;-</span> ar1_chains[[<span class="dv">3</span>]]</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="at">full =</span> <span class="fu">ess_basic</span>(theta_95),</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">thinned =</span> <span class="fu">ess_basic</span>(theta_95[<span class="fu">seq</span>(<span class="dv">1</span>, N_ar1, <span class="at">by =</span> <span class="dv">10</span>)]))</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     full  thinned </span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 555.1623 516.1334</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>theta_95 <span class="ot">&lt;-</span> ar1_chains[[<span class="dv">3</span>]]</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="at">full =</span> <span class="fu">ess_basic</span>(theta_95, <span class="at">split =</span> <span class="cn">FALSE</span>),</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">thinned =</span> <span class="fu">ess_basic</span>(theta_95[<span class="fu">seq</span>(<span class="dv">1</span>, N_ar1, <span class="at">by =</span> <span class="dv">10</span>)], <span class="at">split =</span> <span class="cn">FALSE</span>))</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     full  thinned </span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 557.8409 521.3920</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>An estimated ESS can occasionally be larger after thinning because it is itself estimated with noise. In this example, the theoretical ESS decreases slightly. A practical reason to thin is storage: retaining every value can be costly in a large model. Thinning can also reduce the cost of later calculations. Otherwise, keep the full run.</p>
 <div class="quiz bookgraybox">
@@ -676,11 +685,11 @@ Figure&nbsp;4.6: Repeated estimates of the mean of a standard Normal target, usi
 <p>A single chain cannot reveal that another starting point would lead to a different answer. Several chains let us make that comparison. If they explore the same distribution sufficiently well, their means and ranges should be similar. Persistent differences are a reason to investigate.</p>
 <p>Consider two sets of four records in <a href="#fig-chain-agreement" class="quarto-xref">Figure&nbsp;<span>4.7</span></a>. In the first set, every record consists of standard Normal draws. In the second, two records fluctuate around <span class="math inline">\(-2\)</span> and two around <span class="math inline">\(2\)</span>, each with standard deviation one. These illustrate agreement and disagreement about location. Each matrix below has 1,000 rows and four columns, one column per record. We create the second set by shifting two columns down by two and two up by two.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">48106</span>)</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>agree <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">rnorm</span>(<span class="dv">4000</span>), <span class="at">ncol =</span> <span class="dv">4</span>)</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>separated <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">rnorm</span>(<span class="dv">4000</span>), <span class="at">ncol =</span> <span class="dv">4</span>)</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>separated[, <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>] <span class="ot">&lt;-</span> separated[, <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>] <span class="sc">-</span> <span class="dv">2</span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>separated[, <span class="dv">3</span><span class="sc">:</span><span class="dv">4</span>] <span class="ot">&lt;-</span> separated[, <span class="dv">3</span><span class="sc">:</span><span class="dv">4</span>] <span class="sc">+</span> <span class="dv">2</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">84735</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>agree <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">rnorm</span>(<span class="dv">4000</span>), <span class="at">ncol =</span> <span class="dv">4</span>)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>separated <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">rnorm</span>(<span class="dv">4000</span>), <span class="at">ncol =</span> <span class="dv">4</span>)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>separated[, <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>] <span class="ot">&lt;-</span> separated[, <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>] <span class="sc">-</span> <span class="dv">2</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>separated[, <span class="dv">3</span><span class="sc">:</span><span class="dv">4</span>] <span class="ot">&lt;-</span> separated[, <span class="dv">3</span><span class="sc">:</span><span class="dv">4</span>] <span class="sc">+</span> <span class="dv">2</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
@@ -713,54 +722,53 @@ B=\frac{L}{m-1}\sum_{j=1}^{m}(\bar\theta_j-\bar\theta_{\cdot})^2,
 \]</span> The numerator includes differences between the chain means, whereas the denominator describes variation within the chains. Large differences between the means can therefore raise the ratio above one.</p>
 <p>Return to the disagreeing records in <a href="#fig-chain-agreement" class="quarto-xref">Figure&nbsp;<span>4.7</span></a>, stored in <code>separated</code>. We calculate a mean and a sample variance for each column. <code>colMeans()</code> gives the four means; <code>apply(separated, 2, var)</code> applies <code>var()</code> to each column:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>chain_means <span class="ot">&lt;-</span> <span class="fu">colMeans</span>(separated)</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>chain_variances <span class="ot">&lt;-</span> <span class="fu">apply</span>(separated, <span class="dv">2</span>, var)</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">rbind</span>(<span class="at">mean =</span> chain_means, <span class="at">variance =</span> chain_variances)</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;               [,1]       [,2]      [,3]     [,4]</span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; mean     -1.986436 -2.0255178 2.0236908 1.982948</span></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; variance  1.028308  0.9152197 0.9727786 1.011858</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>chain_means <span class="ot">&lt;-</span> <span class="fu">colMeans</span>(separated)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>chain_variances <span class="ot">&lt;-</span> <span class="fu">apply</span>(separated, <span class="dv">2</span>, var)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">rbind</span>(<span class="at">mean =</span> chain_means, <span class="at">variance =</span> chain_variances)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                [,1]       [,2]      [,3]    [,4]</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; mean     -2.0304360 -2.0191015 1.9859088 2.02687</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; variance  0.9664289  0.9663091 0.9986177 1.01906</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>The sample variances are close to one, but they differ because they come from different random draws. Averaging them gives <span class="math display">\[
-W\approx\frac{1.028+0.915+0.973+1.012}{4}=0.982.
-\]</span> The four means are approximately <span class="math inline">\(-1.986,-2.026,2.024,\)</span> and <span class="math inline">\(1.983\)</span>. We calculate their sample variance and multiply it by <span class="math inline">\(L=1{,}000\)</span> to obtain <span class="math inline">\(B\)</span>. The code uses the unrounded values for all calculations:</p>
+W\approx\frac{0.966+0.966+0.999+1.019}{4}=0.988.
+\]</span> The four means are approximately <span class="math inline">\(-2.030\)</span>, <span class="math inline">\(-2.019\)</span>, <span class="math inline">\(1.986\)</span>, and <span class="math inline">\(2.027\)</span>. We calculate their sample variance and multiply it by <span class="math inline">\(L=1{,}000\)</span> to obtain <span class="math inline">\(B\)</span>. The code uses the unrounded values for all calculations:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>L <span class="ot">&lt;-</span> <span class="fu">nrow</span>(separated)</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>W <span class="ot">&lt;-</span> <span class="fu">mean</span>(chain_variances)</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>B <span class="ot">&lt;-</span> L <span class="sc">*</span> <span class="fu">var</span>(chain_means)</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>var_plus <span class="ot">&lt;-</span> (L <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">/</span> L <span class="sc">*</span> W <span class="sc">+</span> B <span class="sc">/</span> L</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="at">W =</span> W, <span class="at">B =</span> B, <span class="at">rhat =</span> <span class="fu">sqrt</span>(var_plus <span class="sc">/</span> W))</span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;            W            B         rhat </span></span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    0.9820411 5358.6838225    2.5408029</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>L <span class="ot">&lt;-</span> <span class="fu">nrow</span>(separated)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>W <span class="ot">&lt;-</span> <span class="fu">mean</span>(chain_variances)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>B <span class="ot">&lt;-</span> L <span class="sc">*</span> <span class="fu">var</span>(chain_means)</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>var_plus <span class="ot">&lt;-</span> (L <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">/</span> L <span class="sc">*</span> W <span class="sc">+</span> B <span class="sc">/</span> L</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="at">W =</span> W, <span class="at">B =</span> B, <span class="at">rhat =</span> <span class="fu">sqrt</span>(var_plus <span class="sc">/</span> W))</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;           W           B        rhat </span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    0.987604 5417.046370    2.546378</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>With <span class="math inline">\(B\approx5358.68\)</span>, the resulting comparison is <span class="math display">\[
+<p>With <span class="math inline">\(B\approx5417.05\)</span>, the resulting comparison is <span class="math display">\[
 \widehat R\approx
-\sqrt{\frac{(999/1000)\times0.982+5358.68/1000}{0.982}}
-\approx2.541.
+\sqrt{\frac{(999/1000)\times0.988+5417.05/1000}{0.988}}
+\approx2.546.
 \]</span> The records differ much more from one another than their individual variances suggest. The large R-hat makes that disagreement visible in a single number.</p>
 </section>
 <section id="comparing-earlier-and-later-values" class="level3" data-number="4.4.2">
 <h3 data-number="4.4.2" class="anchored" data-anchor-id="comparing-earlier-and-later-values"><span class="header-section-number">4.4.2</span> Comparing earlier and later values</h3>
 <p>Whole-chain averages can miss a shared trend. In the upward-trending example in <a href="#fig-pathologies" class="quarto-xref">Figure&nbsp;<span>4.3</span></a>, all four records rise from a low level to a high level at about the same rate. Their overall means can be similar even though the traces are still changing.</p>
 <p><strong>Split R-hat</strong> addresses this by dividing each chain into an earlier half and a later half, then treating the halves as separate chains. Four chains become eight half-chains. In the trend example, the earlier halves have lower means than the later halves, so the comparison reveals the change over time.</p>
-<p>We can see the difference by regenerating those records. Each column adds the same increasing sequence to small random fluctuations. The two calls to <code>rhat_basic()</code> compare the basic calculation before and after splitting:</p>
+<p>We can see the difference by generating a fresh set of four such records, with <span class="math inline">\(L=1{,}000\)</span> values each as before. Each column adds the same increasing sequence to small random fluctuations. The two calls to <code>rhat_basic()</code> compare the basic calculation before and after splitting:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">48104</span>)</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>L <span class="ot">&lt;-</span> <span class="dv">1000</span></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>trend <span class="ot">&lt;-</span> <span class="fu">sapply</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="cf">function</span>(j) {</span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fl">0.05</span> <span class="sc">+</span> <span class="fl">0.015</span> <span class="sc">*</span> j <span class="sc">+</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="fl">0.45</span>, <span class="at">length.out =</span> L) <span class="sc">+</span></span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rnorm</span>(L, <span class="dv">0</span>, <span class="fl">0.012</span>)</span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>})</span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="at">basic =</span> <span class="fu">rhat_basic</span>(trend, <span class="at">split =</span> <span class="cn">FALSE</span>),</span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">split =</span> <span class="fu">rhat_basic</span>(trend, <span class="at">split =</span> <span class="cn">TRUE</span>))</span>
-<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    basic    split </span></span>
-<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1.010852 2.088141</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">84735</span>)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>trend <span class="ot">&lt;-</span> <span class="fu">sapply</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="cf">function</span>(j) {</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fl">0.05</span> <span class="sc">+</span> <span class="fl">0.015</span> <span class="sc">*</span> j <span class="sc">+</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="fl">0.45</span>, <span class="at">length.out =</span> L) <span class="sc">+</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rnorm</span>(L, <span class="dv">0</span>, <span class="fl">0.012</span>)</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="at">basic =</span> <span class="fu">rhat_basic</span>(trend, <span class="at">split =</span> <span class="cn">FALSE</span>),</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">split =</span> <span class="fu">rhat_basic</span>(trend, <span class="at">split =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    basic    split </span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1.010445 2.085559</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>The basic value is about 1.011 despite the obvious upward movement. It is just above the diagnostic target of 1.01, so it gives a weak warning. Splitting raises the value to about 2.088: the difference between the earlier and later halves now produces a much clearer warning.</p>
+<p>The basic value is 1.0104 despite the obvious upward movement. It is barely above the diagnostic target of 1.01, so it gives at most a weak warning. Splitting raises the value to about 2.086: the difference between the earlier and later halves now produces a much clearer warning.</p>
 <p>For practical use, <code>posterior::rhat()</code> performs this split and also checks for differences in spread <span class="citation" data-cites="vehtari2021rank">(<a href="../references.html#ref-vehtari2021rank" role="doc-biblioref">Vehtari et al., 2021</a>)</span>. It accepts a matrix with one column per chain. Applied to the two sets in <a href="#fig-chain-agreement" class="quarto-xref">Figure&nbsp;<span>4.7</span></a>:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="at">agreement =</span> posterior<span class="sc">::</span><span class="fu">rhat</span>(agree), <span class="at">disagreement =</span> posterior<span class="sc">::</span><span class="fu">rhat</span>(separated))</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    agreement disagreement </span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    0.9998501    1.7230083</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="at">agreement =</span> posterior<span class="sc">::</span><span class="fu">rhat</span>(agree), <span class="at">disagreement =</span> posterior<span class="sc">::</span><span class="fu">rhat</span>(separated))</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    agreement disagreement </span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     1.000479     1.726001</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Use <span class="math inline">\(\widehat R&lt;1.01\)</span> as a diagnostic target for each monitored parameter. A value of 1.04 calls for investigation even if the software uses a looser warning threshold. Inspect the traces and density curves to see what differs. If the chains agree, assess whether their MCSEs are small enough for the quantities you want to report.</p>
 <p><strong>Rank normalization</strong> compares the ranks of the sampled values, reducing the influence of a few extreme values. <strong>Folding</strong> compares their distances from a common center. This helps reveal chains that have similar means but different spreads—a disagreement that comparing means alone can miss. <a href="../appendices/C-mcmc-diagnostics.html#sec-rank-folding" class="quarto-xref"><span>Section C.3</span></a> explains both calculations.</p>
@@ -770,40 +778,41 @@ W\approx\frac{1.028+0.915+0.973+1.012}{4}=0.982.
 <h2 data-number="4.5" class="anchored" data-anchor-id="a-worked-analysis-dutch-language-radio"><span class="header-section-number">4.5</span> A worked analysis: Dutch-language radio</h2>
 <p>Suppose you want to know what proportion of the songs played on Dutch radio station NPO 3FM are sung in Dutch. Let <span class="math inline">\(\pi\)</span> denote that proportion. You choose a Beta<span class="math inline">\((2,5)\)</span> prior and listen to <span class="math inline">\(n=20\)</span> randomly selected tracks, seven of which are in Dutch. The Beta-Binomial update from <a href="02-bayesian-inference-recap.html" class="quarto-xref"><span>Chapter 2</span></a> gives <span class="math display">\[
 \pi\mid y\sim\text{Beta}(9,18).
-\]</span> We will estimate its mean and a 95% credible interval by simulation. The exact posterior gives us a useful check on the results. For this analysis, suppose we want the MCSE of the mean and of each interval endpoint to be at most 0.005 on the proportion scale. An MCSE of 0.005 corresponds to half a percentage point in the reported proportion. We will check the mean and both interval endpoints against this tolerance.</p>
+\]</span> We will estimate its mean and a 95% credible interval by simulation. The exact posterior gives us a useful check on the results. For this analysis, suppose we want the MCSE of the mean to be at most 0.005 on the proportion scale, half a percentage point in the reported proportion, and the MCSE of each interval endpoint to be at most 0.01, one percentage point. The endpoints get the looser tolerance because relatively few draws fall near them, so they are harder to pin down than the mean. We will check the mean and both interval endpoints against these tolerances.</p>
 <section id="generating-the-chains-with-stan" class="level3" data-number="4.5.1">
 <h3 data-number="4.5.1" class="anchored" data-anchor-id="generating-the-chains-with-stan"><span class="header-section-number">4.5.1</span> Generating the chains with Stan</h3>
 <p>Stan <span class="citation" data-cites="carpenter2017stan">(<a href="../references.html#ref-carpenter2017stan" role="doc-biblioref">Carpenter et al., 2017</a>)</span> generates posterior draws from a model specification. We tell it what is observed, which parameters are unknown, and which prior and likelihood define the model. Its sampling algorithm is explained in Chapter 10 (Hamiltonian Monte Carlo). Here we use it to obtain chains that we can inspect with the tools just developed.</p>
 <p>The R package <code>rstan</code> fits a model written in Stan’s language. The model has three blocks: <code>data</code> declares the observations, <code>parameters</code> declares the unknown proportion, and <code>model</code> specifies the prior and likelihood.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>radio_model <span class="ot">&lt;-</span> <span class="st">"</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="st">data {</span></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="st">  int&lt;lower = 0&gt; n;                  // number of tracks sampled</span></span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="st">  int&lt;lower = 0, upper = n&gt; y;       // number of tracks in Dutch</span></span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="st">}</span></span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="st">parameters {</span></span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="st">  real&lt;lower = 0, upper = 1&gt; pi;     // proportion of tracks in Dutch</span></span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="st">}</span></span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="st">model {</span></span>
-<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="st">  y ~ binomial(n, pi);               // likelihood</span></span>
-<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a><span class="st">  pi ~ beta(2, 5);                   // prior</span></span>
-<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a><span class="st">}</span></span>
-<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a><span class="st">"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>radio_model <span class="ot">&lt;-</span> <span class="st">"</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="st">data {</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="st">  int&lt;lower = 0&gt; n;                  // number of tracks sampled</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="st">  int&lt;lower = 0, upper = n&gt; y;       // number of tracks in Dutch</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="st">}</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="st">parameters {</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="st">  real&lt;lower = 0, upper = 1&gt; pi;     // proportion of tracks in Dutch</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="st">}</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="st">model {</span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="st">  y ~ binomial(n, pi);               // likelihood</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a><span class="st">  pi ~ beta(2, 5);                   // prior</span></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a><span class="st">}</span></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a><span class="st">"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Here <code>int</code> means an integer count and <code>real</code> a continuous quantity. The bounds restrict <code>pi</code> to proportions between zero and one. The two statements in <code>model</code> describe the Binomial likelihood and Beta prior; Stan uses them to evaluate the log posterior.</p>
 <p>We ask for four chains of 2,000 iterations, discarding the first 1,000 of each as warm-up. The remaining 1,000 values per chain give <span class="math inline">\(N=4{,}000\)</span> retained draws:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>radio_data <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">n =</span> <span class="dv">20</span>, <span class="at">y =</span> <span class="dv">7</span>)</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>radio_fit <span class="ot">&lt;-</span> <span class="fu">stan</span>(<span class="at">model_code =</span> radio_model, <span class="at">data =</span> radio_data,</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>                  <span class="at">chains =</span> <span class="dv">4</span>, <span class="at">iter =</span> <span class="dv">2000</span>, <span class="at">warmup =</span> <span class="dv">1000</span>,</span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>                  <span class="at">seed =</span> <span class="dv">84735</span>, <span class="at">refresh =</span> <span class="dv">0</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">84735</span>)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>radio_data <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">n =</span> <span class="dv">20</span>, <span class="at">y =</span> <span class="dv">7</span>)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>radio_fit <span class="ot">&lt;-</span> <span class="fu">stan</span>(<span class="at">model_code =</span> radio_model, <span class="at">data =</span> radio_data,</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>                  <span class="at">chains =</span> <span class="dv">4</span>, <span class="at">iter =</span> <span class="dv">2000</span>, <span class="at">warmup =</span> <span class="dv">1000</span>,</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>                  <span class="at">seed =</span> <span class="dv">84735</span>, <span class="at">refresh =</span> <span class="dv">0</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>The first call compiles the model before sampling, which can take longer than the simulation itself. <code>as.array()</code> then arranges the retained draws by iteration, chain, and parameter. We select <code>pi</code>, leaving a matrix with one column per chain. The two blank positions in <code>radio_array[, , "pi"]</code> keep every retained iteration and every chain:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>radio_array <span class="ot">&lt;-</span> <span class="fu">as.array</span>(radio_fit)</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>pi_mat <span class="ot">&lt;-</span> radio_array[, , <span class="st">"pi"</span>]</span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(pi_mat)</span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 1000    4</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>radio_array <span class="ot">&lt;-</span> <span class="fu">as.array</span>(radio_fit)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>pi_mat <span class="ot">&lt;-</span> radio_array[, , <span class="st">"pi"</span>]</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(pi_mat)</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 1000    4</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Keep this structure when computing diagnostics. Flattening the matrix into one long vector would lose the chain boundaries.</p>
 <div class="quiz bookgraybox">
@@ -815,14 +824,11 @@ W\approx\frac{1.028+0.915+0.973+1.012}{4}=0.982.
 </section>
 <section id="do-the-chains-explore-similar-values" class="level3" data-number="4.5.2">
 <h3 data-number="4.5.2" class="anchored" data-anchor-id="do-the-chains-explore-similar-values"><span class="header-section-number">4.5.2</span> Do the chains explore similar values?</h3>
-<p>The <code>bayesplot</code> package provides one function for each graphical check. <code>mcmc_trace()</code> shows movement over time, <code>mcmc_acf()</code> shows dependence within each chain, and <code>mcmc_dens_overlay()</code> draws a density curve for each chain. The argument <code>pars = "pi"</code> selects the proportion we want to examine:</p>
+<p>The <code>bayesplot</code> package provides one function for each graphical check. <code>mcmc_trace()</code> shows movement over time, <code>mcmc_acf()</code> shows dependence within each chain, and <code>mcmc_dens_overlay()</code> draws a density curve for each chain. The argument <code>pars = "pi"</code> selects the proportion we want to examine. <a href="#fig-radio-workflow" class="quarto-xref">Figure&nbsp;<span>4.8</span></a> brings these three plots together with <code>patchwork</code>, where <code>/</code> stacks plots and <code>|</code> places them side by side. Read them as complementary views of the same simulation.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mcmc_trace</span>(radio_array, <span class="at">pars =</span> <span class="st">"pi"</span>)</span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mcmc_acf</span>(radio_array, <span class="at">pars =</span> <span class="st">"pi"</span>, <span class="at">lags =</span> <span class="dv">20</span>)</span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="fu">mcmc_dens_overlay</span>(radio_array, <span class="at">pars =</span> <span class="st">"pi"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p><a href="#fig-radio-workflow" class="quarto-xref">Figure&nbsp;<span>4.8</span></a> brings these three plots together. Read them as complementary views of the same simulation.</p>
-<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>(<span class="fu">mcmc_trace</span>(radio_array, <span class="at">pars =</span> <span class="st">"pi"</span>) <span class="sc">+</span> <span class="fu">legend_none</span>()) <span class="sc">/</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  (<span class="fu">mcmc_acf</span>(radio_array, <span class="at">pars =</span> <span class="st">"pi"</span>, <span class="at">lags =</span> <span class="dv">20</span>) <span class="sc">|</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>     (<span class="fu">mcmc_dens_overlay</span>(radio_array, <span class="at">pars =</span> <span class="st">"pi"</span>) <span class="sc">+</span> <span class="fu">legend_none</span>()))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div id="fig-radio-workflow" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center" data-fig-pos="H">
 <figure class="quarto-float quarto-float-fig figure">
@@ -838,12 +844,21 @@ Figure&nbsp;4.8: The radio posterior from four Stan chains. Top: retained values
 </div>
 <p>The traces fluctuate through similar ranges, their autocorrelations fall quickly, and the density curves overlap. R-hat provides the corresponding numerical comparison:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>posterior<span class="sc">::</span><span class="fu">rhat</span>(pi_mat)</span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 1.003033</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>posterior<span class="sc">::</span><span class="fu">rhat</span>(pi_mat)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 1.003033</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>For this run it is 1.003, below 1.01. We also ask Stan to check for problems specific to its sampling algorithm:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>rstan<span class="sc">::</span><span class="fu">check_hmc_diagnostics</span>(radio_fit)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>rstan<span class="sc">::</span><span class="fu">check_hmc_diagnostics</span>(radio_fit)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Divergences:</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 0 of 4000 iterations ended with a divergence.</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Tree depth:</span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 0 of 4000 iterations saturated the maximum tree depth of 10.</span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Energy:</span></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; E-BFMI indicated no pathological behavior.</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Stan reports no such problems for this fit. Chapter 10 (Hamiltonian Monte Carlo) explains these checks in detail. When a fit does produce warnings, investigate them before relying on the posterior summaries.</p>
 </section>
@@ -851,41 +866,41 @@ Figure&nbsp;4.8: The radio posterior from four Stan chains. Top: retained values
 <h3 data-number="4.5.3" class="anchored" data-anchor-id="is-the-mean-precise-enough"><span class="header-section-number">4.5.3</span> Is the mean precise enough?</h3>
 <p>Calculate the posterior mean, posterior standard deviation, and MCSE of the mean:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="at">mean =</span> <span class="fu">mean</span>(pi_mat), <span class="at">posterior_sd =</span> <span class="fu">sd</span>(pi_mat),</span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">mean_mcse =</span> <span class="fu">mcse_mean</span>(pi_mat))</span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;         mean posterior_sd    mean_mcse </span></span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  0.338817635  0.089925277  0.002332468</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="at">mean =</span> <span class="fu">mean</span>(pi_mat), <span class="at">posterior_sd =</span> <span class="fu">sd</span>(pi_mat),</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">mean_mcse =</span> <span class="fu">mcse_mean</span>(pi_mat))</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;         mean posterior_sd    mean_mcse </span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  0.338817635  0.089925277  0.002332468</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>The estimated mean is 0.339, with MCSE 0.0023. This meets our target of 0.005. The exact mean is <span class="math inline">\(9/27=1/3\)</span>; the difference between the simulated and exact means is 0.0055, or 2.4 MCSEs.</p>
+<p>The estimated mean is 0.339, with MCSE 0.0023. This meets our target of 0.005. The exact mean is <span class="math inline">\(9/27=1/3\)</span>; the difference between the simulated and exact means is 0.0055, or 2.4 MCSEs. That is a little larger than the one or two MCSEs we called unsurprising, but well within the range that repeated runs produce; it is not a sign that anything is wrong.</p>
 <p>Keep the two standard deviations separate. The posterior standard deviation, about 0.09, describes uncertainty about the unknown proportion of Dutch-language tracks. The MCSE describes uncertainty in our numerical estimate of the posterior mean. Running the chain longer can reduce the second without changing the first.</p>
 </section>
 <section id="are-the-interval-endpoints-precise-enough" class="level3" data-number="4.5.4">
 <h3 data-number="4.5.4" class="anchored" data-anchor-id="are-the-interval-endpoints-precise-enough"><span class="header-section-number">4.5.4</span> Are the interval endpoints precise enough?</h3>
 <p>A precise mean does not ensure a precise credible interval. The endpoints are the 2.5% and 97.5% quantiles: they leave 2.5% of the posterior probability below the interval and 2.5% above it. We need to assess their numerical error separately. <code>mcse_quantile()</code> calculates the MCSE at specified probabilities:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>interval_precision <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">probability =</span> <span class="fu">c</span>(<span class="fl">0.025</span>, <span class="fl">0.975</span>),</span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">estimate =</span> <span class="fu">as.numeric</span>(<span class="fu">quantile</span>(pi_mat, <span class="fu">c</span>(<span class="fl">0.025</span>, <span class="fl">0.975</span>))),</span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">exact =</span> <span class="fu">qbeta</span>(probability, <span class="dv">9</span>, <span class="dv">18</span>),</span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">mcse =</span> <span class="fu">as.numeric</span>(<span class="fu">mcse_quantile</span>(pi_mat, <span class="at">probs =</span> probability))</span>
-<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>interval_precision</span>
-<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 2 × 4</span></span>
-<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   probability estimate exact    mcse</span></span>
-<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;         &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;</span></span>
-<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1       0.025    0.180 0.172 0.00436</span></span>
-<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2       0.975    0.522 0.518 0.00458</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>interval_precision <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">probability =</span> <span class="fu">c</span>(<span class="fl">0.025</span>, <span class="fl">0.975</span>),</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">estimate =</span> <span class="fu">as.numeric</span>(<span class="fu">quantile</span>(pi_mat, <span class="fu">c</span>(<span class="fl">0.025</span>, <span class="fl">0.975</span>))),</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">exact =</span> <span class="fu">qbeta</span>(probability, <span class="dv">9</span>, <span class="dv">18</span>),</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">mcse =</span> <span class="fu">as.numeric</span>(<span class="fu">mcse_quantile</span>(pi_mat, <span class="at">probs =</span> probability))</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>interval_precision</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 2 × 4</span></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   probability estimate exact    mcse</span></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;         &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;</span></span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1       0.025    0.180 0.172 0.00436</span></span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2       0.975    0.522 0.518 0.00458</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>Each row gives an endpoint estimate, its exact value, and its MCSE. Both MCSEs are below 0.005, so this run also meets our requirement for the interval. The estimated 95% credible interval is [0.18, 0.522]. The MCSEs describe how much its endpoints would change between simulations; they do not describe uncertainty about <span class="math inline">\(\pi\)</span> itself.</p>
-<p>If an endpoint’s MCSE had been 0.01, a run about four times as long would be a reasonable starting plan for reaching 0.005. We would then check both the chain behavior and the achieved precision again. Tail quantiles often need many effective draws because relatively few sampled values lie near the endpoints. There is no single ESS threshold that ensures a chosen decimal precision for every posterior.</p>
+<p>Each row gives an endpoint estimate, its exact value, and its MCSE. The MCSEs are 0.0044 and 0.0046. Both are below 0.01, so this run also meets our requirement for the interval. The estimated 95% credible interval is [0.180, 0.522]. The MCSEs describe how much its endpoints would change between simulations; they do not describe uncertainty about <span class="math inline">\(\pi\)</span> itself.</p>
+<p>If an endpoint’s MCSE had been 0.02, a run about four times as long would be a reasonable starting plan for reaching 0.01. We would then check both the chain behavior and the achieved precision again. Tail quantiles often need many effective draws because relatively few sampled values lie near the endpoints. There is no single ESS threshold that ensures a chosen decimal precision for every posterior.</p>
 </section>
 <section id="reading-bulk-and-tail-ess-in-a-summary" class="level3" data-number="4.5.5">
 <h3 data-number="4.5.5" class="anchored" data-anchor-id="reading-bulk-and-tail-ess-in-a-summary"><span class="header-section-number">4.5.5</span> Reading bulk and tail ESS in a summary</h3>
 <p>Software summaries often include <code>ess_bulk</code> and <code>ess_tail</code>. These give broad checks on sampling efficiency in the main body and tails of the distribution <span class="citation" data-cites="vehtari2021rank">(<a href="../references.html#ref-vehtari2021rank" role="doc-biblioref">Vehtari et al., 2021</a>)</span>. For the radio fit:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="at">ess_bulk =</span> <span class="fu">ess_bulk</span>(pi_mat), <span class="at">ess_tail =</span> <span class="fu">ess_tail</span>(pi_mat))</span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ess_bulk ess_tail </span></span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1482.134 1532.167</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="at">ess_bulk =</span> <span class="fu">ess_bulk</span>(pi_mat), <span class="at">ess_tail =</span> <span class="fu">ess_tail</span>(pi_mat))</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ess_bulk ess_tail </span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1482.134 1532.167</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p><strong>Bulk ESS</strong> uses the relative ordering of the draws to assess sampling through the main body of the distribution. <strong>Tail ESS</strong> is the smaller of the ESS estimates for the 5% and 95% quantiles. A large bulk ESS with a small tail ESS is a reason to look more closely at the tails, especially when reporting a credible interval.</p>
 <div class="bookbox bookgraybox">
@@ -903,7 +918,7 @@ Figure&nbsp;4.8: The radio posterior from four Stan chains. Top: retained values
 <section id="what-would-we-report" class="level3" data-number="4.5.6">
 <h3 data-number="4.5.6" class="anchored" data-anchor-id="what-would-we-report"><span class="header-section-number">4.5.6</span> What would we report?</h3>
 <p>Under the Beta-Binomial model, the posterior mean proportion of Dutch-language tracks is approximately 0.34, with a 95% credible interval from 0.18 to 0.52.</p>
-<p>R-hat is 1.003, below 1.01. Bulk and tail ESS are 1482 and 1532, both above 400. The MCSEs of the mean and both interval endpoints meet our tolerance of 0.005. Together with the satisfactory plots and absence of Stan sampler warnings, these results give us a reason to stop sampling for the present analysis.</p>
+<p>R-hat is 1.003, below 1.01. Bulk and tail ESS are 1482 and 1532, both above 400. The MCSE of the mean is 0.0023, below our tolerance of 0.005, and the MCSEs of the interval endpoints are 0.0044 and 0.0046, both below our tolerance of 0.01. Together with the satisfactory plots and absence of Stan sampler warnings, these results give us a reason to stop sampling for the present analysis.</p>
 <p><a href="#fig-radio-exact" class="quarto-xref">Figure&nbsp;<span>4.9</span></a> compares the simulated distribution with the known posterior. In a more complex model this exact check may be unavailable, but the diagnostic questions remain the same.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
