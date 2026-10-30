@@ -69,7 +69,7 @@ rowSums(P)
 
 The column sums need not equal one. A matrix with non-negative entries and row sums of one is called a **stochastic matrix**. Together with an initial distribution, it specifies a time-homogeneous Markov chain.
 
-A note on notation. In this chapter the states are moods, so we call the chain $X^{(t)}$ and the states $i$ and $j$. From Chapter 5 (The Metropolis Algorithm) on, the states are candidate values of a parameter, and we write the chain as $\theta^{(t)}$, as in @sec-notation. The states then describe a computational sequence rather than an observed sequence of moods. We use bold $\boldsymbol{\pi}$ for a vector of stationary probabilities and plain $\pi$ for an unknown proportion.
+A note on notation. In this chapter the states are moods, so we call the chain $X^{(t)}$ and the states $i$ and $j$. From @sec-metropolis on, the states are candidate values of a parameter, and we write the chain as $\theta^{(t)}$, as in @sec-notation. The states then describe a computational sequence rather than an observed sequence of moods. We use bold $\boldsymbol{\pi}$ for a vector of stationary probabilities and plain $\pi$ for an unknown proportion.
 
 ### Simulating the chain
 
@@ -745,7 +745,7 @@ c(mean = 18 / 110, lower = qbeta(0.025, 18, 92), upper = qbeta(0.975, 18, 92))
 
 Differences from the continuous Beta values can arise from the finite grid, Monte Carlo variation, and any remaining effect of the starting state. Neighbor moves also produce persistent successive values, so counting $N=49{,}500$ retained states does not describe their precision as if they were independent. @sec-diagnostics develops the corresponding Monte Carlo error calculations.
 
-The construction used relative log weights, neighbor proposals, and an acceptance step. The normalization was needed for the matrix check and the plotted benchmark, but not inside `walk_grid()`. For a different prior and likelihood, the same transition rule can be applied to new finite log weights. Its target would still be a grid approximation. Chapter 5 (The Metropolis Algorithm) develops the corresponding method on a continuous parameter space.
+The construction used relative log weights, neighbor proposals, and an acceptance step. The normalization was needed for the matrix check and the plotted benchmark, but not inside `walk_grid()`. For a different prior and likelihood, the same transition rule can be applied to new finite log weights. Its target would still be a grid approximation. @sec-metropolis develops the corresponding method on a continuous parameter space.
 
 ::: {.quiz title="Quiz yourself!"}
 Suppose you replaced the coin flip in step 1 by a biased one that proposes $g + 1$ with probability $0.7$ and $g - 1$ with probability $0.3$, keeping the acceptance rule the same. Does detailed balance still hold? What would the chain's stationary distribution look like relative to the target?

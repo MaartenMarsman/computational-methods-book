@@ -450,7 +450,7 @@ The price is the rejections. Only `r round(100 * mean(accept))`% of the proposal
 
 Products of many small likelihood terms can underflow, meaning the computer rounds them to zero. To avoid this, compute log densities directly and compare `log(u)` with `log_h(proposal) - log_M`. Taking `log(h(proposal))` after an underflow has occurred cannot recover the lost value. @sec-bayes-recap develops calculations on the log scale.
 
-The Metropolis algorithm in Chapter 5 (The Metropolis Algorithm) also proposes a value and then accepts or rejects it. Its acceptance rule is different and depends on the current state. We will derive that rule separately.
+The Metropolis algorithm in @sec-metropolis also proposes a value and then accepts or rejects it. Its acceptance rule is different and depends on the current state. We will derive that rule separately.
 
 ::: {.quiz title="Quiz yourself!"}
 Suppose you had used $M = 2\,h(18/25)$ instead of $M = h(18/25)$, an envelope twice as high as necessary. What happens to the acceptance rate? What happens to the distribution of the accepted draws? And what if you had used $M = h(18/25)/2$?
@@ -684,7 +684,7 @@ This optional exercise examines why the finite-expectation condition matters. Th
 
 a. Derive $F^{-1}(u)$ and write a function that generates Cauchy draws from uniform draws. Check it against `dcauchy()` with a histogram, restricting the plot to $[-10, 10]$.
 b. Plot the running mean of 100,000 draws against the number of draws. Compare with the running mean of 100,000 Normal draws. What do you see, and what does it say about the Law of Large Numbers?
-c. The Cauchy distribution reappears in Chapter 5 (The Metropolis Algorithm) as a prior. Would a Monte Carlo estimate of the *median* of your draws behave better than the mean? Try it.
+c. The Cauchy distribution reappears in @sec-metropolis as a prior. Would a Monte Carlo estimate of the *median* of your draws behave better than the mean? Try it.
 :::
 
 ::: {.exercise}

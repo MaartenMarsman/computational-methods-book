@@ -8,7 +8,7 @@ This appendix collects the symbols used throughout the book. We follow *Bayes Ru
 
 **Every density is $f$.** The prior, the likelihood, the posterior, and the density of a proposal are all written $f(\cdot)$, and the arguments tell you which one is meant: $f(\theta)$ is the prior, $f(y \mid \theta)$ the likelihood, and $f(\theta \mid y)$ the posterior. We do not use $p(\cdot)$ or $\pi(\cdot)$ for densities, because $\pi$ is a proportion parameter in *Bayes Rules!* and $\mathbf{p}$ is a momentum in Chapter 10 (Hamiltonian Monte Carlo). When a chapter builds a sampler for a generic target, that target is written $f(\theta)$, and you should read it as "the posterior, up to a constant we cannot compute."
 
-**Work on the log scale.** Every sampler in this book takes a function that returns $\log f(\theta)$, never $f(\theta)$, and the code calls it `log_target` or `log_posterior`. The reason is numerical: a likelihood of 2,000 observations is a product of 2,000 small numbers and underflows to zero, while its logarithm is a sum of 2,000 moderate numbers. On the log scale a ratio becomes a difference, $\log r = \log f(\theta^\star) - \log f(\theta^{(t)})$, and the acceptance test becomes $\log u < \log r$ (Chapter 5 (The Metropolis Algorithm)). R's `d*` functions all take `log = TRUE` for exactly this purpose.
+**Work on the log scale.** Every sampler in this book takes a function that returns $\log f(\theta)$, never $f(\theta)$, and the code calls it `log_target` or `log_posterior`. The reason is numerical: a likelihood of 2,000 observations is a product of 2,000 small numbers and underflows to zero, while its logarithm is a sum of 2,000 moderate numbers. On the log scale a ratio becomes a difference, $\log r = \log f(\theta^\star) - \log f(\theta^{(t)})$, and the acceptance test becomes $\log u < \log r$ (@sec-metropolis). R's `d*` functions all take `log = TRUE` for exactly this purpose.
 
 **Vectors are bold, indices are subscripts, iterations are superscripts.** A single parameter is $\theta$; a vector of parameters is $\boldsymbol{\theta} = (\theta_1, \ldots, \theta_d)$; a matrix is a bold capital such as $\mathbf{P}$ or $\boldsymbol{\Sigma}$. Observations are indexed $i = 1, \ldots, n$, predictors $j = 1, \ldots, p$, and models $m = 1, \ldots, M$. The state of a Markov chain at iteration $t$ is $\theta^{(t)}$, with parentheses so that it is not mistaken for a power; a proposed value is $\theta^\star$. Chains start at $t = 0$ and run for $t = 1, \ldots, T$ iterations. Hats denote estimates computed from draws, as in $\widehat{R}$.
 
@@ -97,7 +97,7 @@ The book writes distributions in the abbreviations below, parameterized the way 
 | $\text{Binomial}(n, \pi)$ | number of trials $n$, success probability $\pi$ | `dbinom(x, size = n, prob = pi)` |
 | $\text{Poisson}(\lambda)$ | rate $\lambda$; mean and variance $\lambda$ | `dpois(x, lambda = lambda)` |
 
-A quick check of the two traps, which you can run yourself. The $\text{N}(7, 0.5^2)$ prior of Chapter 5 (The Metropolis Algorithm) has standard deviation $0.5$, and a $\text{Gamma}(2, 4)$ variable has mean $2/4$:
+A quick check of the two traps, which you can run yourself. The $\text{N}(7, 0.5^2)$ prior of @sec-metropolis has standard deviation $0.5$, and a $\text{Gamma}(2, 4)$ variable has mean $2/4$:
 
 ```{r}
 dnorm(7, mean = 7, sd = 0.5, log = TRUE)

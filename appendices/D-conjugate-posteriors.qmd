@@ -1,0 +1,233 @@
+# Deriving Conjugate Posteriors {#sec-conjugate-derivations}
+
+<!-- SOURCES: Chapter 2, Table tbl-conjugate; derivations from the Binomial, Beta, Poisson, Gamma, and Normal probability functions, using the parameterizations in that table. -->
+
+In the modern art example in @sec-bayes-recap, a Beta prior and a Binomial likelihood give a Beta posterior. The same kind of calculation gives the other two updates in @tbl-conjugate. Here we work through all three, beginning with the probability functions and ending with the posterior parameters.
+
+## What we need to recognize
+
+Bayes' rule says that the posterior is proportional to the likelihood times the prior. To identify its distribution, we first keep all the factors that depend on the unknown parameter. Their product is a **kernel**: it gives the shape of a density without necessarily including the constant that makes its integral equal to one.
+
+For example, multiplying a function of $\pi$ by 10 changes its height at every $\pi$ by the same factor. Once we divide by its integral, that factor cancels. Multiplying by $\pi$, however, changes the relative heights at different values of $\pi$ and therefore changes the distribution. This is why we can set aside factors that are constant with respect to the parameter, but must retain factors that vary with it.
+
+We then compare the kernel with a familiar density on the same range of possible parameter values. If they match, the familiar density supplies both the distribution's name and its normalizing constant. On the log scale, constant factors become additive terms. We write these as $C$, allowing its value to change as we collect terms. Such constants may depend on the observed data; they must not depend on the parameter whose posterior we are finding.
+
+The constants can be set aside when identifying the posterior. Computing the marginal likelihood requires the full likelihood and prior, including their constants, as in the model comparisons in @sec-bayes-recap.
+
+## A Binomial likelihood and a Beta prior {#sec-conjugate-beta-binomial}
+
+Let $y$ be the observed number of successes in $n$ trials, with common success probability $\pi$. Under the Binomial model,
+$$
+f(y\mid\pi)=\binom{n}{y}\pi^y(1-\pi)^{n-y},
+\qquad 0<\pi<1.
+$$
+Here $n$ and $y$ are known. The factor $\binom{n}{y}$ counts how many trial sequences give $y$ successes; it does not change as we vary $\pi$.
+
+Assign $\pi$ a $\text{Beta}(\alpha,\beta)$ prior, with $\alpha>0$ and $\beta>0$. Its density is
+$$
+f(\pi)=\frac{1}{B(\alpha,\beta)}
+\pi^{\alpha-1}(1-\pi)^{\beta-1},
+\qquad 0<\pi<1.
+$$
+The Beta function $B(\alpha,\beta)$ is the integral of $\pi^{\alpha-1}(1-\pi)^{\beta-1}$ over $(0,1)$. Dividing by it makes the prior integrate to one. Since $\alpha$ and $\beta$ are fixed prior parameters, it too is constant with respect to $\pi$.
+
+Multiplying the likelihood and prior, and setting aside these constant factors, gives
+$$
+\begin{aligned}
+f(\pi\mid y)
+&\propto \pi^y(1-\pi)^{n-y}
+          \pi^{\alpha-1}(1-\pi)^{\beta-1}\\
+&=\pi^{\alpha+y-1}(1-\pi)^{\beta+n-y-1}.
+\end{aligned}
+$$
+The second line uses the rule that exponents add when we multiply powers with the same base. The $y$ successes add $y$ to the exponent of $\pi$; the $n-y$ failures add $n-y$ to the exponent of $1-\pi$.
+
+A Beta density with parameters $a$ and $b$ has exponents $a-1$ and $b-1$. Matching them gives $a=\alpha+y$ and $b=\beta+n-y$. The range is still $(0,1)$, so
+$$
+\pi\mid y\sim\text{Beta}(\alpha+y,\;\beta+n-y).
+$$
+We can now write the normalized posterior explicitly:
+$$
+f(\pi\mid y)=
+\frac{\pi^{\alpha+y-1}(1-\pi)^{\beta+n-y-1}}
+{B(\alpha+y,\beta+n-y)},
+\qquad 0<\pi<1.
+$$
+The denominator uses the **updated** parameters. Reusing the prior's normalizing constant would not make this new density integrate to one.
+
+For the modern art data, $\alpha=4$, $\beta=6$, $n=100$, and $y=14$. The posterior is therefore $\text{Beta}(18,92)$. Its mean is $18/(18+92)\approx0.164$, between the prior mean $0.4$ and the sample proportion $0.14$. More generally, for $n>0$,
+$$
+E[\pi\mid y]
+=\frac{\alpha+y}{\alpha+\beta+n}
+=\frac{\alpha+\beta}{\alpha+\beta+n}
+  \frac{\alpha}{\alpha+\beta}
++\frac{n}{\alpha+\beta+n}\frac{y}{n}.
+$$
+The last expression is a weighted average of the prior mean and the sample proportion. The weights add to one, and the data receive more weight as $n$ increases while the prior stays fixed.
+
+## A Poisson likelihood and a Gamma prior {#sec-conjugate-gamma-poisson}
+
+Now suppose $y_1,\ldots,y_n$ are counts from $n$ observation periods of equal length. We model them as independent given a common expected count $\lambda$:
+$$
+Y_i\mid\lambda\sim\text{Pois}(\lambda),
+\qquad i=1,\ldots,n.
+$$
+For a single observation, the probability is $\lambda^{y_i}e^{-\lambda}/y_i!$. Conditional independence lets us multiply these probabilities to obtain the joint likelihood:
+$$
+\begin{aligned}
+f(\mathbf y\mid\lambda)
+&=\prod_{i=1}^n\frac{\lambda^{y_i}e^{-\lambda}}{y_i!}\\
+&=\frac{\lambda^{\sum_{i=1}^n y_i}e^{-n\lambda}}
+         {\prod_{i=1}^n y_i!}.
+\end{aligned}
+$$
+There are two combinations to notice. Multiplying the powers of $\lambda$ adds the observed counts in the exponent. Multiplying $n$ copies of $e^{-\lambda}$ gives $e^{-n\lambda}$. The factorials in the denominator involve only the observed counts, so the likelihood kernel is
+$$
+\lambda^{\sum_i y_i}e^{-n\lambda},\qquad \lambda>0.
+$$
+
+Use a $\text{Gamma}(s,r)$ prior with shape $s>0$ and **rate** $r>0$:
+$$
+f(\lambda)=\frac{r^s}{\Gamma(s)}\lambda^{s-1}e^{-r\lambda},
+\qquad \lambda>0.
+$$
+Here $\Gamma(s)$ is the Gamma function; together with $r^s$ it supplies the normalizing constant. To recognize the distribution we need the power $s-1$ and the coefficient $r$ in the exponential. The rate convention matters: a Gamma density written using a scale parameter would instead have $e^{-\lambda/\text{scale}}$.
+
+Multiplying the two kernels gives
+$$
+\begin{aligned}
+f(\lambda\mid\mathbf y)
+&\propto \lambda^{\sum_i y_i}e^{-n\lambda}
+          \lambda^{s-1}e^{-r\lambda}\\
+&=\lambda^{s+\sum_i y_i-1}e^{-(r+n)\lambda}.
+\end{aligned}
+$$
+This has the Gamma form again: the shape is $s+\sum_i y_i$, and the rate is $r+n$. Thus
+$$
+\lambda\mid\mathbf y\sim
+\text{Gamma}\!\left(s+\sum_{i=1}^n y_i,\;r+n\right).
+$$
+The sum of the counts updates the shape; the number of observation periods updates the rate. Substituting these two parameters into the Gamma density above gives the normalized posterior:
+$$
+f(\lambda\mid\mathbf y)
+=\frac{(r+n)^{s+\sum_i y_i}}{\Gamma(s+\sum_i y_i)}
+\lambda^{s+\sum_i y_i-1}e^{-(r+n)\lambda},
+\qquad \lambda>0.
+$$
+
+For example, suppose four equal-length task sessions produce counts of $2,0,3,1$ attention lapses, and we use a $\text{Gamma}(2,1)$ prior for the expected count per session. There are $n=4$ sessions and $\sum_i y_i=6$ lapses, giving a $\text{Gamma}(8,5)$ posterior. The prior mean is $2/1=2$, the observed average is $6/4=1.5$, and the posterior mean is $8/5=1.6$.
+
+The weighted-average interpretation is visible algebraically as well:
+$$
+E[\lambda\mid\mathbf y]
+=\frac{s+\sum_i y_i}{r+n}
+=\frac{r}{r+n}\frac{s}{r}
++\frac{n}{r+n}\bar y.
+$$
+Here $s/r$ is the prior mean and $\bar y$ is the average observed count. With the prior fixed, more observation periods give the observed average more weight.
+
+## A Normal likelihood and a Normal prior {#sec-conjugate-normal-normal}
+
+Suppose the observations are independent given their common mean $\mu$, with a known sampling variance $\sigma^2>0$:
+$$
+Y_i\mid\mu\sim\text{N}(\mu,\sigma^2),
+\qquad i=1,\ldots,n.
+$$
+Assign $\mu$ a $\text{N}(\theta,\tau^2)$ prior, where $\theta$ is the prior mean and $\tau^2>0$ is the prior variance. Here $\mu$ is the unknown parameter. The quantities $\theta$, $\tau^2$, and $\sigma^2$ are specified by the model.
+
+The likelihood and prior are
+$$
+\begin{aligned}
+f(\mathbf y\mid\mu)
+&=(2\pi\sigma^2)^{-n/2}
+  \exp\!\left[-\frac{1}{2\sigma^2}\sum_{i=1}^n(y_i-\mu)^2\right],\\
+f(\mu)
+&=(2\pi\tau^2)^{-1/2}
+  \exp\!\left[-\frac{(\mu-\theta)^2}{2\tau^2}\right].
+\end{aligned}
+$$
+The factors in front of the exponentials do not depend on $\mu$. Taking logs turns multiplication of the kernels into addition:
+$$
+\log f(\mu\mid\mathbf y)
+=-\frac12\left[
+\frac{\sum_i(y_i-\mu)^2}{\sigma^2}
++\frac{(\mu-\theta)^2}{\tau^2}
+\right]+C.
+$$
+
+### Collecting the terms in the unknown mean
+
+To recognize a Normal density, we want one squared expression of the form $(\mu-m)^2$. First expand the squares already present:
+$$
+\begin{aligned}
+\sum_{i=1}^n(y_i-\mu)^2
+&=\sum_{i=1}^n y_i^2-2\mu\sum_{i=1}^n y_i+n\mu^2,\\
+(\mu-\theta)^2&=\mu^2-2\theta\mu+\theta^2.
+\end{aligned}
+$$
+The first line contains $n\mu^2$ because each of the $n$ squared differences contributes one copy of $\mu^2$. The terms $\sum_i y_i^2$ and $\theta^2$ do not depend on $\mu$ and can be included in $C$. Using $\sum_i y_i=n\bar y$, the log posterior becomes
+$$
+\log f(\mu\mid\mathbf y)
+=-\frac12\left[
+\left(\frac{n}{\sigma^2}+\frac{1}{\tau^2}\right)\mu^2
+-2\left(\frac{n\bar y}{\sigma^2}+\frac{\theta}{\tau^2}\right)\mu
+\right]+C.
+$$
+
+### Completing the square
+
+To make the next algebraic step easier to follow, name the two coefficients
+$$
+A=\frac{n}{\sigma^2}+\frac{1}{\tau^2},
+\qquad
+h=\frac{n\bar y}{\sigma^2}+\frac{\theta}{\tau^2}.
+$$
+The expression in brackets is $A\mu^2-2h\mu$. Factor out $A$ and add and subtract $(h/A)^2$ inside the brackets:
+$$
+\begin{aligned}
+A\mu^2-2h\mu
+&=A\left[\mu^2-2\frac{h}{A}\mu\right]\\
+&=A\left[\mu^2-2\frac{h}{A}\mu
+          +\left(\frac{h}{A}\right)^2
+          -\left(\frac{h}{A}\right)^2\right]\\
+&=A\left(\mu-\frac{h}{A}\right)^2-\frac{h^2}{A}.
+\end{aligned}
+$$
+Adding and subtracting the same quantity leaves the expression unchanged, while the first three terms inside the brackets form a square. Since $h^2/A$ does not depend on $\mu$, it joins the constant in the log posterior. We are left with
+$$
+\log f(\mu\mid\mathbf y)
+=-\frac{A}{2}\left(\mu-\frac{h}{A}\right)^2+C.
+$$
+A Normal log density with mean $m$ and variance $v$ has the form $-(\mu-m)^2/(2v)+C$. Comparing the two expressions shows that $m=h/A$ and $v=1/A$. The parameter $\mu$ can take any real value, as required for a Normal distribution. Thus
+$$
+\begin{aligned}
+\mu\mid\mathbf y&\sim\text{N}(m,v),\\
+m&=\frac{\theta/\tau^2+n\bar y/\sigma^2}{1/\tau^2+n/\sigma^2},
+\qquad
+v=\frac{1}{1/\tau^2+n/\sigma^2}.
+\end{aligned}
+$$
+The normalized posterior density is therefore
+$$
+f(\mu\mid\mathbf y)=\frac{1}{\sqrt{2\pi v}}
+\exp\!\left[-\frac{(\mu-m)^2}{2v}\right].
+$$
+
+### Interpreting the update
+
+The reciprocal of a variance is called **precision**. A small variance corresponds to high precision. The prior precision is $1/\tau^2$. The sample mean has sampling variance $\sigma^2/n$, so its precision is $n/\sigma^2$. The posterior precision adds these contributions:
+$$
+\frac1v=\frac1{\tau^2}+\frac n{\sigma^2}.
+$$
+The posterior mean is a weighted average of $\theta$ and $\bar y$, with each weight proportional to its precision. A tightly concentrated prior gives $\theta$ more weight. More observations, or less sampling variability, give $\bar y$ more weight.
+
+For the well-being example in Exercise 2.4, $n=25$, $\bar y=5.735$, and $\sigma=0.5$. Taking the prior $\mu\sim\text{N}(6.5,1^2)$ gives prior precision 1 and sample-mean precision $25/0.5^2=100$. Hence
+$$
+m=\frac{1\times6.5+100\times5.735}{101}
+=\frac{580}{101}\approx5.743,
+\qquad
+v=\frac1{101}\approx0.00990.
+$$
+The posterior mean lies close to the observed mean because the sample mean has much greater precision than the prior. The posterior standard deviation is $\sqrt{v}\approx0.0995$; this is the value to pass to `dnorm()` as `sd`, whereas the Normal notation in the table uses the variance $v$.
+
+This derivation treats $\sigma^2$ as known throughout. If the sampling variance is also unknown, it needs its own prior, and this one-parameter update no longer describes the full posterior.

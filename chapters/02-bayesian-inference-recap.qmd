@@ -148,6 +148,8 @@ The three conjugate pairs in @tbl-conjugate can each be obtained by collecting t
 
 : Three conjugate models. For repeated observations in the Poisson and Normal rows, observations are independent conditional on their parameter. The posterior parameters follow by adding the log likelihood and log prior and matching the resulting kernel. {#tbl-conjugate}
 
+@sec-conjugate-derivations works through each derivation step by step, including the completion of the square in the Normal case, and illustrates how the posterior parameters combine prior information with the data.
+
 @fig-moma-update displays the Beta update. The code evaluates each curve on the same grid. To compare their shapes, the likelihood is rescaled to have area one as a function of $\pi$; this plotting choice does not turn the likelihood into a prior or a posterior. The posterior combines the likelihood with the prior and is shifted slightly toward the prior mean.
 
 ```{r}

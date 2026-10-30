@@ -23,12 +23,16 @@ book:
       chapters:
         - chapters/03-markov-chains.qmd
         - chapters/04-diagnosing-markov-chains.qmd
+    - part: "Sampling Algorithms"
+      chapters:
+        - chapters/05-metropolis.qmd
     - references.qmd
     - news.qmd
   appendices:
     - appendices/A-software-setup.qmd
     - appendices/B-notation.qmd
     - appendices/C-mcmc-diagnostics.qmd
+    - appendices/D-conjugate-posteriors.qmd
   page-footer:
     left: "Stochastic Simulation for Bayesian Modeling in Psychology, Maarten Marsman and Lourens Waldorp."
     right: "Published with [Quarto](https://quarto.org)."

@@ -11,4 +11,5 @@ Not yet released. Online in the development version:
 - Chapter 2, Bayesian Inference, Revisited;
 - Chapter 3, Markov Chains;
 - Chapter 4, Diagnosing Markov Chains;
-- Appendices A–C: software setup, notation, and technical notes on MCMC diagnostics.
+- Chapter 5, The Metropolis Algorithm;
+- Appendices A–D: software setup, notation, technical notes on MCMC (including the acceptance-probability derivation), and conjugate-posterior derivations.

@@ -719,7 +719,7 @@ p_trace | p_dens
 
 The traces look stable and R-hat is `r round(posterior::rhat(trapped), 3)`. Nevertheless, the estimated mean is near $-3$ rather than zero. Agreement has not revealed the missing mode. An MCSE calculated from these records describes variation within the explored region and misses the much larger error caused by incomplete exploration.
 
-Dispersed starting values help because different chains may find different regions. Knowledge of the model also matters: a mixture model, for example, may suggest several modes worth investigating. Chapter 5 (The Metropolis Algorithm) shows this difficulty with an actual sampler. No diagnostic based only on visited values can tell us everything about a region that was never visited.
+Dispersed starting values help because different chains may find different regions. Knowledge of the model also matters: a mixture model, for example, may suggest several modes worth investigating. @sec-metropolis shows this difficulty with an actual sampler. No diagnostic based only on visited values can tell us everything about a region that was never visited.
 
 A separate question is whether the model describes the observed data well. Even an accurate simulation can represent the posterior of an unsuitable model. Posterior predictive checks address that question by comparing observations simulated from the fitted model with the data.
 

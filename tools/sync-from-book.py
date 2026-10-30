@@ -28,11 +28,13 @@ PUBLIC_CHAPTERS = [
     "02-bayesian-inference-recap.qmd",
     "03-markov-chains.qmd",
     "04-diagnosing-markov-chains.qmd",
+    "05-metropolis.qmd",
 ]
 PUBLIC_APPENDICES = [
     "A-software-setup.qmd",
     "B-notation.qmd",
     "C-mcmc-diagnostics.qmd",
+    "D-conjugate-posteriors.qmd",
 ]
 PUBLIC_FILES = ["chapters/" + n for n in PUBLIC_CHAPTERS] + ["appendices/" + n for n in PUBLIC_APPENDICES]
 SHARED = [
@@ -47,7 +49,6 @@ SHARED = [
 # Chapters that are not (yet) on the website. Update when a chapter goes online:
 # remove its entry here and add its file to PUBLIC_CHAPTERS and to _quarto.yml.
 ABSENT = {
-    "sec-metropolis": "Chapter 5 (The Metropolis Algorithm)",
     "sec-metropolis-hastings": "Chapter 6 (Metropolis–Hastings and Adaptive Proposals)",
     "sec-gibbs": "Chapter 7 (Gibbs Sampling and Metropolis-within-Gibbs)",
     "sec-variable-selection": "Chapter 8 (Bayesian Variable Selection)",

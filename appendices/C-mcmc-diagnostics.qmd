@@ -1,4 +1,4 @@
-# Technical Notes on MCMC Diagnostics {#sec-diagnostics-notes}
+# Technical Notes on MCMC {#sec-diagnostics-notes}
 
 ```{r}
 #| include: false
@@ -14,7 +14,7 @@ to_draws <- function(M, name = "theta") {
 ```
 
 
-These notes give the derivations and diagnostic implementations used in @sec-diagnostics. Exercise 4.7 uses the R-hat functions in @sec-rhat-calculations.
+These notes expand on the diagnostics in @sec-diagnostics and derive the acceptance rule used in @sec-metropolis and Chapter 6 (Metropolis–Hastings and Adaptive Proposals). Exercise 4.7 uses the R-hat functions in @sec-rhat-calculations.
 
 ## The variance of a dependent average {#sec-mcmc-variance}
 
@@ -122,4 +122,60 @@ mcmc_dens_overlay(to_draws(same_mean, "theta"), pars = "theta") +
   mcmc_dens_overlay(to_draws(folded, "theta"), pars = "theta") +
   labs(x = "Absolute deviation from pooled median") + legend_none()
 ```
+
+## Deriving the Metropolis acceptance probability {#sec-metropolis-acceptance-derivation}
+
+The Metropolis rule accepts every proposal to a higher target density and only some proposals to a lower one. How do we obtain these probabilities? We can choose them by solving the detailed balance equation [@vandenbergh2026reversible, Appendix B].
+
+Let $a$ be the current state and $b$ a proposed state. Write $\alpha_{\mathrm{fwd}}$ for the probability of accepting the move from $a$ to $b$, and $\alpha_{\mathrm{rev}}$ for the acceptance probability if we instead propose $a$ from $b$. These are probabilities for two possible directions, not two decisions made in one iteration. For this derivation, assume that both states have positive, finite target density and that the proposal densities in both directions are positive.
+
+### Relating the two directions
+
+Detailed balance is satisfied when
+$$
+f(a)q(b\mid a)\alpha_{\mathrm{fwd}}
+=f(b)q(a\mid b)\alpha_{\mathrm{rev}}.
+$$ {#eq-acceptance-balance}
+For the symmetric proposals in @sec-metropolis, $q(b\mid a)=q(a\mid b)$, so these factors cancel. Dividing by $f(a)$ leaves
+$$
+\alpha_{\mathrm{fwd}}=r\alpha_{\mathrm{rev}},
+\qquad r=\frac{f(b)}{f(a)}.
+$$ {#eq-acceptance-directions}
+Once we choose an acceptance probability in one direction, this equation fixes the probability in the other. The choices must also lie between zero and one.
+
+Since $\alpha_{\mathrm{rev}}\leq1$, the equation gives $\alpha_{\mathrm{fwd}}\leq r$. We also require $\alpha_{\mathrm{fwd}}\leq1$. The largest permitted forward probability is therefore $\min(1,r)$. Taking this value gives the Metropolis rule:
+$$
+\alpha_{\mathrm{fwd}}=\min(1,r),
+\qquad
+\alpha_{\mathrm{rev}}=\min(1,1/r).
+$$ {#eq-derived-metropolis-acceptance}
+
+If $r<1$, set $\alpha_{\mathrm{rev}}=1$ and obtain $\alpha_{\mathrm{fwd}}=r$. The proposal goes to a lower target density, so it is accepted only sometimes. If $r\geq1$, set $\alpha_{\mathrm{fwd}}=1$ and obtain $\alpha_{\mathrm{rev}}=1/r$. The proposal goes to an equal or higher target density and is always accepted. In either case, the equation is satisfied in both directions. Proposals outside the target support are rejected.
+
+### A numerical comparison
+
+Suppose $f(a)=0.2$, $f(b)=0.1$, and the symmetric proposal density is 0.3 in either direction. Then $r=0.5$. The two sides of @eq-acceptance-balance are
+$$
+\underbrace{0.2\times0.3\times0.5}_{a\text{ to }b}
+=\underbrace{0.1\times0.3\times1}_{b\text{ to }a}
+=0.03.
+$$
+The target assigns a higher density to $a$, but the smaller acceptance probability from $a$ to $b$ compensates for that difference.
+
+There are other balanced choices. For example, $\alpha_{\mathrm{fwd}}=0.25$ and $\alpha_{\mathrm{rev}}=0.5$ also satisfy @eq-acceptance-directions, since $0.25=0.5\times0.5$. Both sides of the balance equation then equal 0.015. Both directions would produce more rejections. The Metropolis choice makes both acceptance probabilities as large as possible while preserving their required relationship; detailed balance alone does not specify a unique rule.
+
+### Allowing asymmetric proposals
+
+When proposal densities differ between directions, retain them in @eq-acceptance-balance. The same rearrangement gives
+$$
+\alpha_{\mathrm{fwd}}=R\alpha_{\mathrm{rev}},
+\qquad
+R=\frac{f(b)q(a\mid b)}{f(a)q(b\mid a)}.
+$$
+Applying the same bounds yields the **Metropolis–Hastings** acceptance probability
+$$
+\alpha(a,b)=\min\!\left\{1,
+\frac{f(b)q(a\mid b)}{f(a)q(b\mid a)}\right\}.
+$$ {#eq-derived-hastings-acceptance}
+The reverse proposal density is in the numerator and the forward proposal density is in the denominator. This adjustment accounts for a proposal mechanism that favors one direction. Chapter 6 (Metropolis–Hastings and Adaptive Proposals) develops examples of such proposals. With a symmetric proposal, their ratio is one and the expression reduces to the rule derived above.
 
