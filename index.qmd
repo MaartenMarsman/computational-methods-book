@@ -2,4 +2,4 @@
 
 Stochastic simulation provides a way to study Bayesian models when the quantities of interest are difficult to calculate directly. By generating draws from a probability distribution, we can estimate posterior means, probabilities, and predictions. This book develops the methods behind those calculations and shows how to implement them in R.
 
-The book is being written. The chapters that are ready can be read in the [development version](dev/).
+The book is being written. Chapters will appear here as they are released.
