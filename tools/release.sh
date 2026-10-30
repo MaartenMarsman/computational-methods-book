@@ -27,7 +27,7 @@ changes = changes[:changes.index("\n:::")] + "\n" if "\n:::" in changes else cha
 link = (f" Every changed line since version {previous[1:]}: [compare on GitHub]"
         f"(https://github.com/MaartenMarsman/computational-methods-book/compare/{previous}...v{version})." if previous else "")
 release = (f"## Version {version} ({today}) {{.unnumbered}}\n\n"
-           f"Released {today}.{link}\n\nChanges" + (f" since version {previous[1:]}" if previous else "") + ":\n" + changes)
+           f"Released {today}.{link}\n\n" + (f"Changes since version {previous[1:]}:\n" if previous else "First release. Contents:\n") + changes)
 newdev = (f"<!-- dev-start -->\n::: {{.content-visible when-meta=\"dev-build\"}}\n## In preparation {{.unnumbered}}\n\n"
           f"What the next release will contain: everything in version {version} plus the changes below.\n\n"
           f"Changes since version {version}:\n\n- Nothing yet.\n:::\n<!-- dev-end -->\n")
