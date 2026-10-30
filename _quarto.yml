@@ -8,10 +8,8 @@ book:
   subtitle: "An Introduction to Computational Methods"
   author: "Maarten Marsman and Lourens Waldorp"
   output-file: Stochastic-Simulation-for-Bayesian-Modeling
-  downloads: [pdf]
   site-url: https://maartenmarsman.github.io/computational-methods-book/
-  repo-url: https://github.com/MaartenMarsman/computational-methods-book
-  repo-actions: [issue]
+  bread-crumbs: false
   search: true
   chapters:
     - index.qmd
@@ -56,8 +54,12 @@ format:
     theme: cosmo
     css: style/bayesrules.css
     include-after-body: style/version-switcher.html
-    toc: true
-    toc-depth: 3
+    toc: false
+    grid:
+      sidebar-width: 300px
+      body-width: 850px
+      margin-width: 0px
+      gutter-width: 3rem
     number-sections: true
     number-depth: 3
     code-copy: true

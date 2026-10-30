@@ -96,13 +96,9 @@ def chapter_entry(name):
 
 entries = [chapter_entry(n) for n in PUBLIC_CHAPTERS]
 online = entries[0] if len(entries) == 1 else ", ".join(entries[:-1]) + " and " + entries[-1]
-NOTE = f"""
-::: {{.callout-note appearance="simple"}}
-**Work in progress.** This website holds the chapters of the book that are ready for readers. Online now: {online}. Further chapters are added as they are completed, and the chapters already online may still change.
-
-::: {{.content-visible when-format="html"}}
-[Download the PDF](Stochastic-Simulation-for-Bayesian-Modeling.pdf) of the chapters that are online.
-:::
+NOTE = """
+::: {.content-visible when-format="html"}
+This website holds the released chapters of the book. You can also [download it as a PDF](Stochastic-Simulation-for-Bayesian-Modeling.pdf).
 :::
 """
 ABOUT = """
