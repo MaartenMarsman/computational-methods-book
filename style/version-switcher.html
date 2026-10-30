@@ -25,6 +25,18 @@
 .book-version .book-version-kind { color: #777; font-size: 0.8em; }
 </style>
 <script>
+  // Move the chapter's table of contents from the bottom of the sidebar to
+  // right under the chapter's own entry, as on the Bayes Rules! site.
+  document.addEventListener("DOMContentLoaded", function () {
+    const toc = document.querySelector("#quarto-sidebar #TOC");
+    const current = document.querySelector("#quarto-sidebar .sidebar-item a.active");
+    if (toc && current) {
+      const item = current.closest(".sidebar-item");
+      if (item) item.append(toc);
+    }
+  });
+</script>
+<script>
 (function () {
   const header = document.querySelector("#quarto-sidebar .sidebar-header");
   if (!header) return;
