@@ -15,9 +15,19 @@ tools/release.sh turns the block into the entry for the new version.
 ::: {.content-visible when-meta="dev-build"}
 ## In preparation {.unnumbered}
 
-What the first release will contain.
+What the next release will contain: everything in version 0.1 plus the changes below.
 
-Contents:
+Changes since version 0.1:
+
+- Nothing yet.
+:::
+<!-- dev-end -->
+
+## Version 0.1 (30 October 2026) {.unnumbered}
+
+Released 30 October 2026.
+
+First release. Contents:
 
 - The welcome page.
 - Chapter 1, Probability and Simulation.
@@ -26,5 +36,4 @@ Contents:
 - Chapter 4, Diagnosing Markov Chains.
 - Chapter 5, The Metropolis Algorithm.
 - Appendices A to D: software setup, notation, technical notes on MCMC, and conjugate-posterior derivations.
-:::
-<!-- dev-end -->
+
