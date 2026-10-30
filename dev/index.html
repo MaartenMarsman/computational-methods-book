@@ -190,6 +190,23 @@ div.csl-indent {
 </li>
       </ul>
   </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">Sampling Algorithms</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapters/05-metropolis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">The Metropolis Algorithm</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./references.html" class="sidebar-item-text sidebar-link">
@@ -204,13 +221,13 @@ div.csl-indent {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
  <span class="menu-text">Appendices</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./appendices/A-software-setup.html" class="sidebar-item-text sidebar-link">
@@ -226,7 +243,13 @@ div.csl-indent {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./appendices/C-mcmc-diagnostics.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Technical Notes on MCMC Diagnostics</span></span></a>
+ <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Technical Notes on MCMC</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./appendices/D-conjugate-posteriors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Deriving Conjugate Posteriors</span></span></a>
   </div>
 </li>
       </ul>
@@ -292,7 +315,7 @@ div.csl-indent {
 <i class="callout-icon"></i>
 </div>
 <div class="callout-body-container">
-<p><strong>Work in progress.</strong> This website holds the chapters of the book that are ready for readers. Online now: <a href="./chapters/01-probability-and-simulation.html">Chapter 1</a> (Probability and Simulation), <a href="./chapters/02-bayesian-inference-recap.html">Chapter 2</a> (Bayesian Inference, Revisited), <a href="./chapters/03-markov-chains.html">Chapter 3</a> (Markov Chains) and <a href="./chapters/04-diagnosing-markov-chains.html">Chapter 4</a> (Diagnosing Markov Chains). Further chapters are added as they are completed, and the chapters already online may still change.</p>
+<p><strong>Work in progress.</strong> This website holds the chapters of the book that are ready for readers. Online now: <a href="./chapters/01-probability-and-simulation.html">Chapter 1</a> (Probability and Simulation), <a href="./chapters/02-bayesian-inference-recap.html">Chapter 2</a> (Bayesian Inference, Revisited), <a href="./chapters/03-markov-chains.html">Chapter 3</a> (Markov Chains), <a href="./chapters/04-diagnosing-markov-chains.html">Chapter 4</a> (Diagnosing Markov Chains) and <a href="./chapters/05-metropolis.html">Chapter 5</a> (The Metropolis Algorithm). Further chapters are added as they are completed, and the chapters already online may still change.</p>
 <p><a href="Stochastic-Simulation-for-Bayesian-Modeling.pdf">Download the PDF</a> of the chapters that are online.</p>
 </div>
 </div>
@@ -321,7 +344,7 @@ div.csl-indent {
 <p>The book has five parts. Each builds on the concepts and methods introduced earlier.</p>
 <p><strong>Foundations.</strong> <a href="chapters/01-probability-and-simulation.html" class="quarto-xref"><span>1&nbsp; Probability and Simulation</span></a> introduces Monte Carlo integration, explains its accuracy, and develops methods for generating random draws. <a href="chapters/02-bayesian-inference-recap.html" class="quarto-xref"><span>2&nbsp; Bayesian Inference, Revisited</span></a> connects these ideas to Bayesian inference, including posterior summaries, marginal likelihoods, and Bayes factors. These chapters also explain why obtaining useful draws and evaluating integrals become more demanding as models grow.</p>
 <p><strong>Markov Chains.</strong> <a href="chapters/03-markov-chains.html" class="quarto-xref"><span>3&nbsp; Markov Chains</span></a> develops the properties of Markov chains and explains how their transitions can be constructed to preserve a chosen stationary distribution. <a href="chapters/04-diagnosing-markov-chains.html" class="quarto-xref"><span>4&nbsp; Diagnosing Markov Chains</span></a> uses simulations from Stan to introduce practical checks of chain behavior and estimates of Monte Carlo accuracy.</p>
-<p><strong>Sampling Algorithms.</strong> Chapter 5 (The Metropolis Algorithm) develops the Metropolis algorithm using ratios of posterior densities. Chapter 6 (Metropolis–Hastings and Adaptive Proposals) extends it to asymmetric proposals, parameter transformations, and adaptive tuning. Chapter 7 (Gibbs Sampling and Metropolis-within-Gibbs) introduces updates from conditional distributions and combines them with Metropolis steps when direct conditional sampling is unavailable. The code makes the connection between each algorithm’s mathematical definition and its implementation explicit.</p>
+<p><strong>Sampling Algorithms.</strong> <a href="chapters/05-metropolis.html" class="quarto-xref"><span>5&nbsp; The Metropolis Algorithm</span></a> develops the Metropolis algorithm using ratios of posterior densities. Chapter 6 (Metropolis–Hastings and Adaptive Proposals) extends it to asymmetric proposals, parameter transformations, and adaptive tuning. Chapter 7 (Gibbs Sampling and Metropolis-within-Gibbs) introduces updates from conditional distributions and combines them with Metropolis steps when direct conditional sampling is unavailable. The code makes the connection between each algorithm’s mathematical definition and its implementation explicit.</p>
 <p><strong>Model Uncertainty.</strong> Chapter 8 (Bayesian Variable Selection) treats the inclusion of predictors as an unknown part of a regression model. Chapter 9 (Bayesian Model Averaging) uses posterior model probabilities to combine estimates and predictions across models, accounting for uncertainty about model choice.</p>
 <p><strong>Going Further.</strong> Chapter 10 (Hamiltonian Monte Carlo) introduces Hamiltonian Monte Carlo, the family of methods underlying Stan’s sampling algorithms. This chapter is optional; the earlier chapters can be studied independently of it.</p>
 </section>

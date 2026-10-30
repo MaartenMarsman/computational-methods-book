@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Appendix C — Technical Notes on MCMC Diagnostics – Stochastic Simulation for Bayesian Modeling in Psychology</title>
+<title>Appendix C — Technical Notes on MCMC – Stochastic Simulation for Bayesian Modeling in Psychology</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -91,6 +91,7 @@ div.csl-indent {
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
+<link href="../appendices/D-conjugate-posteriors.html" rel="next">
 <link href="../appendices/B-notation.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
@@ -172,7 +173,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../appendices/A-software-setup.html">Appendices</a></li><li class="breadcrumb-item"><a href="../appendices/C-mcmc-diagnostics.html"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Technical Notes on MCMC Diagnostics</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../appendices/A-software-setup.html">Appendices</a></li><li class="breadcrumb-item"><a href="../appendices/C-mcmc-diagnostics.html"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Technical Notes on MCMC</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -253,6 +254,23 @@ window.Quarto = {
 </li>
       </ul>
   </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">Sampling Algorithms</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/05-metropolis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">The Metropolis Algorithm</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../references.html" class="sidebar-item-text sidebar-link">
@@ -267,13 +285,13 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
  <span class="menu-text">Appendices</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../appendices/A-software-setup.html" class="sidebar-item-text sidebar-link">
@@ -289,7 +307,13 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../appendices/C-mcmc-diagnostics.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Technical Notes on MCMC Diagnostics</span></span></a>
+ <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Technical Notes on MCMC</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendices/D-conjugate-posteriors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Deriving Conjugate Posteriors</span></span></a>
   </div>
 </li>
       </ul>
@@ -307,15 +331,21 @@ window.Quarto = {
   <li><a href="#sec-mcmc-variance" id="toc-sec-mcmc-variance" class="nav-link active" data-scroll-target="#sec-mcmc-variance"><span class="header-section-number">C.1</span> The variance of a dependent average</a></li>
   <li><a href="#sec-rhat-calculations" id="toc-sec-rhat-calculations" class="nav-link" data-scroll-target="#sec-rhat-calculations"><span class="header-section-number">C.2</span> Calculating basic and split R-hat</a></li>
   <li><a href="#sec-rank-folding" id="toc-sec-rank-folding" class="nav-link" data-scroll-target="#sec-rank-folding"><span class="header-section-number">C.3</span> Rank normalization and folding</a></li>
+  <li><a href="#sec-metropolis-acceptance-derivation" id="toc-sec-metropolis-acceptance-derivation" class="nav-link" data-scroll-target="#sec-metropolis-acceptance-derivation"><span class="header-section-number">C.4</span> Deriving the Metropolis acceptance probability</a>
+  <ul class="collapse">
+  <li><a href="#relating-the-two-directions" id="toc-relating-the-two-directions" class="nav-link" data-scroll-target="#relating-the-two-directions"><span class="header-section-number">C.4.1</span> Relating the two directions</a></li>
+  <li><a href="#a-numerical-comparison" id="toc-a-numerical-comparison" class="nav-link" data-scroll-target="#a-numerical-comparison"><span class="header-section-number">C.4.2</span> A numerical comparison</a></li>
+  <li><a href="#allowing-asymmetric-proposals" id="toc-allowing-asymmetric-proposals" class="nav-link" data-scroll-target="#allowing-asymmetric-proposals"><span class="header-section-number">C.4.3</span> Allowing asymmetric proposals</a></li>
+  </ul></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/MaartenMarsman/computational-methods-book/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../appendices/A-software-setup.html">Appendices</a></li><li class="breadcrumb-item"><a href="../appendices/C-mcmc-diagnostics.html"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Technical Notes on MCMC Diagnostics</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../appendices/A-software-setup.html">Appendices</a></li><li class="breadcrumb-item"><a href="../appendices/C-mcmc-diagnostics.html"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Technical Notes on MCMC</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span id="sec-diagnostics-notes" class="quarto-section-identifier">Appendix C — Technical Notes on MCMC Diagnostics</span></h1>
+<h1 class="title"><span id="sec-diagnostics-notes" class="quarto-section-identifier">Appendix C — Technical Notes on MCMC</span></h1>
 </div>
 
 
@@ -332,7 +362,7 @@ window.Quarto = {
 </header>
 
 
-<p>These notes give the derivations and diagnostic implementations used in <a href="../chapters/04-diagnosing-markov-chains.html" class="quarto-xref"><span>Chapter 4</span></a>. Exercise 4.7 uses the R-hat functions in <a href="#sec-rhat-calculations" class="quarto-xref"><span>Section C.2</span></a>.</p>
+<p>These notes expand on the diagnostics in <a href="../chapters/04-diagnosing-markov-chains.html" class="quarto-xref"><span>Chapter 4</span></a> and derive the acceptance rule used in <a href="../chapters/05-metropolis.html" class="quarto-xref"><span>Chapter 5</span></a> and Chapter 6 (Metropolis–Hastings and Adaptive Proposals). Exercise 4.7 uses the R-hat functions in <a href="#sec-rhat-calculations" class="quarto-xref"><span>Section C.2</span></a>.</p>
 <section id="sec-mcmc-variance" class="level2" data-number="C.1">
 <h2 data-number="C.1" class="anchored" data-anchor-id="sec-mcmc-variance"><span class="header-section-number">C.1</span> The variance of a dependent average</h2>
 <p>For <span class="math inline">\(N\)</span> independent draws, the variance of their average is <span class="math inline">\(\sigma^2/N\)</span>. With dependent draws, the covariances also contribute. For a stationary chain, <span class="math inline">\(\operatorname{Cov}(\theta^{(t)},\theta^{(t+k)})=\sigma^2\rho_k\)</span>. There are <span class="math inline">\(N-k\)</span> pairs of values separated by lag <span class="math inline">\(k\)</span>, giving <span id="eq-mcmc-finite-var"><span class="math display">\[
@@ -428,16 +458,60 @@ Figure&nbsp;C.1: Folding makes a spread difference easier to compare. Left: reco
 </div>
 </div>
 </div>
+</section>
+<section id="sec-metropolis-acceptance-derivation" class="level2" data-number="C.4">
+<h2 data-number="C.4" class="anchored" data-anchor-id="sec-metropolis-acceptance-derivation"><span class="header-section-number">C.4</span> Deriving the Metropolis acceptance probability</h2>
+<p>The Metropolis rule accepts every proposal to a higher target density and only some proposals to a lower one. How do we obtain these probabilities? We can choose them by solving the detailed balance equation <span class="citation" data-cites="vandenbergh2026reversible">(<a href="../references.html#ref-vandenbergh2026reversible" role="doc-biblioref"><span class="nocase">van den Bergh et al.</span>, 2026</a>, Appendix B)</span>.</p>
+<p>Let <span class="math inline">\(a\)</span> be the current state and <span class="math inline">\(b\)</span> a proposed state. Write <span class="math inline">\(\alpha_{\mathrm{fwd}}\)</span> for the probability of accepting the move from <span class="math inline">\(a\)</span> to <span class="math inline">\(b\)</span>, and <span class="math inline">\(\alpha_{\mathrm{rev}}\)</span> for the acceptance probability if we instead propose <span class="math inline">\(a\)</span> from <span class="math inline">\(b\)</span>. These are probabilities for two possible directions, not two decisions made in one iteration. For this derivation, assume that both states have positive, finite target density and that the proposal densities in both directions are positive.</p>
+<section id="relating-the-two-directions" class="level3" data-number="C.4.1">
+<h3 data-number="C.4.1" class="anchored" data-anchor-id="relating-the-two-directions"><span class="header-section-number">C.4.1</span> Relating the two directions</h3>
+<p>Detailed balance is satisfied when <span id="eq-acceptance-balance"><span class="math display">\[
+f(a)q(b\mid a)\alpha_{\mathrm{fwd}}
+=f(b)q(a\mid b)\alpha_{\mathrm{rev}}.
+\tag{C.3}\]</span></span> For the symmetric proposals in <a href="../chapters/05-metropolis.html" class="quarto-xref"><span>Chapter 5</span></a>, <span class="math inline">\(q(b\mid a)=q(a\mid b)\)</span>, so these factors cancel. Dividing by <span class="math inline">\(f(a)\)</span> leaves <span id="eq-acceptance-directions"><span class="math display">\[
+\alpha_{\mathrm{fwd}}=r\alpha_{\mathrm{rev}},
+\qquad r=\frac{f(b)}{f(a)}.
+\tag{C.4}\]</span></span> Once we choose an acceptance probability in one direction, this equation fixes the probability in the other. The choices must also lie between zero and one.</p>
+<p>Since <span class="math inline">\(\alpha_{\mathrm{rev}}\leq1\)</span>, the equation gives <span class="math inline">\(\alpha_{\mathrm{fwd}}\leq r\)</span>. We also require <span class="math inline">\(\alpha_{\mathrm{fwd}}\leq1\)</span>. The largest permitted forward probability is therefore <span class="math inline">\(\min(1,r)\)</span>. Taking this value gives the Metropolis rule: <span id="eq-derived-metropolis-acceptance"><span class="math display">\[
+\alpha_{\mathrm{fwd}}=\min(1,r),
+\qquad
+\alpha_{\mathrm{rev}}=\min(1,1/r).
+\tag{C.5}\]</span></span></p>
+<p>If <span class="math inline">\(r&lt;1\)</span>, set <span class="math inline">\(\alpha_{\mathrm{rev}}=1\)</span> and obtain <span class="math inline">\(\alpha_{\mathrm{fwd}}=r\)</span>. The proposal goes to a lower target density, so it is accepted only sometimes. If <span class="math inline">\(r\geq1\)</span>, set <span class="math inline">\(\alpha_{\mathrm{fwd}}=1\)</span> and obtain <span class="math inline">\(\alpha_{\mathrm{rev}}=1/r\)</span>. The proposal goes to an equal or higher target density and is always accepted. In either case, the equation is satisfied in both directions. Proposals outside the target support are rejected.</p>
+</section>
+<section id="a-numerical-comparison" class="level3" data-number="C.4.2">
+<h3 data-number="C.4.2" class="anchored" data-anchor-id="a-numerical-comparison"><span class="header-section-number">C.4.2</span> A numerical comparison</h3>
+<p>Suppose <span class="math inline">\(f(a)=0.2\)</span>, <span class="math inline">\(f(b)=0.1\)</span>, and the symmetric proposal density is 0.3 in either direction. Then <span class="math inline">\(r=0.5\)</span>. The two sides of <a href="#eq-acceptance-balance" class="quarto-xref">Equation&nbsp;<span>C.3</span></a> are <span class="math display">\[
+\underbrace{0.2\times0.3\times0.5}_{a\text{ to }b}
+=\underbrace{0.1\times0.3\times1}_{b\text{ to }a}
+=0.03.
+\]</span> The target assigns a higher density to <span class="math inline">\(a\)</span>, but the smaller acceptance probability from <span class="math inline">\(a\)</span> to <span class="math inline">\(b\)</span> compensates for that difference.</p>
+<p>There are other balanced choices. For example, <span class="math inline">\(\alpha_{\mathrm{fwd}}=0.25\)</span> and <span class="math inline">\(\alpha_{\mathrm{rev}}=0.5\)</span> also satisfy <a href="#eq-acceptance-directions" class="quarto-xref">Equation&nbsp;<span>C.4</span></a>, since <span class="math inline">\(0.25=0.5\times0.5\)</span>. Both sides of the balance equation then equal 0.015. Both directions would produce more rejections. The Metropolis choice makes both acceptance probabilities as large as possible while preserving their required relationship; detailed balance alone does not specify a unique rule.</p>
+</section>
+<section id="allowing-asymmetric-proposals" class="level3" data-number="C.4.3">
+<h3 data-number="C.4.3" class="anchored" data-anchor-id="allowing-asymmetric-proposals"><span class="header-section-number">C.4.3</span> Allowing asymmetric proposals</h3>
+<p>When proposal densities differ between directions, retain them in <a href="#eq-acceptance-balance" class="quarto-xref">Equation&nbsp;<span>C.3</span></a>. The same rearrangement gives <span class="math display">\[
+\alpha_{\mathrm{fwd}}=R\alpha_{\mathrm{rev}},
+\qquad
+R=\frac{f(b)q(a\mid b)}{f(a)q(b\mid a)}.
+\]</span> Applying the same bounds yields the <strong>Metropolis–Hastings</strong> acceptance probability <span id="eq-derived-hastings-acceptance"><span class="math display">\[
+\alpha(a,b)=\min\!\left\{1,
+\frac{f(b)q(a\mid b)}{f(a)q(b\mid a)}\right\}.
+\tag{C.6}\]</span></span> The reverse proposal density is in the numerator and the forward proposal density is in the denominator. This adjustment accounts for a proposal mechanism that favors one direction. Chapter 6 (Metropolis–Hastings and Adaptive Proposals) develops examples of such proposals. With a symmetric proposal, their ratio is one and the expression reduces to the rule derived above.</p>
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" data-line-spacing="2" role="list" style="display: none">
 <div id="ref-margossian2024iterations" class="csl-entry" role="listitem">
 Margossian, C. C., &amp; Gelman, A. (2026). For how many iterations should we run <span>M</span>arkov chain <span>M</span>onte <span>C</span>arlo? In R. V. Craiu, D. Vats, G. L. Jones, S. Brooks, A. Gelman, &amp; X.-L. Meng (Eds.), <em>Handbook of <span>M</span>arkov chain <span>M</span>onte <span>C</span>arlo</em> (2nd ed., pp. 110–131). CRC Press. <a href="https://doi.org/10.1201/9781003453420-4">https://doi.org/10.1201/9781003453420-4</a>
 </div>
+<div id="ref-vandenbergh2026reversible" class="csl-entry" role="listitem">
+<span class="nocase">van den Bergh, D., Clyde, M. A., Raftery, A. E., &amp; Marsman, M.</span> (2026). <em>Reversible jump <span>MCMC</span> with no regrets: <span>B</span>ayesian variable selection using mixtures of mutually singular distributions</em>.
+</div>
 <div id="ref-vehtari2021rank" class="csl-entry" role="listitem">
 Vehtari, A., Gelman, A., Simpson, D., Carpenter, B., &amp; Bürkner, P.-C. (2021). Rank-normalization, folding, and localization: <span>A</span>n improved <span class="math inline">\(\widehat{R}\)</span> for assessing convergence of <span>MCMC</span> (with discussion). <em>Bayesian Analysis</em>, <em>16</em>(2), 667–718.
 </div>
 </div>
+</section>
 </section>
 
 </main> <!-- /main -->
@@ -970,6 +1044,9 @@ Vehtari, A., Gelman, A., Simpson, D., Carpenter, B., &amp; Bürkner, P.-C. (2021
       </a>          
   </div>
   <div class="nav-page nav-page-next">
+      <a href="../appendices/D-conjugate-posteriors.html" class="pagination-link" aria-label="Deriving Conjugate Posteriors">
+        <span class="nav-page-text"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Deriving Conjugate Posteriors</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
   </div>
 </nav>
 </div> <!-- /content -->

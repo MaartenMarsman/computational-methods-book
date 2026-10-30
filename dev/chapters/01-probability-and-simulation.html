@@ -254,6 +254,23 @@ window.Quarto = {
 </li>
       </ul>
   </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">Sampling Algorithms</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/05-metropolis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">The Metropolis Algorithm</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../references.html" class="sidebar-item-text sidebar-link">
@@ -268,13 +285,13 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
  <span class="menu-text">Appendices</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../appendices/A-software-setup.html" class="sidebar-item-text sidebar-link">
@@ -290,7 +307,13 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../appendices/C-mcmc-diagnostics.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Technical Notes on MCMC Diagnostics</span></span></a>
+ <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Technical Notes on MCMC</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendices/D-conjugate-posteriors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Deriving Conjugate Posteriors</span></span></a>
   </div>
 </li>
       </ul>
@@ -802,7 +825,7 @@ Figure&nbsp;1.8: Rejection sampling for <span class="math inline">\(h(\pi) = \pi
 <p>The left panel of <a href="#fig-rejection" class="quarto-xref">Figure&nbsp;<span>1.8</span></a> shows how acceptance changes the distribution of candidates. The proposals fill the rectangle under the envelope uniformly; the accepted ones fill the region under <span class="math inline">\(h\)</span> uniformly; and a uniform scatter under a curve, projected onto the horizontal axis, has that curve as its density. The right panel provides a visual check that the 4,324 accepted draws follow the <span class="math inline">\(\text{Beta}(19, 8)\)</span> density.</p>
 <p>The price is the rejections. Only 22% of the proposals survived, close to the theoretical rate <span class="math inline">\(Z/M = B(19, 8)/M = 0.219\)</span>, where <span class="math inline">\(B(19,8)\)</span> is the Beta function, the normalizing constant of <span class="math inline">\(h\)</span>. The acceptance rate is the ratio of the area under <span class="math inline">\(h\)</span> to the area under the envelope; a tighter envelope wastes fewer proposals. Here the flat envelope is a poor fit to a peaked target, and three out of four proposals are thrown away. Whether this is affordable depends on how many accepted draws we need and how expensive each proposal is. With several parameters, a poorly fitting envelope can become much more wasteful.</p>
 <p>Products of many small likelihood terms can underflow, meaning the computer rounds them to zero. To avoid this, compute log densities directly and compare <code>log(u)</code> with <code>log_h(proposal) - log_M</code>. Taking <code>log(h(proposal))</code> after an underflow has occurred cannot recover the lost value. <a href="02-bayesian-inference-recap.html" class="quarto-xref"><span>Chapter 2</span></a> develops calculations on the log scale.</p>
-<p>The Metropolis algorithm in Chapter 5 (The Metropolis Algorithm) also proposes a value and then accepts or rejects it. Its acceptance rule is different and depends on the current state. We will derive that rule separately.</p>
+<p>The Metropolis algorithm in <a href="05-metropolis.html" class="quarto-xref"><span>Chapter 5</span></a> also proposes a value and then accepts or rejects it. Its acceptance rule is different and depends on the current state. We will derive that rule separately.</p>
 <div class="quiz bookgraybox">
 <div class="title">
 <p>Quiz yourself!</p>
@@ -1022,7 +1045,7 @@ Figure&nbsp;1.10: A broad proposal with several parameters. Left: For two parame
 <ol type="a">
 <li>Derive <span class="math inline">\(F^{-1}(u)\)</span> and write a function that generates Cauchy draws from uniform draws. Check it against <code>dcauchy()</code> with a histogram, restricting the plot to <span class="math inline">\([-10, 10]\)</span>.</li>
 <li>Plot the running mean of 100,000 draws against the number of draws. Compare with the running mean of 100,000 Normal draws. What do you see, and what does it say about the Law of Large Numbers?</li>
-<li>The Cauchy distribution reappears in Chapter 5 (The Metropolis Algorithm) as a prior. Would a Monte Carlo estimate of the <em>median</em> of your draws behave better than the mean? Try it.</li>
+<li>The Cauchy distribution reappears in <a href="05-metropolis.html" class="quarto-xref"><span>Chapter 5</span></a> as a prior. Would a Monte Carlo estimate of the <em>median</em> of your draws behave better than the mean? Try it.</li>
 </ol>
 </div>
 <div class="exercise bookgraybox">

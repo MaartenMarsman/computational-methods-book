@@ -254,6 +254,23 @@ window.Quarto = {
 </li>
       </ul>
   </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">Sampling Algorithms</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/05-metropolis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">The Metropolis Algorithm</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../references.html" class="sidebar-item-text sidebar-link">
@@ -268,13 +285,13 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
  <span class="menu-text">Appendices</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../appendices/A-software-setup.html" class="sidebar-item-text sidebar-link">
@@ -290,7 +307,13 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../appendices/C-mcmc-diagnostics.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Technical Notes on MCMC Diagnostics</span></span></a>
+ <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Technical Notes on MCMC</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendices/D-conjugate-posteriors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Deriving Conjugate Posteriors</span></span></a>
   </div>
 </li>
       </ul>
@@ -341,7 +364,7 @@ window.Quarto = {
 <section id="conventions" class="level2" data-number="B.1">
 <h2 data-number="B.1" class="anchored" data-anchor-id="conventions"><span class="header-section-number">B.1</span> Conventions</h2>
 <p><strong>Every density is <span class="math inline">\(f\)</span>.</strong> The prior, the likelihood, the posterior, and the density of a proposal are all written <span class="math inline">\(f(\cdot)\)</span>, and the arguments tell you which one is meant: <span class="math inline">\(f(\theta)\)</span> is the prior, <span class="math inline">\(f(y \mid \theta)\)</span> the likelihood, and <span class="math inline">\(f(\theta \mid y)\)</span> the posterior. We do not use <span class="math inline">\(p(\cdot)\)</span> or <span class="math inline">\(\pi(\cdot)\)</span> for densities, because <span class="math inline">\(\pi\)</span> is a proportion parameter in <em>Bayes Rules!</em> and <span class="math inline">\(\mathbf{p}\)</span> is a momentum in Chapter 10 (Hamiltonian Monte Carlo). When a chapter builds a sampler for a generic target, that target is written <span class="math inline">\(f(\theta)\)</span>, and you should read it as “the posterior, up to a constant we cannot compute.”</p>
-<p><strong>Work on the log scale.</strong> Every sampler in this book takes a function that returns <span class="math inline">\(\log f(\theta)\)</span>, never <span class="math inline">\(f(\theta)\)</span>, and the code calls it <code>log_target</code> or <code>log_posterior</code>. The reason is numerical: a likelihood of 2,000 observations is a product of 2,000 small numbers and underflows to zero, while its logarithm is a sum of 2,000 moderate numbers. On the log scale a ratio becomes a difference, <span class="math inline">\(\log r = \log f(\theta^\star) - \log f(\theta^{(t)})\)</span>, and the acceptance test becomes <span class="math inline">\(\log u &lt; \log r\)</span> (Chapter 5 (The Metropolis Algorithm)). R’s <code>d*</code> functions all take <code>log = TRUE</code> for exactly this purpose.</p>
+<p><strong>Work on the log scale.</strong> Every sampler in this book takes a function that returns <span class="math inline">\(\log f(\theta)\)</span>, never <span class="math inline">\(f(\theta)\)</span>, and the code calls it <code>log_target</code> or <code>log_posterior</code>. The reason is numerical: a likelihood of 2,000 observations is a product of 2,000 small numbers and underflows to zero, while its logarithm is a sum of 2,000 moderate numbers. On the log scale a ratio becomes a difference, <span class="math inline">\(\log r = \log f(\theta^\star) - \log f(\theta^{(t)})\)</span>, and the acceptance test becomes <span class="math inline">\(\log u &lt; \log r\)</span> (<a href="../chapters/05-metropolis.html" class="quarto-xref"><span>Chapter 5</span></a>). R’s <code>d*</code> functions all take <code>log = TRUE</code> for exactly this purpose.</p>
 <p><strong>Vectors are bold, indices are subscripts, iterations are superscripts.</strong> A single parameter is <span class="math inline">\(\theta\)</span>; a vector of parameters is <span class="math inline">\(\boldsymbol{\theta} = (\theta_1, \ldots, \theta_d)\)</span>; a matrix is a bold capital such as <span class="math inline">\(\mathbf{P}\)</span> or <span class="math inline">\(\boldsymbol{\Sigma}\)</span>. Observations are indexed <span class="math inline">\(i = 1, \ldots, n\)</span>, predictors <span class="math inline">\(j = 1, \ldots, p\)</span>, and models <span class="math inline">\(m = 1, \ldots, M\)</span>. The state of a Markov chain at iteration <span class="math inline">\(t\)</span> is <span class="math inline">\(\theta^{(t)}\)</span>, with parentheses so that it is not mistaken for a power; a proposed value is <span class="math inline">\(\theta^\star\)</span>. Chains start at <span class="math inline">\(t = 0\)</span> and run for <span class="math inline">\(t = 1, \ldots, T\)</span> iterations. Hats denote estimates computed from draws, as in <span class="math inline">\(\widehat{R}\)</span>.</p>
 </section>
 <section id="data-parameters-and-densities" class="level2" data-number="B.2">
@@ -668,7 +691,7 @@ window.Quarto = {
 </tr>
 </tbody>
 </table>
-<p>A quick check of the two traps, which you can run yourself. The <span class="math inline">\(\text{N}(7, 0.5^2)\)</span> prior of Chapter 5 (The Metropolis Algorithm) has standard deviation <span class="math inline">\(0.5\)</span>, and a <span class="math inline">\(\text{Gamma}(2, 4)\)</span> variable has mean <span class="math inline">\(2/4\)</span>:</p>
+<p>A quick check of the two traps, which you can run yourself. The <span class="math inline">\(\text{N}(7, 0.5^2)\)</span> prior of <a href="../chapters/05-metropolis.html" class="quarto-xref"><span>Chapter 5</span></a> has standard deviation <span class="math inline">\(0.5\)</span>, and a <span class="math inline">\(\text{Gamma}(2, 4)\)</span> variable has mean <span class="math inline">\(2/4\)</span>:</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dnorm</span>(<span class="dv">7</span>, <span class="at">mean =</span> <span class="dv">7</span>, <span class="at">sd =</span> <span class="fl">0.5</span>, <span class="at">log =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
@@ -676,7 +699,7 @@ window.Quarto = {
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(<span class="fu">rgamma</span>(<span class="fl">1e5</span>, <span class="at">shape =</span> <span class="dv">2</span>, <span class="at">rate =</span> <span class="dv">4</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.4992972</code></pre>
+<pre><code>[1] 0.4994467</code></pre>
 </div>
 </div>
 
@@ -1218,8 +1241,8 @@ Johnson, A. A., Ott, M. Q., &amp; Dogucu, M. (2022). <em>Bayes rules! <span>A</s
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../appendices/C-mcmc-diagnostics.html" class="pagination-link" aria-label="Technical Notes on MCMC Diagnostics">
-        <span class="nav-page-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Technical Notes on MCMC Diagnostics</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../appendices/C-mcmc-diagnostics.html" class="pagination-link" aria-label="Technical Notes on MCMC">
+        <span class="nav-page-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Technical Notes on MCMC</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

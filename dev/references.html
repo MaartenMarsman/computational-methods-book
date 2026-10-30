@@ -56,7 +56,7 @@ div.csl-indent {
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
 <link href="./news.html" rel="next">
-<link href="./chapters/04-diagnosing-markov-chains.html" rel="prev">
+<link href="./chapters/05-metropolis.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -189,6 +189,23 @@ div.csl-indent {
 </li>
       </ul>
   </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">Sampling Algorithms</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapters/05-metropolis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">The Metropolis Algorithm</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./references.html" class="sidebar-item-text sidebar-link active">
@@ -203,13 +220,13 @@ div.csl-indent {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
  <span class="menu-text">Appendices</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./appendices/A-software-setup.html" class="sidebar-item-text sidebar-link">
@@ -225,7 +242,13 @@ div.csl-indent {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./appendices/C-mcmc-diagnostics.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Technical Notes on MCMC Diagnostics</span></span></a>
+ <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Technical Notes on MCMC</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./appendices/D-conjugate-posteriors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Deriving Conjugate Posteriors</span></span></a>
   </div>
 </li>
       </ul>
@@ -308,6 +331,12 @@ Gelman, &amp; X.-L. Meng (Eds.), <em>Handbook of <span>M</span>arkov
 chain <span>M</span>onte <span>C</span>arlo</em> (2nd ed., pp. 110–131).
 CRC Press. <a href="https://doi.org/10.1201/9781003453420-4">https://doi.org/10.1201/9781003453420-4</a>
 </div>
+<div id="ref-metropolis1953equation" class="csl-entry" role="listitem">
+Metropolis, N., Rosenbluth, A. W., Rosenbluth, M. N., Teller, A. H.,
+&amp; Teller, E. (1953). Equation of state calculations by fast
+computing machines. <em>The Journal of Chemical Physics</em>,
+<em>21</em>(6), 1087–1092.
+</div>
 <div id="ref-norris1997markov" class="csl-entry" role="listitem">
 Norris, J. R. (1997). <em>Markov chains</em>. Cambridge University
 Press.
@@ -315,6 +344,22 @@ Press.
 <div id="ref-robert2004monte" class="csl-entry" role="listitem">
 Robert, C. P., &amp; Casella, G. (2004). <em>Monte <span>C</span>arlo
 statistical methods</em> (2nd ed.). Springer.
+</div>
+<div id="ref-roberts1997weak" class="csl-entry" role="listitem">
+Roberts, G. O., Gelman, A., &amp; Gilks, W. R. (1997). Weak convergence
+and optimal scaling of random walk metropolis algorithms. <em>The Annals
+of Applied Probability</em>, <em>7</em>(1), 110–120.
+</div>
+<div id="ref-roberts2001optimal" class="csl-entry" role="listitem">
+Roberts, G. O., &amp; Rosenthal, J. S. (2001). Optimal scaling for
+various <span>Metropolis–Hastings</span> algorithms. <em>Statistical
+Science</em>, <em>16</em>(4), 351–367.
+</div>
+<div id="ref-vandenbergh2026reversible" class="csl-entry" role="listitem">
+<span class="nocase">van den Bergh, D., Clyde, M. A., Raftery, A. E.,
+&amp; Marsman, M.</span> (2026). <em>Reversible jump <span>MCMC</span>
+with no regrets: <span>B</span>ayesian variable selection using mixtures
+of mutually singular distributions</em>.
 </div>
 <div id="ref-vehtari2021rank" class="csl-entry" role="listitem">
 Vehtari, A., Gelman, A., Simpson, D., Carpenter, B., &amp; Bürkner,
@@ -858,8 +903,8 @@ the savage–dickey method. <em>Cognitive Psychology</em>, <em>60</em>(3),
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./chapters/04-diagnosing-markov-chains.html" class="pagination-link" aria-label="Diagnosing Markov Chains">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Diagnosing Markov Chains</span></span>
+      <a href="./chapters/05-metropolis.html" class="pagination-link" aria-label="The Metropolis Algorithm">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">The Metropolis Algorithm</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">

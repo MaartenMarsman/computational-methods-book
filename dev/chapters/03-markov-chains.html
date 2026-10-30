@@ -254,6 +254,23 @@ window.Quarto = {
 </li>
       </ul>
   </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">Sampling Algorithms</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/05-metropolis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">The Metropolis Algorithm</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../references.html" class="sidebar-item-text sidebar-link">
@@ -268,13 +285,13 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
  <span class="menu-text">Appendices</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../appendices/A-software-setup.html" class="sidebar-item-text sidebar-link">
@@ -290,7 +307,13 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../appendices/C-mcmc-diagnostics.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Technical Notes on MCMC Diagnostics</span></span></a>
+ <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Technical Notes on MCMC</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendices/D-conjugate-posteriors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Deriving Conjugate Posteriors</span></span></a>
   </div>
 </li>
       </ul>
@@ -422,7 +445,7 @@ P_{12}=P(\text{neutral tomorrow}\mid\text{happy today}).
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;       1       1       1</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>The column sums need not equal one. A matrix with non-negative entries and row sums of one is called a <strong>stochastic matrix</strong>. Together with an initial distribution, it specifies a time-homogeneous Markov chain.</p>
-<p>A note on notation. In this chapter the states are moods, so we call the chain <span class="math inline">\(X^{(t)}\)</span> and the states <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span>. From Chapter 5 (The Metropolis Algorithm) on, the states are candidate values of a parameter, and we write the chain as <span class="math inline">\(\theta^{(t)}\)</span>, as in <a href="../appendices/B-notation.html" class="quarto-xref"><span>Appendix B</span></a>. The states then describe a computational sequence rather than an observed sequence of moods. We use bold <span class="math inline">\(\boldsymbol{\pi}\)</span> for a vector of stationary probabilities and plain <span class="math inline">\(\pi\)</span> for an unknown proportion.</p>
+<p>A note on notation. In this chapter the states are moods, so we call the chain <span class="math inline">\(X^{(t)}\)</span> and the states <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span>. From <a href="05-metropolis.html" class="quarto-xref"><span>Chapter 5</span></a> on, the states are candidate values of a parameter, and we write the chain as <span class="math inline">\(\theta^{(t)}\)</span>, as in <a href="../appendices/B-notation.html" class="quarto-xref"><span>Appendix B</span></a>. The states then describe a computational sequence rather than an observed sequence of moods. We use bold <span class="math inline">\(\boldsymbol{\pi}\)</span> for a vector of stationary probabilities and plain <span class="math inline">\(\pi\)</span> for an unknown proportion.</p>
 <section id="simulating-the-chain" class="level3" data-number="3.1.1">
 <h3 data-number="3.1.1" class="anchored" data-anchor-id="simulating-the-chain"><span class="header-section-number">3.1.1</span> Simulating the chain</h3>
 <p>At each transition, select the row for the current mood and draw the next mood using that row’s probabilities. <code>sample()</code> takes the state labels, the number of draws, and the probabilities. For example, <code>sample(moods, 1, prob = P["happy", ])</code> generates a possible next state after a happy day.</p>
@@ -1136,7 +1159,7 @@ Figure&nbsp;3.7: Left: the first 500 steps of the hand-built chain, started at <
 <span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 0.1636364 0.1009084 0.2379286</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Differences from the continuous Beta values can arise from the finite grid, Monte Carlo variation, and any remaining effect of the starting state. Neighbor moves also produce persistent successive values, so counting <span class="math inline">\(N=49{,}500\)</span> retained states does not describe their precision as if they were independent. <a href="04-diagnosing-markov-chains.html" class="quarto-xref"><span>Chapter 4</span></a> develops the corresponding Monte Carlo error calculations.</p>
-<p>The construction used relative log weights, neighbor proposals, and an acceptance step. The normalization was needed for the matrix check and the plotted benchmark, but not inside <code>walk_grid()</code>. For a different prior and likelihood, the same transition rule can be applied to new finite log weights. Its target would still be a grid approximation. Chapter 5 (The Metropolis Algorithm) develops the corresponding method on a continuous parameter space.</p>
+<p>The construction used relative log weights, neighbor proposals, and an acceptance step. The normalization was needed for the matrix check and the plotted benchmark, but not inside <code>walk_grid()</code>. For a different prior and likelihood, the same transition rule can be applied to new finite log weights. Its target would still be a grid approximation. <a href="05-metropolis.html" class="quarto-xref"><span>Chapter 5</span></a> develops the corresponding method on a continuous parameter space.</p>
 <div class="quiz bookgraybox">
 <div class="title">
 <p>Quiz yourself!</p>
