@@ -54,7 +54,9 @@ format:
     theme: cosmo
     css: style/bayesrules.css
     include-after-body: style/version-switcher.html
-    toc: false
+    toc: true
+    toc-location: left
+    toc-depth: 2
     grid:
       sidebar-width: 300px
       body-width: 850px

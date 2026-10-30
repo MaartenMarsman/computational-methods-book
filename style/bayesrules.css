@@ -109,3 +109,13 @@ div.csl-entry {
 .quarto-title-meta-author {
   margin-top: 0.4em;
 }
+
+/* Sections of the current chapter, listed under it in the sidebar as on the Bayes Rules! site */
+#quarto-sidebar #TOC { margin: 0; padding: 0; border: 0; }
+#quarto-sidebar #TOC #toc-title { display: none; }
+#quarto-sidebar #TOC ul.collapse { display: block; }
+#quarto-sidebar #TOC ul { list-style: none; padding-left: 1.6em; margin: 0.1em 0 0.4em 0; }
+#quarto-sidebar #TOC ul ul { padding-left: 1.2em; }
+#quarto-sidebar #TOC a { display: block; font-size: 0.85em; line-height: 1.35; padding: 0.12em 0; color: #555; text-decoration: none; }
+#quarto-sidebar #TOC a.active { color: var(--bayespurple); }
+#quarto-sidebar #TOC .header-section-number { margin-right: 0.3em; }
