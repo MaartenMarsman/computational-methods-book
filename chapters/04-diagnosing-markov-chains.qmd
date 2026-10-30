@@ -25,7 +25,6 @@ library(rstan)
 library(bayesplot)
 library(patchwork)
 library(posterior)
-set.seed(84735)
 rstan_options(auto_write = TRUE)  # reuse compiled Stan models
 options(mc.cores = 1)             # run the Stan chains one after another
 color_scheme_set("purple")       # colors for the diagnostic plots
@@ -71,6 +70,7 @@ ar1_chain <- function(phi, N, init = 0) {
 We generate three chains, with $\phi=0$, $0.5$, and $0.95$. Each starts with a draw from the target, so its distribution is stationary from the start. This lets us study dependence without also introducing an effect of a fixed starting point.
 
 ```{r}
+set.seed(84735)
 phis <- c(0, 0.5, 0.95)
 N_ar1 <- 20000
 ar1_chains <- lapply(phis, function(phi) {
@@ -78,20 +78,15 @@ ar1_chains <- lapply(phis, function(phi) {
 })
 ```
 
-A **trace plot** shows the sampled values in the order they were produced. In @fig-ar1-traces, the three chains all fluctuate around zero, but they do so quite differently.
+A **trace plot** shows the sampled values in the order they were produced. To draw one with `ggplot2`, put each chain in a tibble with an iteration column, stack the tibbles, and label each by its value of $\phi$. In @fig-ar1-traces, the three chains all fluctuate around zero, but they do so quite differently.
 
 ```{r}
-#| include: false
-ar1 <- map2(ar1_chains, phis, \(theta, phi) tibble(iteration = seq_along(theta), theta, phi)) |>
-  list_rbind() |>
-  mutate(phi = factor(phi, labels = paste("phi =", phis)))
-```
-
-```{r}
-#| echo: false
 #| label: fig-ar1-traces
 #| fig-cap: "The first 500 iterations of three chains that all have the N(0, 1) stationary distribution. With $\\phi = 0$ the draws are independent. With $\\phi = 0.95$ the chain wanders slowly, and a short window can give an unrepresentative picture of the target."
 #| fig-height: 3.2
+ar1 <- map2(ar1_chains, phis, \(theta, phi) tibble(iteration = seq_along(theta), theta, phi)) |>
+  list_rbind() |>
+  mutate(phi = factor(phi, labels = paste("phi =", phis)))
 ar1 |>
   filter(iteration <= 500) |>
   ggplot(aes(iteration, theta)) +
@@ -123,6 +118,7 @@ ggplot(start_frame, aes(iteration, theta, color = start)) +
   annotate("rect", xmin = -Inf, xmax = Inf, ymin = -2, ymax = 2,
            fill = "#ECECEC", alpha = 0.6) +
   geom_line(linewidth = 0.3) +
+  scale_color_manual(values = unname(unlist(color_scheme_get("purple")[c(2, 3, 4, 6)]))) +
   labs(x = "Transition", y = expression(theta), color = "Starting value")
 ```
 
@@ -223,7 +219,7 @@ To see what this means for an estimate, imagine repeating each simulation 200 ti
 The calculation for $\phi=0.95$ is:
 
 ```{r}
-set.seed(48105)
+set.seed(84735)
 means_95 <- replicate(200, mean(ar1_chain(0.95, 2000, init = rnorm(1))))
 ```
 
@@ -240,7 +236,7 @@ repeated_means <- tibble(
                replicate(200, mean(ar1_chain(0.5, 2000, rnorm(1)))), means_95)
 )
 ggplot(repeated_means, aes(estimate)) +
-  geom_histogram(binwidth = 0.025, boundary = 0, fill = "#9E7BB5", color = "white") +
+  geom_histogram(binwidth = 0.025, boundary = 0, fill = "#552E6B", color = "white") +
   geom_vline(xintercept = 0, linetype = "dashed") +
   facet_wrap(~ phi, nrow = 1, labeller = label_both) +
   labs(x = "Estimated mean", y = "Number of runs")
@@ -276,12 +272,12 @@ N_{\mathrm{eff}}
 $$
 With $\phi=0.95$, our 20,000-state chain has an effective sample size of approximately $20{,}000\times0.05/1.95\approx513$. Its average is about as precise as an average of 513 independent standard Normal draws.
 
-In most applications we do not know the autocorrelations. The function `ess_basic()` in the `posterior` package estimates ESS from the sampled values. Compare those estimates with the known AR(1) formula:
+In most applications we do not know the autocorrelations. The function `ess_basic()` in the `posterior` package estimates ESS from the sampled values. By default it first splits each chain into two halves, a safeguard we return to when comparing chains; `split = FALSE` keeps each of our single chains whole. Compare the estimates with the known AR(1) formula:
 
 ```{r}
 tibble(phi = phis,
        ess_formula = N_ar1 * (1 - phi) / (1 + phi),
-       ess_estimated = sapply(ar1_chains, ess_basic))
+       ess_estimated = sapply(ar1_chains, ess_basic, split = FALSE))
 ```
 
 The columns need not agree exactly. The formula uses known correlations and a long-run approximation; the function uses correlations estimated from a particular path. Repeating the simulation gives different ESS estimates, especially when dependence is strong. @sec-mcmc-variance derives the exact variance for a chain of $N$ states and explains the approximation.
@@ -328,8 +324,8 @@ We can make the same comparison with estimated ESS:
 
 ```{r}
 theta_95 <- ar1_chains[[3]]
-c(full = ess_basic(theta_95),
-  thinned = ess_basic(theta_95[seq(1, N_ar1, by = 10)]))
+c(full = ess_basic(theta_95, split = FALSE),
+  thinned = ess_basic(theta_95[seq(1, N_ar1, by = 10)], split = FALSE))
 ```
 
 An estimated ESS can occasionally be larger after thinning because it is itself estimated with noise. In this example, the theoretical ESS decreases slightly. A practical reason to thin is storage: retaining every value can be costly in a large model. Thinning can also reduce the cost of later calculations. Otherwise, keep the full run.
@@ -365,7 +361,7 @@ bias_variance <- tidyr::crossing(discard = c(0, 500), retained = c(200, 2000)) |
   mutate(discard = factor(discard, labels = c("Discard 0", "Discard 500")),
          retained = factor(retained, labels = c("Retain 200", "Retain 2,000")))
 ggplot(bias_variance, aes(estimates)) +
-  geom_histogram(bins = 25, fill = "#9E7BB5", color = "white") +
+  geom_histogram(bins = 25, fill = "#552E6B", color = "white") +
   geom_vline(xintercept = 0, linetype = "dashed") +
   facet_grid(discard ~ retained) +
   labs(x = "Estimated mean", y = "Number of runs")
@@ -386,7 +382,7 @@ A single chain cannot reveal that another starting point would lead to a differe
 Consider two sets of four records in @fig-chain-agreement. In the first set, every record consists of standard Normal draws. In the second, two records fluctuate around $-2$ and two around $2$, each with standard deviation one. These illustrate agreement and disagreement about location. Each matrix below has 1,000 rows and four columns, one column per record. We create the second set by shifting two columns down by two and two up by two.
 
 ```{r}
-set.seed(48106)
+set.seed(84735)
 agree <- matrix(rnorm(4000), ncol = 4)
 separated <- matrix(rnorm(4000), ncol = 4)
 separated[, 1:2] <- separated[, 1:2] - 2
@@ -399,13 +395,13 @@ separated[, 3:4] <- separated[, 3:4] + 2
 #| fig-cap: "Records that agree (left column) and records that disagree about location (right column). Traces show the values over time; density curves summarize the distribution within each record. Each individual record fluctuates rapidly in both sets."
 #| fig-height: 4.4
 p1 <- mcmc_trace(to_draws(agree), pars = "theta") + legend_none() +
-  labs(title = "Agreement") + ylim(-5.5, 5.5)
+  labs(title = "Agreement") + coord_cartesian(ylim = c(-5.5, 5.5))
 p2 <- mcmc_trace(to_draws(separated), pars = "theta") + legend_none() +
-  labs(title = "Disagreement") + ylim(-5.5, 5.5)
+  labs(title = "Disagreement") + coord_cartesian(ylim = c(-5.5, 5.5))
 p3 <- mcmc_dens_overlay(to_draws(agree), pars = "theta") + legend_none() +
-  xlim(-5.5, 5.5)
+  coord_cartesian(xlim = c(-5.5, 5.5))
 p4 <- mcmc_dens_overlay(to_draws(separated), pars = "theta") + legend_none() +
-  xlim(-5.5, 5.5)
+  coord_cartesian(xlim = c(-5.5, 5.5))
 (p1 | p2) / (p3 | p4)
 ```
 
@@ -443,9 +439,9 @@ rbind(mean = chain_means, variance = chain_variances)
 
 The sample variances are close to one, but they differ because they come from different random draws. Averaging them gives
 $$
-W\approx\frac{1.028+0.915+0.973+1.012}{4}=0.982.
+W\approx\frac{`r paste(sprintf("%.3f", chain_variances), collapse = "+")`}{4}=`r sprintf("%.3f", mean(chain_variances))`.
 $$
-The four means are approximately $-1.986,-2.026,2.024,$ and $1.983$. We calculate their sample variance and multiply it by $L=1{,}000$ to obtain $B$. The code uses the unrounded values for all calculations:
+The four means are approximately $`r sprintf("%.3f", chain_means[1])`$, $`r sprintf("%.3f", chain_means[2])`$, $`r sprintf("%.3f", chain_means[3])`$, and $`r sprintf("%.3f", chain_means[4])`$. We calculate their sample variance and multiply it by $L=1{,}000$ to obtain $B$. The code uses the unrounded values for all calculations:
 
 ```{r}
 L <- nrow(separated)
@@ -455,11 +451,11 @@ var_plus <- (L - 1) / L * W + B / L
 c(W = W, B = B, rhat = sqrt(var_plus / W))
 ```
 
-With $B\approx5358.68$, the resulting comparison is
+With $B\approx`r sprintf("%.2f", B)`$, the resulting comparison is
 $$
 \widehat R\approx
-\sqrt{\frac{(999/1000)\times0.982+5358.68/1000}{0.982}}
-\approx2.541.
+\sqrt{\frac{(999/1000)\times`r sprintf("%.3f", W)`+`r sprintf("%.2f", B)`/1000}{`r sprintf("%.3f", W)`}}
+\approx`r sprintf("%.3f", sqrt(var_plus / W))`.
 $$
 The records differ much more from one another than their individual variances suggest. The large R-hat makes that disagreement visible in a single number.
 
@@ -469,11 +465,10 @@ Whole-chain averages can miss a shared trend. In the upward-trending example in 
 
 **Split R-hat** addresses this by dividing each chain into an earlier half and a later half, then treating the halves as separate chains. Four chains become eight half-chains. In the trend example, the earlier halves have lower means than the later halves, so the comparison reveals the change over time.
 
-We can see the difference by regenerating those records. Each column adds the same increasing sequence to small random fluctuations. The two calls to `rhat_basic()` compare the basic calculation before and after splitting:
+We can see the difference by generating a fresh set of four such records, with $L=1{,}000$ values each as before. Each column adds the same increasing sequence to small random fluctuations. The two calls to `rhat_basic()` compare the basic calculation before and after splitting:
 
 ```{r}
-set.seed(48104)
-L <- 1000
+set.seed(84735)
 trend <- sapply(1:4, function(j) {
   0.05 + 0.015 * j + seq(0, 0.45, length.out = L) +
     rnorm(L, 0, 0.012)
@@ -482,7 +477,7 @@ c(basic = rhat_basic(trend, split = FALSE),
   split = rhat_basic(trend, split = TRUE))
 ```
 
-The basic value is about 1.011 despite the obvious upward movement. It is just above the diagnostic target of 1.01, so it gives a weak warning. Splitting raises the value to about 2.088: the difference between the earlier and later halves now produces a much clearer warning.
+The basic value is `r sprintf("%.4f", rhat_basic(trend, split = FALSE))` despite the obvious upward movement. It is `r if (rhat_basic(trend, split = FALSE) < 1.01) "below the diagnostic target of 1.01, so it gives no warning at all" else "barely above the diagnostic target of 1.01, so it gives at most a weak warning"`. Splitting raises the value to about `r sprintf("%.3f", rhat_basic(trend, split = TRUE))`: the difference between the earlier and later halves now produces a much clearer warning.
 
 For practical use, `posterior::rhat()` performs this split and also checks for differences in spread [@vehtari2021rank]. It accepts a matrix with one column per chain. Applied to the two sets in @fig-chain-agreement:
 
@@ -500,7 +495,7 @@ Suppose you want to know what proportion of the songs played on Dutch radio stat
 $$
 \pi\mid y\sim\text{Beta}(9,18).
 $$
-We will estimate its mean and a 95% credible interval by simulation. The exact posterior gives us a useful check on the results. For this analysis, suppose we want the MCSE of the mean and of each interval endpoint to be at most 0.005 on the proportion scale. An MCSE of 0.005 corresponds to half a percentage point in the reported proportion. We will check the mean and both interval endpoints against this tolerance.
+We will estimate its mean and a 95% credible interval by simulation. The exact posterior gives us a useful check on the results. For this analysis, suppose we want the MCSE of the mean to be at most 0.005 on the proportion scale, half a percentage point in the reported proportion, and the MCSE of each interval endpoint to be at most 0.01, one percentage point. The endpoints get the looser tolerance because relatively few draws fall near them, so they are harder to pin down than the mean. We will check the mean and both interval endpoints against these tolerances.
 
 ### Generating the chains with Stan
 
@@ -532,6 +527,7 @@ We ask for four chains of 2,000 iterations, discarding the first 1,000 of each a
 #| results: hide
 #| message: false
 #| warning: false
+set.seed(84735)
 radio_data <- list(n = 20, y = 7)
 radio_fit <- stan(model_code = radio_model, data = radio_data,
                   chains = 4, iter = 2000, warmup = 1000,
@@ -554,23 +550,12 @@ You call `stan()` with `chains = 3` and `iter = 5000`, leaving warm-up at its de
 
 ### Do the chains explore similar values?
 
-The `bayesplot` package provides one function for each graphical check. `mcmc_trace()` shows movement over time, `mcmc_acf()` shows dependence within each chain, and `mcmc_dens_overlay()` draws a density curve for each chain. The argument `pars = "pi"` selects the proportion we want to examine:
-
-```{r}
-#| eval: false
-mcmc_trace(radio_array, pars = "pi")
-mcmc_acf(radio_array, pars = "pi", lags = 20)
-mcmc_dens_overlay(radio_array, pars = "pi")
-```
-
-@fig-radio-workflow brings these three plots together. Read them as complementary views of the same simulation.
+The `bayesplot` package provides one function for each graphical check. `mcmc_trace()` shows movement over time, `mcmc_acf()` shows dependence within each chain, and `mcmc_dens_overlay()` draws a density curve for each chain. The argument `pars = "pi"` selects the proportion we want to examine. @fig-radio-workflow brings these three plots together with `patchwork`, where `/` stacks plots and `|` places them side by side. Read them as complementary views of the same simulation.
 
 ```{r}
 #| label: fig-radio-workflow
-#| echo: false
 #| fig-cap: "The radio posterior from four Stan chains. Top: retained values over time. Bottom left: autocorrelation within each chain. Bottom right: density estimates from the separate chains."
 #| fig-height: 4.8
-radio_draws <- as_draws_df(radio_fit) |> subset_draws("pi")
 (mcmc_trace(radio_array, pars = "pi") + legend_none()) /
   (mcmc_acf(radio_array, pars = "pi", lags = 20) |
      (mcmc_dens_overlay(radio_array, pars = "pi") + legend_none()))
@@ -585,7 +570,7 @@ posterior::rhat(pi_mat)
 For this run it is `r round(posterior::rhat(pi_mat), 3)`, below 1.01. We also ask Stan to check for problems specific to its sampling algorithm:
 
 ```{r}
-#| results: hide
+#| message: true
 rstan::check_hmc_diagnostics(radio_fit)
 ```
 
@@ -600,7 +585,7 @@ c(mean = mean(pi_mat), posterior_sd = sd(pi_mat),
   mean_mcse = mcse_mean(pi_mat))
 ```
 
-The estimated mean is `r round(mean(pi_mat), 3)`, with MCSE `r round(mcse_mean(pi_mat), 4)`. This meets our target of 0.005. The exact mean is $9/27=1/3$; the difference between the simulated and exact means is `r round(abs(mean(pi_mat) - 1/3), 4)`, or `r round(abs(mean(pi_mat) - 1/3) / mcse_mean(pi_mat), 1)` MCSEs.
+The estimated mean is `r round(mean(pi_mat), 3)`, with MCSE `r round(mcse_mean(pi_mat), 4)`. This meets our target of 0.005. The exact mean is $9/27=1/3$; the difference between the simulated and exact means is `r round(abs(mean(pi_mat) - 1/3), 4)`, or `r round(abs(mean(pi_mat) - 1/3) / mcse_mean(pi_mat), 1)` MCSEs. `r if (abs(mean(pi_mat) - 1/3) / mcse_mean(pi_mat) > 2) "That is a little larger than the one or two MCSEs we called unsurprising, but well within the range that repeated runs produce; it is not a sign that anything is wrong." else "That is within the one or two MCSEs we called unsurprising."`
 
 Keep the two standard deviations separate. The posterior standard deviation, about `r round(sd(pi_mat), 2)`, describes uncertainty about the unknown proportion of Dutch-language tracks. The MCSE describes uncertainty in our numerical estimate of the posterior mean. Running the chain longer can reduce the second without changing the first.
 
@@ -618,9 +603,9 @@ interval_precision <- tibble(
 interval_precision
 ```
 
-Each row gives an endpoint estimate, its exact value, and its MCSE. Both MCSEs are below 0.005, so this run also meets our requirement for the interval. The estimated 95% credible interval is [`r round(interval_precision$estimate[1], 3)`, `r round(interval_precision$estimate[2], 3)`]. The MCSEs describe how much its endpoints would change between simulations; they do not describe uncertainty about $\pi$ itself.
+Each row gives an endpoint estimate, its exact value, and its MCSE. The MCSEs are `r sprintf("%.4f", interval_precision$mcse[1])` and `r sprintf("%.4f", interval_precision$mcse[2])`. `r if (all(interval_precision$mcse < 0.01)) "Both are below 0.01, so this run also meets our requirement for the interval." else "At least one of them exceeds 0.01, so this run does not yet meet our requirement for the interval, and we would extend it."` The estimated 95% credible interval is [`r sprintf("%.3f", interval_precision$estimate[1])`, `r sprintf("%.3f", interval_precision$estimate[2])`]. The MCSEs describe how much its endpoints would change between simulations; they do not describe uncertainty about $\pi$ itself.
 
-If an endpoint's MCSE had been 0.01, a run about four times as long would be a reasonable starting plan for reaching 0.005. We would then check both the chain behavior and the achieved precision again. Tail quantiles often need many effective draws because relatively few sampled values lie near the endpoints. There is no single ESS threshold that ensures a chosen decimal precision for every posterior.
+If an endpoint's MCSE had been 0.02, a run about four times as long would be a reasonable starting plan for reaching 0.01. We would then check both the chain behavior and the achieved precision again. Tail quantiles often need many effective draws because relatively few sampled values lie near the endpoints. There is no single ESS threshold that ensures a chosen decimal precision for every posterior.
 
 ### Reading bulk and tail ESS in a summary
 
@@ -642,9 +627,9 @@ Use these targets alongside the trace plots and sampler checks. They do not guar
 
 ### What would we report?
 
-Under the Beta-Binomial model, the posterior mean proportion of Dutch-language tracks is approximately `r round(mean(pi_mat), 2)`, with a 95% credible interval from `r round(interval_precision$estimate[1], 2)` to `r round(interval_precision$estimate[2], 2)`.
+Under the Beta-Binomial model, the posterior mean proportion of Dutch-language tracks is approximately `r sprintf("%.2f", mean(pi_mat))`, with a 95% credible interval from `r sprintf("%.2f", interval_precision$estimate[1])` to `r sprintf("%.2f", interval_precision$estimate[2])`.
 
-R-hat is `r round(posterior::rhat(pi_mat), 3)`, below 1.01. Bulk and tail ESS are `r round(ess_bulk(pi_mat))` and `r round(ess_tail(pi_mat))`, both above 400. The MCSEs of the mean and both interval endpoints meet our tolerance of 0.005. Together with the satisfactory plots and absence of Stan sampler warnings, these results give us a reason to stop sampling for the present analysis.
+R-hat is `r round(posterior::rhat(pi_mat), 3)`, below 1.01. Bulk and tail ESS are `r round(ess_bulk(pi_mat))` and `r round(ess_tail(pi_mat))`, both above 400. The MCSE of the mean is `r sprintf("%.4f", mcse_mean(pi_mat))`, `r if (mcse_mean(pi_mat) < 0.005) "below" else "above"` our tolerance of 0.005, and the MCSEs of the interval endpoints are `r sprintf("%.4f", interval_precision$mcse[1])` and `r sprintf("%.4f", interval_precision$mcse[2])`, `r if (all(interval_precision$mcse < 0.01)) "both below" else "not both below"` our tolerance of 0.01. Together with the satisfactory plots and absence of Stan sampler warnings, these results give us a reason to stop sampling for the present analysis.
 
 @fig-radio-exact compares the simulated distribution with the known posterior. In a more complex model this exact check may be unavailable, but the diagnostic questions remain the same.
 
@@ -653,7 +638,7 @@ R-hat is `r round(posterior::rhat(pi_mat), 3)`, below 1.01. Bulk and tail ESS ar
 #| label: fig-radio-exact
 #| fig-cap: "Histogram of the 4,000 Stan draws for the proportion of Dutch-language tracks, with the exact Beta(9, 18) posterior overlaid."
 #| fig-height: 3
-ggplot(radio_draws, aes(pi)) +
+ggplot(tibble(pi = as.vector(pi_mat)), aes(pi)) +
   geom_histogram(aes(y = after_stat(density)), bins = 40,
                  fill = "#ECECEC", color = "white") +
   stat_function(fun = dbeta, args = list(shape1 = 9, shape2 = 18),
@@ -708,7 +693,7 @@ trapped_draws <- to_draws(trapped, "theta")
 #| fig-height: 3
 true_density <- tibble(theta = seq(-6.5, 6.5, length.out = 400),
                        density = 0.5 * dnorm(theta, -3, 1) + 0.5 * dnorm(theta, 3, 1))
-p_trace <- mcmc_trace(trapped_draws, pars = "theta") + ylim(-6.5, 6.5) + legend_none()
+p_trace <- mcmc_trace(trapped_draws, pars = "theta") + coord_cartesian(ylim = c(-6.5, 6.5)) + legend_none()
 p_dens <- ggplot() +
   geom_area(data = true_density, aes(theta, density), fill = "#ECECEC") +
   geom_density(data = as_draws_df(trapped_draws), aes(theta),

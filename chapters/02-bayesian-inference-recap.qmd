@@ -3,7 +3,6 @@
 ```{r}
 #| include: false
 source("R/_common.R")
-library(bayesrules)
 ```
 
 <!-- SOURCES: Bayes Rules! Ch. 2–5 (prior/likelihood/posterior, conjugate families), Ch. 8 (posterior inference), §6.1 (grid approximation); 2025 Addendum §8.8 (point hypotheses, Savage–Dickey), ported with executed code; CM1 Lecture 4 (kernel recognition, grid approximation and where it stops working). The chapter develops computational Bayesian inference with explicit probability, numerical, and model-comparison steps. -->
@@ -18,7 +17,6 @@ For further background on Bayesian models and posterior summaries, see *Bayes Ru
 library(tidyverse)
 library(patchwork)
 library(bayesrules)
-set.seed(84735)
 ```
 
 ::: {.bookbox title="Goals"}
@@ -75,7 +73,7 @@ $$
 On the log scale the product becomes a sum, and R's `d*` functions compute each term with `log = TRUE`:
 
 ```{r}
-log_posterior <- function(pi, y = 14, n = 100) {
+log_posterior <- function(pi) {
   dbinom(y, size = n, prob = pi, log = TRUE) +   # log likelihood
     dbeta(pi, 4, 6, log = TRUE)                   # log prior
 }
@@ -156,13 +154,14 @@ The three conjugate pairs in @tbl-conjugate can each be obtained by collecting t
 #| label: fig-moma-update
 #| fig-cap: "The Beta(4, 6) prior, the Binomial likelihood of 14 Gen X artists out of 100 (scaled to integrate to one), and the Beta(18, 92) posterior for the proportion $\\pi$ of Gen X or younger artists."
 #| fig-height: 3
-pi_grid <- seq(0, 1, length.out = 501)
-lik <- dbinom(y, n, pi_grid)
+pi_plot <- seq(0, 1, length.out = 501)
+delta <- pi_plot[2] - pi_plot[1]
+lik <- dbinom(y, n, pi_plot)
 
-tibble(pi = pi_grid,
-       prior = dbeta(pi, 4, 6),
-       likelihood = lik / sum(lik * (pi[2] - pi[1])),
-       posterior = dbeta(pi, y + 4, n - y + 6)) |>
+tibble(pi = pi_plot,
+       prior = dbeta(pi_plot, 4, 6),
+       likelihood = lik / sum(lik * delta),
+       posterior = dbeta(pi_plot, y + 4, n - y + 6)) |>
   pivot_longer(-pi, names_to = "curve", values_to = "density") |>
   mutate(curve = factor(curve, levels = c("prior", "likelihood", "posterior"))) |>
   ggplot(aes(pi, density, color = curve, linetype = curve)) +
@@ -198,7 +197,7 @@ $$
 The derivative factor is the **Jacobian** for this one-dimensional transformation. On the log scale, it contributes $-\log\pi-\log(1-\pi)$. The following function includes it and returns $-\infty$ outside $(0,1)$, corresponding to zero posterior density there.
 
 ```{r}
-log_posterior_logitnormal <- function(pi, y = 14, n = 100) {
+log_posterior_logitnormal <- function(pi) {
   lp <- rep(-Inf, length(pi))
   inside <- pi > 0 & pi < 1
   p <- pi[inside]
@@ -242,6 +241,7 @@ exact
 Now estimate the same summaries from $N=10{,}000$ independent posterior draws. R's `rbeta()` generates them directly because the posterior is a Beta distribution.
 
 ```{r}
+set.seed(84735)
 N <- 10000
 draws <- tibble(pi = rbeta(N, a, b))
 
@@ -371,7 +371,7 @@ ml_H0 <- dbinom(y, size = n, prob = pi0)
 log_ml_H0 <- dbinom(y, size = n, prob = pi0, log = TRUE)
 log_ml_H1 <- lchoose(n, y) + lbeta(y + 4, n - y + 6) - lbeta(4, 6)
 ml_H1 <- exp(log_ml_H1)
-ml_H1_numeric <- integrate(\(pi) dbinom(y, n, pi) * dbeta(pi, 4, 6), 0, 1)$value
+ml_H1_numeric <- integrate(function(pi) dbinom(y, n, pi) * dbeta(pi, 4, 6), 0, 1)$value
 
 c(ml_H0 = ml_H0, ml_H1 = ml_H1, ml_H1_numeric = ml_H1_numeric)
 BF_01 <- exp(log_ml_H0 - log_ml_H1)
@@ -474,29 +474,27 @@ sd_table
 #| label: fig-savage-dickey
 #| fig-cap: "Prior (dashed) and posterior (solid) densities for $\\pi$ under three priors. The Savage–Dickey Bayes factor for $\\pi = 0.2$ is the ratio of the heights of the two dots. Under the diffuse prior the data raise the density at 0.2 a lot; under the concentrated prior they lower it slightly."
 #| fig-height: 3.3
-curves <- priors |>
+panels <- sd_table |>
+  mutate(panel = paste0(prior, ", BF01 = ", round(BF_01, 2)),
+         panel = factor(panel, levels = panel))
+
+curves <- panels |>
+  select(panel, alpha, beta) |>
   crossing(pi = seq(0.001, 0.999, length.out = 400)) |>
-  mutate(prior_density = dbeta(pi, alpha, beta),
-         posterior_density = dbeta(pi, alpha + y, beta + n - y)) |>
+  mutate(prior = dbeta(pi, alpha, beta),
+         posterior = dbeta(pi, alpha + y, beta + n - y)) |>
+  pivot_longer(c(prior, posterior), names_to = "curve", values_to = "density")
+
+dots <- panels |>
+  select(panel, prior_density, posterior_density) |>
   pivot_longer(c(prior_density, posterior_density), names_to = "curve", values_to = "density") |>
   mutate(curve = if_else(curve == "prior_density", "prior", "posterior"))
 
-dots <- sd_table |>
-  pivot_longer(c(prior_density, posterior_density), names_to = "curve", values_to = "density") |>
-  mutate(curve = if_else(curve == "prior_density", "prior", "posterior"))
-
-facet_names <- setNames(
-  paste0("atop('", sd_table$prior, "', plain(BF)['01'] == ",
-         round(sd_table$BF_01, 2), ")"),
-  sd_table$prior
-)
-prior_levels <- priors$prior
 ggplot(curves, aes(pi, density, linetype = curve)) +
   geom_line(color = "#552E6B") +
   geom_point(data = dots, aes(x = pi0, y = density), size = 2) +
-  facet_wrap(~ factor(prior, levels = prior_levels),
-             labeller = as_labeller(facet_names, default = label_parsed)) +
-  coord_cartesian(xlim = c(0, 0.6), ylim = c(0, 15)) +
+  facet_wrap(~ panel) +
+  coord_cartesian(xlim = c(0, 0.6), ylim = c(0, 16)) +
   scale_linetype_manual(values = c(prior = "dashed", posterior = "solid"), name = NULL) +
   labs(x = expression(pi), y = "Density")
 ```
@@ -508,6 +506,7 @@ With Beta$(0.5,0.5)$ under $H_1$, $\text{BF}_{01}=`r round(sd_table$BF_01[1],2)`
 The examples so far evaluate a Beta posterior density directly. When we have posterior draws instead, we can estimate that density at the null value and divide by the known prior density. This adds a density-estimation step. The following calculation illustrates it for a case where the exact answer is available; it is an optional numerical extension of the density-ratio identity.
 
 ```{r}
+set.seed(84735)
 post_draws <- rbeta(1e5, y + 4, n - y + 6)
 dens <- density(post_draws)
 posterior_at_pi0_hat <- approx(dens$x, dens$y, xout = pi0)$y
@@ -702,7 +701,7 @@ expand_grid(d = 1:10, G = c(10, 50, 100)) |>
   geom_line() + geom_point() +
   scale_y_log10(labels = scales::label_log()) +
   scale_x_continuous(breaks = 1:10) +
-  scale_color_manual(values = c("#B9A2C8", "#8B65A3", "#552E6B"), name = NULL) +
+  scale_color_manual(values = c("gray60", "gray30", "#552E6B"), name = NULL) +
   labs(x = "Number of parameters d", y = "Grid points")
 ```
 

@@ -13,12 +13,11 @@ If you specify distributions for the durations of these processes, how can you c
 
 This chapter develops that approach. We begin with probability distributions and expectations, use simulation to approximate them, and examine the accuracy of the resulting estimates. We then study how to generate draws from a distribution and why some sampling methods become inefficient. For further background on probability, simulation, and Bayesian inference, see *Bayes Rules!* [@johnson2022bayes, Chapters 2, 3 and 8].
 
-The code assumes that you can assign objects, call functions, and work with vectors in R. Run the following setup before working through the examples.
+The code assumes that you can assign objects, call functions, and work with vectors in R. Run the following setup before working through the examples. Every chunk that generates random numbers starts with `set.seed(84735)`, so you can run any chunk on its own and obtain the numbers printed in the book.
 
 ```{r}
 library(tidyverse)
 library(patchwork)
-set.seed(84735)
 ```
 
 We use $N$ for the number of Monte Carlo draws and $n$ for the number of observed data points. The distinction matters because increasing $N$ makes a computation more precise, whereas increasing $n$ adds information about the phenomenon being studied.
@@ -43,7 +42,6 @@ Before collecting data, Sara represents her uncertainty about $\pi$ with a **pri
 ```{r}
 #| label: fig-sara-prior
 #| fig-cap: "Sara's Beta(7,5) prior. The dashed line marks its mean, 7/12. The shaded area is the prior probability that the on-time rate exceeds 0.8; the height of the curve at 0.8 is not that probability."
-#| echo: false
 prior_grid <- tibble(p = seq(0, 1, length.out = 501), density = dbeta(p, 7, 5))
 ggplot(prior_grid, aes(p, density)) +
   geom_area(data = filter(prior_grid, p >= 0.8), fill = "#552E6B", alpha = 0.35) +
@@ -162,6 +160,7 @@ The distance from the origin to $(x,y)$ is $\sqrt{x^2+y^2}$ by Pythagoras' theor
 The expression `x^2 + y^2 <= 1` checks the condition for every point and returns `TRUE` or `FALSE`. When averaged, R treats these as one or zero. The resulting proportion estimates $\pi/4$, so multiplying by four estimates $\pi$.
 
 ```{r}
+set.seed(84735)
 N <- 10000
 x <- runif(N)
 y <- runif(N)
@@ -180,7 +179,7 @@ p_darts <- darts |>
   slice_head(n = 2000) |>
   ggplot(aes(x, y, color = inside)) +
   geom_point(size = 0.5, alpha = 0.6) +
-  scale_color_manual(values = c("TRUE" = "#552E6B", "FALSE" = "gray70"), guide = "none") +
+  scale_color_manual(values = c("TRUE" = "#552E6B", "FALSE" = "#ECECEC"), guide = "none") +
   coord_equal() +
   labs(x = NULL, y = NULL)
 
@@ -190,7 +189,7 @@ p_running <- ggplot(running, aes(n_darts, estimate)) +
   scale_x_log10() +
   labs(x = "Number of darts (log scale)", y = expression(hat(pi)))
 
-patchwork::wrap_plots(p_darts, p_running, widths = c(1, 1.6))
+wrap_plots(p_darts, p_running, widths = c(1, 1.6))
 ```
 
 Why does this work? Write $I_i$ for the indicator that dart $i$ lands inside. Each $I_i$ is a random variable with $E[I_i] = P(\text{inside}) = \pi/4$, and the darts are independent. The **Law of Large Numbers** states that an average of independent, identically distributed draws converges to its expectation, provided the absolute expectation is finite. The condition holds here because the indicators are bounded between zero and one. So $\frac{1}{N}\sum_i I_i \to \pi/4$, and our estimate $4 \bar{I} \to \pi$. The right panel of @fig-mc-pi is the Law of Large Numbers in action.
@@ -212,7 +211,7 @@ and for large $N$ the estimate is approximately Normal, so $\bar{g} \pm 2\,\text
 
 ### How accurate is it?
 
-The right panel of @fig-mc-pi shows the estimate converging, but with 10,000 darts it is still visibly off. How far off should we expect it to be? The estimate is an average of independent draws of $g(X, Y) = 4 \cdot \mathbb{1}\{X^2 + Y^2 \le 1\}$, so the **Central Limit Theorem** applies: the average is approximately Normal with mean $\pi$ and standard deviation $\text{sd}(g)/\sqrt{N}$. We can estimate $\text{sd}(g)$ from the same draws:
+The right panel of @fig-mc-pi shows the estimate settling down, but with 10,000 darts it has not necessarily arrived; our run gives $`r round(4 * mean(inside), 3)`$ against $\pi \approx 3.1416$. How far off should we expect it to be? The estimate is an average of independent draws of $g(X, Y) = 4 \cdot \mathbb{1}\{X^2 + Y^2 \le 1\}$, so the **Central Limit Theorem** applies: the average is approximately Normal with mean $\pi$ and standard deviation $\text{sd}(g)/\sqrt{N}$. We can estimate $\text{sd}(g)$ from the same draws:
 
 ```{r}
 g <- 4 * inside
@@ -239,6 +238,7 @@ Let's check the $1/\sqrt{N}$ rule directly by repeating the whole experiment 200
 #| label: fig-mc-error
 #| fig-cap: "Two hundred independent estimates of $\\pi$ for each of three numbers of darts. The spread shrinks by a factor of about $\\sqrt{10}$ each time the number of darts grows tenfold."
 #| fig-height: 3
+set.seed(84735)
 estimate_pi <- function(N) 4 * mean(runif(N)^2 + runif(N)^2 <= 1)
 
 repeats <- expand_grid(N = c(100, 1000, 10000), rep = 1:200) |>
@@ -247,14 +247,16 @@ repeats <- expand_grid(N = c(100, 1000, 10000), rep = 1:200) |>
 repeats |>
   ggplot(aes(factor(N), estimate)) +
   geom_hline(yintercept = pi, linetype = "dashed") +
-  geom_jitter(width = 0.25, alpha = 0.3, color = "#552E6B", size = 0.8) +
+  geom_point(position = position_jitter(width = 0.25, seed = 1),
+             alpha = 0.3, color = "#552E6B", size = 0.8) +
   labs(x = "Number of darts", y = expression(hat(pi)))
 ```
 
 ```{r}
 repeats |>
   group_by(N) |>
-  summarize(observed_sd = sd(estimate), theoretical_se = sqrt(pi * (4 - pi) / first(N)))
+  summarize(observed_sd = sd(estimate)) |>
+  mutate(theoretical_se = sqrt(pi * (4 - pi) / N))
 ```
 
 The observed standard deviation of the estimates matches the theoretical standard error $\sqrt{\pi(4 - \pi)/N}$, which follows from the variance of the indicator, $\text{Var}(4 I) = 16 \cdot \tfrac{\pi}{4}(1 - \tfrac{\pi}{4}) = \pi(4 - \pi)$. Each row uses ten times as many darts as the one above it and is about $\sqrt{10} \approx 3.2$ times more precise.
@@ -266,10 +268,11 @@ The Monte Carlo recipe applies whenever we can generate independent draws from t
 We assume that the components and the two processes are independent. All finishing times must be measured from the same starting point. The go process begins at the arrow, whereas the stop process begins 250 ms later. We therefore add 250 to the simulated stop duration before comparing the finishing times. In R, an Exponential mean of 100 requires `rate = 1/100`, since its mean is the reciprocal of its rate.
 
 ```{r}
+set.seed(84735)
 N_races <- 100000
-go   <- rnorm(N_races, mean = 500, sd = 50) + rexp(N_races, rate = 1 / 100)
-stop <- 250 + rnorm(N_races, mean = 200, sd = 30) + rexp(N_races, rate = 1 / 50)
-stop_wins <- stop < go
+go_time   <- rnorm(N_races, mean = 500, sd = 50) + rexp(N_races, rate = 1 / 100)
+stop_time <- 250 + rnorm(N_races, mean = 200, sd = 30) + rexp(N_races, rate = 1 / 50)
+stop_wins <- stop_time < go_time
 p_stop <- mean(stop_wins)
 c(estimate = p_stop, se = sd(stop_wins) / sqrt(N_races))
 ```
@@ -284,26 +287,7 @@ So far, R has provided the required draws. In Bayesian analyses, however, the po
 
 The **cumulative distribution function** (CDF), $F(x)=P(X\le x)$, records how much probability lies to the left of $x$. Its inverse, the **quantile function**, starts with a cumulative probability $u$ and returns the corresponding value of $x$. For a continuous, strictly increasing CDF, $F^{-1}(u)$ is the value satisfying $F(x)=u$.
 
-Imagine choosing a height $u$ uniformly between zero and one on a CDF plot. Move horizontally to the curve, then down to the $x$ axis. The value you reach is a draw from the desired distribution. @fig-inverse-guide shows one such construction before we implement it.
-
-```{r}
-#| label: fig-inverse-guide
-#| fig-cap: "Reading a random probability as a quantile. For an Exponential distribution with rate 2, u = 0.8 maps to x = -log(0.2)/2, approximately 0.805. The dashed path goes from the vertical axis to the CDF and then to the horizontal axis."
-#| echo: false
-#| fig-width: 3.6
-#| fig-height: 3.6
-#| out-width: "60%"
-local({
-  plot_par <- par(pty = "s", bty = "l", mar = c(4, 4, 1, 1),
-                  mgp = c(2.5, 0.7, 0), las = 1)
-  curve(pexp(x, rate = 2), from = 0, to = 2, ylim = c(0, 1),
-        xaxs = "i", yaxs = "i", xlab = "x", ylab = "F(x)", lwd = 1.5)
-  segments(0, 0.8, -log(0.2)/2, 0.8, lty = 2, col = "#552E6B")
-  segments(-log(0.2)/2, 0, -log(0.2)/2, 0.8, lty = 2, col = "#552E6B")
-  points(-log(0.2)/2, 0.8, pch = 19, col = "#552E6B")
-  par(plot_par)
-})
-```
+Imagine choosing a height $u$ uniformly between zero and one on a CDF plot. Move horizontally to the curve, then down to the $x$ axis. The value you reach is a draw from the desired distribution. The left panel of @fig-inverse-transform, below, shows five such constructions.
 
 Formally, draw $U\sim\text{Unif}(0,1)$ and set $X=F^{-1}(U)$. Because $F$ is increasing, the events $F^{-1}(U)\le x$ and $U\le F(x)$ are equivalent. Hence
 $$
@@ -314,26 +298,27 @@ The last equality holds because a uniform draw falls below any number $u\in[0,1]
 Take the Exponential distribution with rate $\lambda$, which has $F(x) = 1 - e^{-\lambda x}$ for $x \geq 0$. To solve $u=1-e^{-\lambda x}$, rearrange to $1-u=e^{-\lambda x}$, take logarithms to get $\log(1-u)=-\lambda x$, and divide by $-\lambda$. This gives $F^{-1}(u)=-\log(1-u)/\lambda$. So an Exponential draw is one line of code:
 
 ```{r}
+set.seed(84735)
 r_exponential <- function(N, rate) -log(1 - runif(N)) / rate
 draws_exp <- r_exponential(10000, rate = 2)
 ```
 
 ```{r}
 #| label: fig-inverse-transform
-#| fig-cap: "Inverse-transform sampling for the Exponential(2) distribution. Left: five uniform draws $u$ (points on the vertical axis) are mapped through the inverse CDF to values $x = F^{-1}(u)$ on the horizontal axis. Right: 10,000 draws produced this way, with the Exponential(2) density overlaid."
+#| fig-cap: "Inverse-transform sampling for the Exponential(2) distribution. Left: five values of $u$ (points on the vertical axis) are mapped through the inverse CDF to values $x = F^{-1}(u)$ on the horizontal axis. Right: 10,000 draws produced this way, with the Exponential(2) density overlaid."
 #| fig-height: 3
 u_demo <- c(0.15, 0.4, 0.62, 0.8, 0.95)
 x_demo <- -log(1 - u_demo) / 2
-cdf_df <- tibble(x = seq(0, 3, length.out = 300), F = pexp(x, rate = 2))
-segments <- tibble(u = u_demo, x = x_demo)
+cdf_df <- tibble(x = seq(0, 3, length.out = 300), cdf = pexp(x, rate = 2))
+paths <- tibble(u = u_demo, x = x_demo)
 
-p_cdf <- ggplot(cdf_df, aes(x, F)) +
-  geom_line(color = "gray40") +
-  geom_segment(data = segments, aes(x = 0, xend = x, y = u, yend = u),
+p_cdf <- ggplot(cdf_df, aes(x, cdf)) +
+  geom_line(color = "gray50") +
+  geom_segment(data = paths, aes(x = 0, xend = x, y = u, yend = u),
                color = "#552E6B", linetype = "dotted") +
-  geom_segment(data = segments, aes(x = x, xend = x, y = u, yend = 0),
+  geom_segment(data = paths, aes(x = x, xend = x, y = u, yend = 0),
                color = "#552E6B", arrow = arrow(length = unit(0.15, "cm"))) +
-  geom_point(data = segments, aes(0, u), color = "#552E6B") +
+  geom_point(data = paths, aes(0, u), color = "#552E6B") +
   labs(x = "x", y = "F(x)")
 
 p_hist <- ggplot(tibble(x = draws_exp), aes(x)) +
@@ -341,7 +326,7 @@ p_hist <- ggplot(tibble(x = draws_exp), aes(x)) +
   stat_function(fun = dexp, args = list(rate = 2), color = "#552E6B", linewidth = 1) +
   labs(x = "x", y = "Density")
 
-patchwork::wrap_plots(p_cdf, p_hist)
+wrap_plots(p_cdf, p_hist)
 ```
 
 The histogram follows the Exponential density, and the simulated mean, `r round(mean(draws_exp), 3)`, is close to $1/\lambda=0.5$. This is one way to generate Exponential draws; it is not the algorithm used internally by R's `rexp()` [see its documentation](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Exponential.html).
@@ -352,49 +337,26 @@ The limitation is that we need $F^{-1}$. For a posterior density we typically kn
 
 ### Rejection sampling
 
-Rejection sampling generates candidates from an accessible distribution and keeps some of them to obtain the distribution we want. Suppose we can evaluate the target density $f(x)$, or even just a function $h(x)$ that is proportional to it, $f(x) = h(x)/Z$ with an unknown constant $Z$. Suppose also that we have some other density $g(x)$, called the **proposal**, that we *can* draw from, and a constant $M$ such that
+Rejection sampling generates candidates from an accessible distribution and keeps some of them to obtain the distribution we want. Suppose we can evaluate the target density $f(x)$, or even just a function $h(x)$ that is proportional to it, $f(x) = h(x)/Z$ with an unknown constant $Z$. Suppose also that we have some other density $q(x)$, called the **proposal**, that we *can* draw from, and a constant $M$ such that
 $$
-h(x) \le M\, g(x) \quad \text{for every } x.
+h(x) \le M\, q(x) \quad \text{for every } x.
 $$
-The function $M g(x)$ is an **envelope**. It lies at or above $h$ everywhere. Rejection sampling draws a point uniformly under the envelope and keeps it if it also lies under $h$.
+The function $M q(x)$ is an **envelope**. It lies at or above $h$ everywhere. Rejection sampling draws a point uniformly under the envelope and keeps it if it also lies under $h$.
 
-For a uniform proposal on $[0,1]$, the envelope is a rectangle. A candidate's horizontal position is uniform; its vertical position is uniform between zero and the envelope's height. Where the target curve is high, a larger fraction of candidates lie below it and are kept. This makes accepted values more common in high-density regions.
-
-```{r}
-#| label: fig-envelope-guide
-#| fig-cap: "A rejection envelope before sampling. The target curve lies below the dashed envelope. At x = 0.7, the purple segment shows the heights that lead to acceptance; the gray segment shows those that lead to rejection."
-#| echo: false
-#| fig-width: 3.6
-#| fig-height: 3.6
-#| out-width: "60%"
-local({
-  plot_par <- par(pty = "s", bty = "l", mar = c(4, 4, 1, 1),
-                  mgp = c(2.5, 0.7, 0), las = 1)
-  curve(dbeta(x, 19, 8), from = 0, to = 1, ylim = c(0, 5.5),
-        xaxs = "i", yaxs = "i", xlab = "Candidate value", ylab = "Height",
-        lwd = 1.5)
-  segments(0, 5, 1, 5, lty = 2, col = "gray40")
-  target_height <- dbeta(0.7, 19, 8)
-  segments(0.7, 0, 0.7, target_height, col = "#552E6B", lwd = 3)
-  segments(0.7, target_height, 0.7, 5, col = "gray60", lwd = 3)
-  text(0.4, target_height / 2, "Accept", adj = 0.5, cex = 0.8, col = "#552E6B")
-  text(0.4, (target_height + 5) / 2, "Reject", adj = 0.5, cex = 0.8, col = "gray40")
-  par(plot_par)
-})
-```
+For a uniform proposal on $[0,1]$, the envelope is a rectangle. A candidate's horizontal position is uniform; its vertical position is uniform between zero and the envelope's height. Where the target curve is high, a larger fraction of candidates lie below it and are kept. This makes accepted values more common in high-density regions. The left panel of @fig-rejection, below, shows the construction.
 
 ::: {.bookbox title="Rejection sampling"}
-Given a target $h(x) \propto f(x)$, a proposal density $g$, and a constant $M$ with $h(x) \le M g(x)$ for all $x$:
+Given a target $h(x) \propto f(x)$, a proposal density $q$, and a constant $M$ with $h(x) \le M q(x)$ for all $x$:
 
-1. **Propose.** Draw $x^\star \sim g$.
-2. **Accept or reject.** Draw $u \sim \text{Unif}(0, 1)$. If $u < h(x^\star) / (M g(x^\star))$, accept $x^\star$; otherwise reject it and return to step 1.
+1. **Propose.** Draw $x^\star \sim q$.
+2. **Accept or reject.** Draw $u \sim \text{Unif}(0, 1)$. If $u < h(x^\star) / (M q(x^\star))$, accept $x^\star$; otherwise reject it and return to step 1.
 
-The accepted values are independent draws from $f$. The probability that a proposal is accepted is $Z/M$ when $g$ is a proper density, where $Z = \int h(x)\,dx$.
+The accepted values are independent draws from $f$. The probability that a proposal is accepted is $Z/M$ when $q$ is a proper density, where $Z = \int h(x)\,dx$.
 :::
 
-Why does this produce draws from $f$? A proposal at $x$ is accepted with probability $h(x)/(M g(x))$, so the density of proposing $x$ *and* accepting it is
+Why does this produce draws from $f$? A proposal at $x$ is accepted with probability $h(x)/(M q(x))$, so the density of proposing $x$ *and* accepting it is
 $$
-g(x) \cdot \frac{h(x)}{M g(x)} = \frac{h(x)}{M}.
+q(x) \cdot \frac{h(x)}{M q(x)} = \frac{h(x)}{M}.
 $$
 This is a joint density for the candidate value together with acceptance, not yet the density among accepted values. Its integral is the probability of acceptance,
 $$
@@ -406,11 +368,12 @@ f(x\mid\text{accept})=\frac{h(x)/M}{Z/M}=\frac{h(x)}{Z}=f(x).
 $$
 This explains why the unknown normalizing constant $Z$ is not needed to run the algorithm. The acceptance step corrects the relative frequencies of the proposed values.
 
-For a fixed proposal $g$, we want the smallest *valid* $M$. Increasing $M$ enlarges the envelope without changing the area under $h$, so the acceptance rate $Z/M$ falls. Choosing $M$ too small is different; it invalidates the sampler wherever $h(x)>Mg(x)$.
+For a fixed proposal $q$, we want the smallest *valid* $M$. Increasing $M$ enlarges the envelope without changing the area under $h$, so the acceptance rate $Z/M$ falls. Choosing $M$ too small is different; it invalidates the sampler wherever $h(x)>Mq(x)$.
 
-We now return to using $\pi$ for an on-time probability. Apply rejection sampling to the function $h(\pi) = \pi^{18}(1 - \pi)^{7}$ on the interval $[0, 1]$. A function proportional to a density is called its **kernel**. This one is the kernel of a $\text{Beta}(19,8)$ density, which gives us a known distribution against which to check the sampler. The simplest proposal is the uniform density on $[0, 1]$, $g(\pi) = 1$, and the smallest valid $M$ is then the maximum of $h$, which is at $\pi = 18/25$. Every proposal is a uniform point in the unit interval and is accepted with probability $h(\pi^\star)/M$.
+We now return to using $\pi$ for an on-time probability. Apply rejection sampling to the function $h(\pi) = \pi^{18}(1 - \pi)^{7}$ on the interval $[0, 1]$. A function proportional to a density is called its **kernel**. This one is the kernel of a $\text{Beta}(19,8)$ density, which gives us a known distribution against which to check the sampler. The simplest proposal is the uniform density on $[0, 1]$, $q(\pi) = 1$, and the smallest valid $M$ is then the maximum of $h$, which is at $\pi = 18/25$. Every proposal is a uniform point in the unit interval and is accepted with probability $h(\pi^\star)/M$.
 
 ```{r}
+set.seed(84735)
 h <- function(p) p^18 * (1 - p)^7
 M <- h(18 / 25)
 
@@ -424,29 +387,29 @@ mean(accept)
 
 ```{r}
 #| label: fig-rejection
-#| fig-cap: "Rejection sampling for $h(\\pi) = \\pi^{18}(1-\\pi)^7$ with a uniform proposal. Left: the first 3,000 proposals, placed at height $u M$ under the flat envelope $M$; points under the curve $h$ (purple) are accepted, the rest (gray) are rejected. Right: histogram of all accepted draws with the Beta(19, 8) density overlaid."
+#| fig-cap: "Rejection sampling for $h(\\pi) = \\pi^{18}(1-\\pi)^7$ with a uniform proposal. Left: the first 3,000 proposals, placed at height $u$ under the flat envelope at 1, so that the target is drawn as $h(\\pi)/M$; points under the curve (purple) are accepted, the rest (gray) are rejected. Right: histogram of all accepted draws with the Beta(19, 8) density overlaid."
 #| fig-height: 3
-env_df <- tibble(proposal, height = u * M, accept) |> slice_head(n = 3000)
-curve_h <- tibble(p = seq(0, 1, length.out = 400), h = h(p))
+env_df <- tibble(proposal, u, accept) |> slice_head(n = 3000)
+curve_h <- tibble(p = seq(0, 1, length.out = 400), scaled_h = h(p) / M)
 
 p_env <- ggplot() +
-  geom_point(data = env_df, aes(proposal, height, color = accept), size = 0.5, alpha = 0.6) +
-  geom_line(data = curve_h, aes(p, h), color = "gray20") +
-  geom_hline(yintercept = M, linetype = "dashed") +
-  scale_color_manual(values = c("TRUE" = "#552E6B", "FALSE" = "gray75"), guide = "none") +
-  labs(x = expression(pi), y = expression(h(pi)))
+  geom_point(data = env_df, aes(proposal, u, color = accept), size = 0.5, alpha = 0.6) +
+  geom_line(data = curve_h, aes(p, scaled_h), color = "gray50") +
+  geom_hline(yintercept = 1, linetype = "dashed") +
+  scale_color_manual(values = c("TRUE" = "#552E6B", "FALSE" = "#ECECEC"), guide = "none") +
+  labs(x = expression(pi), y = "u")
 
 p_rej <- ggplot(tibble(p = draws_rej), aes(p)) +
   geom_histogram(aes(y = after_stat(density)), bins = 40, fill = "#ECECEC", color = "white") +
   stat_function(fun = dbeta, args = list(shape1 = 19, shape2 = 8), color = "#552E6B", linewidth = 1) +
   labs(x = expression(pi), y = "Density")
 
-patchwork::wrap_plots(p_env, p_rej)
+wrap_plots(p_env, p_rej)
 ```
 
-The left panel of @fig-rejection shows how acceptance changes the distribution of candidates. The proposals fill the rectangle under the envelope uniformly; the accepted ones fill the region under $h$ uniformly; and a uniform scatter under a curve, projected onto the horizontal axis, has that curve as its density. The right panel provides a visual check that the `r format(length(draws_rej), big.mark = ",")` accepted draws follow the $\text{Beta}(19, 8)$ density.
+The left panel of @fig-rejection shows how acceptance changes the distribution of candidates. The proposals fill the rectangle under the envelope uniformly; the accepted ones fill the region under the scaled target $h/M$ uniformly; and a uniform scatter under a curve, projected onto the horizontal axis, has that curve as its density. The right panel provides a visual check that the `r format(length(draws_rej), big.mark = ",")` accepted draws follow the $\text{Beta}(19, 8)$ density.
 
-The price is the rejections. Only `r round(100 * mean(accept))`% of the proposals survived, close to the theoretical rate $Z/M = B(19, 8)/M = `r round(beta(19, 8) / M, 3)`$, where $B(19,8)$ is the Beta function, the normalizing constant of $h$. The acceptance rate is the ratio of the area under $h$ to the area under the envelope; a tighter envelope wastes fewer proposals. Here the flat envelope is a poor fit to a peaked target, and three out of four proposals are thrown away. Whether this is affordable depends on how many accepted draws we need and how expensive each proposal is. With several parameters, a poorly fitting envelope can become much more wasteful.
+The price is the rejections. Only `r round(100 * mean(accept))`% of the proposals survived, close to the theoretical rate $Z/M = B(19, 8)/M = `r round(beta(19, 8) / M, 3)`$, where $B(19,8)$ is the Beta function, the normalizing constant of $h$. The acceptance rate is the ratio of the area under $h$ to the area under the envelope; a tighter envelope wastes fewer proposals. Here the flat envelope is a poor fit to a peaked target, and about `r round(100 * (1 - beta(19, 8) / M))`% of the proposals are thrown away. Whether this is affordable depends on how many accepted draws we need and how expensive each proposal is. With several parameters, a poorly fitting envelope can become much more wasteful.
 
 Products of many small likelihood terms can underflow, meaning the computer rounds them to zero. To avoid this, compute log densities directly and compare `log(u)` with `log_h(proposal) - log_M`. Taking `log(h(proposal))` after an underflow has occurred cannot recover the lost value. @sec-bayes-recap develops calculations on the log scale.
 
@@ -478,6 +441,7 @@ We can also obtain this posterior by simulation. First draw a possible on-time p
 Now retain only pairs whose simulated count is 12. Within those pairs, the distribution of $\pi$ is the conditional distribution given $Y=12$, which is precisely the posterior. Each entry of `pi_prior` below is used to generate one corresponding entry of `y_sim`; the logical condition selects the matching parameter draws.
 
 ```{r}
+set.seed(84735)
 N_sim <- 100000
 pi_prior <- rbeta(N_sim, shape1 = 7, shape2 = 5)          # 1. draw pi from the prior
 y_sim    <- rbinom(N_sim, size = 15, prob = pi_prior)      # 2. simulate a week of trains
@@ -494,8 +458,9 @@ joint <- tibble(pi = pi_prior, y = y_sim, keep = y_sim == 12)
 p_joint <- joint |>
   slice_head(n = 5000) |>
   ggplot(aes(pi, y, color = keep)) +
-  geom_jitter(height = 0.25, width = 0, size = 0.5, alpha = 0.5) +
-  scale_color_manual(values = c("TRUE" = "#552E6B", "FALSE" = "gray75"), guide = "none") +
+  geom_point(position = position_jitter(height = 0.25, width = 0, seed = 1),
+             size = 0.5, alpha = 0.5) +
+  scale_color_manual(values = c("TRUE" = "#552E6B", "FALSE" = "#ECECEC"), guide = "none") +
   scale_y_continuous(breaks = seq(0, 15, 3)) +
   labs(x = expression(pi), y = "Simulated Y")
 
@@ -504,13 +469,14 @@ p_post <- ggplot(tibble(pi = pi_post), aes(pi)) +
   stat_function(fun = dbeta, args = list(shape1 = 19, shape2 = 8), color = "#552E6B", linewidth = 1) +
   labs(x = expression(pi), y = "Density")
 
-patchwork::wrap_plots(p_joint, p_post)
+wrap_plots(p_joint, p_post)
 ```
 
 The left panel of @fig-forward-sim shows the joint distribution. Small $\pi$ produces small $Y$, large $\pi$ produces large $Y$, and the purple row is the slice at $Y = 12$. The right panel shows that the $\pi$ values in that slice are distributed as $\text{Beta}(19, 8)$. Their summaries agree with the exact posterior as well:
 
 ```{r}
-c(mean = mean(pi_post), sd = sd(pi_post), lower = quantile(pi_post, 0.025), upper = quantile(pi_post, 0.975))
+c(mean = mean(pi_post), sd = sd(pi_post),
+  lower = quantile(pi_post, 0.025, names = FALSE), upper = quantile(pi_post, 0.975, names = FALSE))
 c(mean = 19 / 27, sd = sqrt(19 * 8 / (27^2 * 28)), lower = qbeta(0.025, 19, 8), upper = qbeta(0.975, 19, 8))
 ```
 
@@ -518,10 +484,10 @@ The retained draws describe uncertainty about $\pi$. Their standard deviation is
 
 The link to rejection sampling follows by considering the probability of keeping a proposed $\pi^\star$. It is $P(Y=12\mid\pi^\star)$, since that is the probability that the simulated count matches the observed one. This value is at most one because $Y$ is discrete and we use its full probability mass, including the Binomial coefficient. A likelihood in general is not a probability distribution over the parameter, and a continuous-data likelihood is not bounded by one.
 
-With proposal $g(\pi)=f(\pi)$ and unnormalized target $h(\pi)=f(12\mid\pi)f(\pi)$, we therefore have $h(\pi)\le g(\pi)$. The rejection constant $M=1$ is valid, and the acceptance ratio is $h(\pi)/g(\pi)=f(12\mid\pi)$.
+With proposal $q(\pi)=f(\pi)$ and unnormalized target $h(\pi)=f(12\mid\pi)f(\pi)$, we therefore have $h(\pi)\le q(\pi)$. The rejection constant $M=1$ is valid, and the acceptance ratio is $h(\pi)/q(\pi)=f(12\mid\pi)$.
 
 ::: {.bookbox title="Forward simulation is rejection sampling"}
-For discrete data, drawing $\pi$ from the prior, simulating data, and keeping the draws whose simulated data equal the observed data $y$ is rejection sampling with proposal $g(\pi) = f(\pi)$, unnormalized target $h(\pi)=f(\pi)f(y\mid\pi)$ using the full data probability mass, and $M=1$. Its acceptance rate is
+For discrete data, drawing $\pi$ from the prior, simulating data, and keeping the draws whose simulated data equal the observed data $y$ is rejection sampling with proposal $q(\pi) = f(\pi)$, unnormalized target $h(\pi)=f(\pi)f(y\mid\pi)$ using the full data probability mass, and $M=1$. Its acceptance rate is
 $$
 P(\text{keep}) = \int f(y \mid \pi) f(\pi)\,d\pi = f(y),
 $$
@@ -541,14 +507,17 @@ f_y <- function(y, n, a, b) {   # computed on the log scale to avoid overflow
 f_y(12, n = 15, a = 7, b = 5)
 ```
 
-The calculation predicts the acceptance rate; about `r round(100 * mean(y_sim == 12))`% of the simulated records were retained in our run. Now suppose Sara keeps going. Consider longer records with 120 of 150 and 1,200 of 1,500 trains on time. The observed proportion stays at 0.8. The chance that a simulated record matches hers exactly shrinks roughly in proportion to the number of trains:
+The calculation predicts the acceptance rate; about `r round(100 * length(pi_post) / N_sim)`% of the simulated records were retained in our run. Now suppose Sara keeps going. Consider longer records with 120 of 150 and 1,200 of 1,500 trains on time. The observed proportion stays at 0.8. The chance that a simulated record matches hers exactly shrinks roughly in proportion to the number of trains. We reuse the prior draws in `pi_prior`, and the week already simulated in `y_sim`, and simulate the two longer records from the same prior draws:
 
 ```{r}
-survival <- tibble(n = c(15, 150, 1500), y = c(12, 120, 1200)) |>
-  mutate(
-    f_y = f_y(y, n, a = 7, b = 5),
-    survivors = map2_int(n, y, \(n, y) sum(rbinom(N_sim, size = n, prob = pi_prior) == y))
-  )
+set.seed(84735)
+y_sim_150  <- rbinom(N_sim, size = 150,  prob = pi_prior)
+y_sim_1500 <- rbinom(N_sim, size = 1500, prob = pi_prior)
+survival <- tibble(
+  n = c(15, 150, 1500), y = c(12, 120, 1200),
+  predicted = f_y(y, n, a = 7, b = 5),
+  survivors = c(sum(y_sim == 12), sum(y_sim_150 == 120), sum(y_sim_1500 == 1200))
+)
 survival
 ```
 
@@ -593,7 +562,7 @@ cost <- tibble(d = 1:20, acceptance = 0.5^d)
 p_cost <- ggplot(cost, aes(d, acceptance)) + geom_line(color = "#552E6B") +
   geom_point(color = "#552E6B") + scale_y_log10() +
   labs(x = "Number of parameters", y = "Acceptance probability (log scale)")
-patchwork::wrap_plots(p_region, p_cost)
+wrap_plots(p_region, p_cost)
 ```
 
 At ten parameters, about one in 1,024 proposals is accepted; at twenty, about one in a million. Each individual condition is easy to satisfy, yet satisfying all of them at once is unlikely. This example requires only multiplication of independent probabilities, rather than geometry in higher dimensions.
@@ -612,7 +581,7 @@ This chapter introduced simulation as a way to calculate properties of probabili
 - **Monte Carlo integration** draws independently from the required distribution and averages $g(X)$. The Law of Large Numbers establishes convergence when the absolute expectation is finite. With finite variance, the standard error is $\text{sd}(g(X))/\sqrt{N}$. The rate does not explicitly depend on dimension, but the variance and difficulty of generating draws can.
 - **Pseudo-random numbers** come from a deterministic generator. Reproducibility requires the seed, code, generator settings, and software environment.
 - **Inverse-transform sampling** converts uniform draws into quantiles of the target distribution. A numerical quantile function can be sufficient.
-- **Rejection sampling** accepts a proposal from $g$ with probability $h(x)/(Mg(x))$. A valid envelope satisfies $h(x)\le Mg(x)$ everywhere, and a tighter envelope improves acceptance for a fixed proposal.
+- **Rejection sampling** accepts a proposal from $q$ with probability $h(x)/(Mq(x))$. A valid envelope satisfies $h(x)\le Mq(x)$ everywhere, and a tighter envelope improves acceptance for a fixed proposal.
 - **Forward simulation** generates parameters and data from their joint distribution. For discrete data, retaining exact matches gives posterior draws. The acceptance rate is the prior predictive probability of the observed data.
 - Poorly matched proposals can be expensive with many parameters. **Markov chain Monte Carlo** is one approach to this difficulty; its dependent draws require separate convergence and accuracy checks.
 
@@ -651,11 +620,11 @@ c. Rewrite the workflow so that the two runs are independent but the whole analy
 
 ::: {.exercise}
 **Exercise 1.3 (Envelopes)**
-A rejection sampler for a target $h(x)$ uses a proposal $g$ and a constant $M$.
+A rejection sampler for a target $h(x)$ uses a proposal $q$ and a constant $M$.
 
-a. Explain in one sentence why $M g(x) \ge h(x)$ must hold for every $x$, and what goes wrong if it fails on some interval.
+a. Explain in one sentence why $M q(x) \ge h(x)$ must hold for every $x$, and what goes wrong if it fails on some interval.
 b. The sampler accepts 4% of its proposals. Someone suggests using the accepted draws anyway, since "4% of a million is still 40,000 draws". Is this a valid objection to the sampler's *correctness*, to its *efficiency*, or to neither?
-c. If you could choose a proposal $g$ that is proportional to $h$, what would $M$ be, and what would the acceptance rate be?
+c. If you could choose a proposal $q$ that is proportional to $h$, what would $M$ be, and what would the acceptance rate be?
 :::
 
 ::: {.exercise}
@@ -698,9 +667,9 @@ c. Change the mean of the Normal component of the stop duration from 200 ms to 3
 
 ::: {.exercise}
 **Exercise 1.8 (Rejection sampling with a better envelope)**
-The uniform envelope in @fig-rejection wastes three of every four proposals.
+The uniform envelope in @fig-rejection wastes nearly four of every five proposals.
 
-a. Use a $\text{Beta}(2, 2)$ proposal instead. Find the smallest valid $M$ numerically with `optimize()` applied to the ratio $h(\pi)/g(\pi)$, and run the sampler.
+a. Use a $\text{Beta}(2, 2)$ proposal instead. Find the smallest valid $M$ numerically with `optimize()` applied to the ratio $h(\pi)/q(\pi)$, and run the sampler.
 b. Report the acceptance rate and compare the histogram of the accepted draws with the $\text{Beta}(19, 8)$ density.
 c. Try a $\text{Beta}(15, 6)$ proposal. What acceptance rate do you get, and why is it so much better? What would happen with a $\text{Beta}(25, 4)$ proposal, whose left tail near zero is thinner than the target's? Examine the limiting ratio as $\pi\to0$; a numerical maximum on a finite search interval is not a proof of a valid envelope.
 :::

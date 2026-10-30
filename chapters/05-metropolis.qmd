@@ -11,14 +11,13 @@ Suppose you ask 20 first-year psychology students how many hours they slept last
 
 @sec-bayes-recap introduced conjugate updates and grid approximation. @sec-diagnostics used Stan to generate posterior draws and examined their accuracy. Here we construct a sampler ourselves: the **Metropolis algorithm**. It proposes a new parameter value, compares the posterior density there with the density at the current value, and decides whether to move. Repeating this procedure produces a Markov chain designed to have the posterior as its stationary distribution. Stan usually uses Hamiltonian Monte Carlo, developed in Chapter 10 (Hamiltonian Monte Carlo); Metropolis gives us a simpler algorithm with which to study how proposals and acceptance decisions work.
 
-Run the following setup before working through the examples. The seed makes the simulated sequences reproducible when the examples are run in order with the same R environment.
+Run the following setup before working through the examples.
 
 ```{r}
 library(tidyverse)
 library(posterior)
 library(patchwork)
 library(mvtnorm)
-set.seed(123)
 ```
 
 ::: {.bookbox title="Goals"}
@@ -60,7 +59,7 @@ Given a target density $f(\theta)$ that we can evaluate up to a constant, a curr
 2. **Compare.** Compute $r = f(\theta^\star) / f(\theta^{(t)})$.
 3. **Accept or reject.** If $r \geq 1$, set $\theta^{(t+1)} = \theta^\star$. Otherwise draw $u \sim \text{Unif}(0,1)$ and set $\theta^{(t+1)} = \theta^\star$ if $u < r$, and $\theta^{(t+1)} = \theta^{(t)}$ if not.
 
-Repeat for $t = 0, 1, 2, \ldots$, starting at a value where the log target is finite. After $N$ iterations, the recorded states are $\theta^{(1)},\ldots,\theta^{(N)}$; the starting value $\theta^{(0)}$ is specified separately.
+Repeat for $t = 0, 1, 2, \ldots$, starting at a value where the log target is finite. After $T$ iterations, the recorded states are $\theta^{(1)},\ldots,\theta^{(T)}$; the starting value $\theta^{(0)}$ is specified separately.
 :::
 
 The normalizing constant cancels in $r$. For a posterior,
@@ -191,18 +190,20 @@ For the first two rows of @tbl-metropolis-decisions, $\log r=-0.5$. The first Un
 
 ### The sampler
 
-Here is the algorithm of the previous section as an R function. It takes the log target, a starting value, the number of iterations, and the step size. It returns a list with the draws in a tibble and the fraction of proposals that were accepted. The `n_iter` argument gives the number $N$ of recorded states. The function draws both Normal proposals and Uniform values for the acceptance decisions.
+Here is the algorithm of the previous section as an R function. It takes the log target, a starting value, the number of iterations, and the step size. It returns a list with the draws in a tibble and the fraction of proposals that were accepted. The `n_iter` argument gives the number $T$ of recorded states, and any extra arguments in `...` are passed on to `log_target`, for example the data. The function draws both Normal proposals and Uniform values for the acceptance decisions.
 
 ```{r}
 metropolis <- function(log_target, init, n_iter, step_size, ...) {
   draws <- numeric(n_iter)
   current <- init
   current_lp <- log_target(current, ...)
+  if (!is.finite(current_lp)) stop("log_target() is not finite at init")
   n_accept <- 0
 
   for (t in seq_len(n_iter)) {
     proposal <- rnorm(1, mean = current, sd = step_size)   # 1. propose
     proposal_lp <- log_target(proposal, ...)
+    if (is.nan(proposal_lp)) stop("log_target() returned NaN; return -Inf outside the support")
     log_r <- proposal_lp - current_lp                      # 2. compare (on the log scale)
     if (log(runif(1)) < log_r) {                           # 3. accept ...
       current <- proposal
@@ -219,11 +220,12 @@ metropolis <- function(log_target, init, n_iter, step_size, ...) {
 }
 ```
 
-A few remarks on how the code maps onto the algorithm. Step 2 computes $\log r$ rather than $r$, which is just a subtraction. Step 3 compares $\log u$ with $\log r$, which is the same as comparing $u$ with $r$, and it handles both cases of the algorithm at once: if $r \geq 1$ then $\log r \geq 0 > \log u$ and the proposal is always accepted. We also store the log target of the current state, `current_lp`, so that each iteration evaluates the target only once, for the proposal. That matters when the target is expensive.
+A few remarks on how the code maps onto the algorithm. Step 2 computes $\log r$ rather than $r$, which is just a subtraction. Step 3 compares $\log u$ with $\log r$, which is the same as comparing $u$ with $r$, and it handles both cases of the algorithm at once: if $r \geq 1$ then $\log r \geq 0 > \log u$ and the proposal is always accepted. We also store the log target of the current state, `current_lp`, so that each iteration evaluates the target only once, for the proposal. That matters when the target is expensive. The two `stop()` lines are guards: the chain must start where the log target is finite, and a log target that returns `NaN` for a proposal cannot be compared with $\log u$; @sec-metropolis-mistakes explains when that happens.
 
 Let's run it for 10,000 iterations, starting at $\mu = 5$ with a step size of $0.5$:
 
 ```{r}
+set.seed(84735)
 fit <- metropolis(log_posterior, init = 5, n_iter = 10000, step_size = 0.5)
 fit$accept_rate
 head(fit$draws)
@@ -233,7 +235,6 @@ About `r round(100 * fit$accept_rate)`% of the proposals were accepted. The `the
 
 ```{r}
 #| label: fig-metropolis-sleep
-#| echo: false
 #| fig-cap: "Left: trace of the Metropolis chain for the mean hours of sleep. Right: histogram of the draws after discarding the first 500, with the exact Normal posterior overlaid."
 #| fig-height: 3
 p_trace <- ggplot(fit$draws, aes(iteration, theta)) +
@@ -247,7 +248,7 @@ p_hist <- ggplot(filter(fit$draws, iteration > 500), aes(theta)) +
                 color = "#552E6B", linewidth = 1) +
   labs(x = expression(mu), y = "Density")
 
-patchwork::wrap_plots(p_trace, p_hist)
+p_trace | p_hist
 ```
 
 The retained draws approximate the exact posterior. We can compare the mean, standard deviation, and central 95% interval as well:
@@ -297,6 +298,7 @@ The balance argument uses the target through a ratio, so multiplying it by a pos
 The step size $c$ does not affect whether the chain has the right stationary distribution, but it has everything to do with how quickly the chain explores it. Let's run the sleep sampler with three step sizes: one tiny, one large, and the one we used above. We start each near the posterior mean and compare the same number of updates. @fig-step-sizes pairs each trace with a histogram so that we can inspect both movement and the resulting posterior approximation.
 
 ```{r}
+set.seed(84735)
 step_sizes <- c(0.02, 0.5, 10)
 fits <- map(step_sizes, \(c) metropolis(log_posterior, init = 6.7,
                                      n_iter = 10000, step_size = c))
@@ -319,7 +321,7 @@ p_steps_trace <- traces |>
   labs(x = "Iteration", y = expression(mu))
 p_steps_density <- ggplot(traces, aes(theta)) +
   geom_histogram(aes(y = after_stat(density)), bins = 35,
-                 fill = "gray85", color = "white") +
+                 fill = "#ECECEC", color = "white") +
   stat_function(fun = dnorm, args = list(mean = mu_n, sd = sqrt(tau2_n)),
                 color = "#552E6B", linewidth = 0.8) +
   facet_wrap(~ step_size, ncol = 1) +
@@ -367,6 +369,7 @@ The middle chain is worth roughly `r round(ess_basic(fits[[2]]$draws$theta) / ma
 How do we choose $c$? There is no formula that works for every target, but we can compare several trial values using traces, ESS, and the acceptance rate. Use runs of equal length and assess the summaries you intend to report; an estimated ESS from a single trial is itself variable. Since a useful step size depends on the target's scale, it is convenient to think of $c$ relative to the posterior standard deviation, here about `r round(sqrt(tau2_n), 2)`.
 
 ```{r}
+set.seed(84735)
 tuning <- tibble(step_size = exp(seq(log(0.02), log(10), length.out = 15))) |>
   mutate(fit = map(step_size, \(c) metropolis(log_posterior, init = 6.7, n_iter = 10000, step_size = c)),
          ess = map_dbl(fit, \(f) ess_basic(f$draws$theta)),
@@ -414,6 +417,7 @@ So far we have used Metropolis on a posterior we could have written down. The po
 The $\text{N}(7, 0.5^2)$ prior for $\mu$ is confident: it puts almost no mass below six hours. Suppose we want to express the same central belief but allow for the possibility that we are badly wrong. A common device is a **Cauchy prior**, $\mu \sim \text{Cauchy}(7, 0.5)$, which has the same location, seven hours, but much heavier tails. Its scale parameter 0.5 controls the spread; it is not a standard deviation, because the Cauchy distribution has no finite variance. This prior is not conjugate to the Normal likelihood, so the Normal posterior formula no longer applies. We can still evaluate likelihood times prior, changing the prior term to `dcauchy()`:
 
 ```{r}
+set.seed(84735)
 log_posterior_cauchy <- function(mu, y = sleep_hours) {
   sum(dnorm(y, mean = mu, sd = 1, log = TRUE)) +
     dcauchy(mu, location = 7, scale = 0.5, log = TRUE)
@@ -441,27 +445,26 @@ The proposal and acceptance code is unchanged. The histogram in @fig-cauchy-post
 
 ### A target with two modes
 
-Let's look at a target that is chosen to make Metropolis struggle: an equal mixture of two Normals, centered at $-3$ and $3$, each with standard deviation 1 [@hanada2022mcmc, Section 4.4]. Posteriors with two separated modes occur in practice, for instance in mixture models and in models where the sign of a parameter is not identified.
+Let's look at a target that is chosen to make Metropolis struggle: an equal mixture of two Normals, centered at $-5$ and $5$, each with standard deviation 1 [@hanada2022mcmc, Section 4.4]. Posteriors with two separated modes occur in practice, for instance in mixture models and in models where the sign of a parameter is not identified.
 
 ```{r}
+set.seed(84735)
 log_bimodal <- function(theta) {
-  a <- log(0.5) + dnorm(theta, -3, 1, log = TRUE)
-  b <- log(0.5) + dnorm(theta, 3, 1, log = TRUE)
+  a <- log(0.5) + dnorm(theta, -5, 1, log = TRUE)
+  b <- log(0.5) + dnorm(theta, 5, 1, log = TRUE)
   m <- pmax(a, b)
   m + log(exp(a - m) + exp(b - m))
 }
-# Reset the seed so this comparison can be reproduced separately.
-set.seed(12505)
-fit_small <- metropolis(log_bimodal, init = -3, n_iter = 10000, step_size = 0.5)
-fit_large <- metropolis(log_bimodal, init = -3, n_iter = 10000, step_size = 5)
+fit_small <- metropolis(log_bimodal, init = -5, n_iter = 10000, step_size = 0.5)
+fit_large <- metropolis(log_bimodal, init = -5, n_iter = 10000, step_size = 5)
 ```
 
-The function adds the two weighted component densities on a stable log scale, using the rescaling idea from @sec-bayes-recap. The target is highest near $-3$ and $3$, with a low-density region between them. Before inspecting @fig-bimodal, consider why a chain with short proposals may spend a long time near just one mode.
+The function adds the two weighted component densities on a stable log scale, using the rescaling idea from @sec-bayes-recap. The target is highest near $-5$ and $5$, with a wide low-density region between them. Before inspecting @fig-bimodal, consider why a chain with short proposals may spend a long time near just one mode.
 
 ```{r}
 #| label: fig-bimodal
 #| echo: false
-#| fig-cap: "Metropolis on an equal mixture of two Normal distributions. Each row uses the same chain for its trace (left) and histogram (right); the purple curve is the full target density. Compare the time spent on either side of zero with the equal weights of the two target components."
+#| fig-cap: "Metropolis on an equal mixture of two Normal distributions centered at $-5$ and $5$. Each row uses the same chain for its trace (left) and histogram (right); the purple curve is the full target density. With step size 0.5 the chain never leaves the mode where it started; with step size 5 it moves between the modes. Compare the time spent on either side of zero with the equal weights of the two target components."
 #| fig-height: 3.8
 mixture_draws <- bind_rows(
   mutate(fit_small$draws, step_size = "step size = 0.5"),
@@ -469,18 +472,20 @@ mixture_draws <- bind_rows(
 p_mix_trace <- ggplot(mixture_draws, aes(iteration, theta)) +
   geom_line(color = "#552E6B", linewidth = 0.25) +
   facet_wrap(~ step_size, ncol = 1) +
+  coord_cartesian(ylim = c(-8.5, 8.5)) +
   labs(x = "Iteration", y = expression(theta))
 p_mix_hist <- ggplot(mixture_draws, aes(theta)) +
   geom_histogram(aes(y = after_stat(density)), bins = 45,
-                 fill = "gray85", color = "white") +
+                 fill = "#ECECEC", color = "white") +
   stat_function(fun = function(x) exp(log_bimodal(x)),
                 color = "#552E6B", linewidth = 0.8) +
   facet_wrap(~ step_size, ncol = 1) +
+  coord_cartesian(xlim = c(-8.5, 8.5)) +
   labs(x = expression(theta), y = "Density")
 p_mix_trace | p_mix_hist
 ```
 
-The small-step chain accepted `r round(100 * fit_small$accept_rate)`% of its proposals. An apparently satisfactory acceptance rate can therefore accompany poor exploration: accepted moves within one mode do not tell us how often the chain crosses to the other. The target assigns equal probability to its negative and positive halves. The fractions of stored values above zero are `r round(mean(fit_small$draws$theta > 0), 2)` for the small step and `r round(mean(fit_large$draws$theta > 0), 2)` for the large step, compared with the target value 0.5.
+The small-step chain accepted `r round(100 * fit_small$accept_rate)`% of its proposals, yet it crossed zero `r sum(diff(sign(fit_small$draws$theta)) != 0)` times in 10,000 iterations; the large-step chain accepted `r round(100 * fit_large$accept_rate)`% and crossed zero `r sum(diff(sign(fit_large$draws$theta)) != 0)` times. An apparently satisfactory acceptance rate can therefore accompany poor exploration: accepted moves within one mode do not tell us how often the chain crosses to the other. To travel from $-5$ to $5$ with step size 0.5, the chain would have to accept a long sequence of moves through the region around zero, where the target density is less than $10^{-5}$ of its value at a mode; that sequence is so improbable that it does not occur in a run of this length. The target assigns equal probability to its negative and positive halves. The fractions of stored values above zero are `r round(mean(fit_small$draws$theta > 0), 2)` for the small step and `r round(mean(fit_large$draws$theta > 0), 2)` for the large step, compared with the target value 0.5.
 
 This is the missing-region problem in @sec-diagnostics. Several chains started near different modes can reveal disagreement that one trace misses. Even agreement and a low R-hat cannot guarantee that an unvisited region does not exist. In this example the target is known, so the traces and histograms can be compared directly with both modes.
 
@@ -496,7 +501,7 @@ Each update has a proposal, a comparison, and a recorded state. Checking those t
 
 **Keep target evaluations consistent.** `log_target(theta)` must return the same log density when called again with the same inputs. Store the current log target and update it on acceptance, as the code does. This saves a second evaluation per iteration. Random noise inside the evaluator needs methods beyond this Metropolis implementation.
 
-**Reject values outside the support.** For a positive parameter, a Normal proposal may be negative. The log target should return `-Inf` there, giving acceptance probability zero. For example, `if (lambda <= 0) return(-Inf)` belongs before evaluating a Poisson likelihood at rate `lambda`: a negative rate would otherwise produce `NaN`. Start at a value with a finite log target. Parameter transformations in Chapter 6 (Metropolis–Hastings and Adaptive Proposals) offer another way to handle boundaries.
+**Reject values outside the support.** For a positive parameter, a Normal proposal may be negative. The log target should return `-Inf` there, giving acceptance probability zero. For example, `if (lambda <= 0) return(-Inf)` belongs before evaluating a Poisson likelihood at rate `lambda`: a negative rate would otherwise produce `NaN`, which cannot be compared with $\log u$. The guard in `metropolis()` turns such a value into the error `log_target() returned NaN; return -Inf outside the support`, which points at the missing check instead of failing inside the comparison. Start at a value with a finite log target. Parameter transformations in Chapter 6 (Metropolis–Hastings and Adaptive Proposals) offer another way to handle boundaries.
 
 **Check exploration across chains.** A good acceptance rate within one mode can hide failure to visit another. Use dispersed starts, traces, R-hat, ESS, and MCSE as in @sec-diagnostics, and interpret them in light of the model.
 
@@ -506,7 +511,7 @@ A student modifies `metropolis()` so that it "saves time" by only storing a draw
 
 ## Metropolis in more than one dimension {#sec-metropolis-multivariate}
 
-Almost every real model has several parameters. The Metropolis algorithm generalizes with no change to the logic: propose a new *vector* $\boldsymbol{\theta}^\star$ by adding Normal noise to every component of the current vector, compute the ratio of the target at the two vectors, and accept or reject the whole vector at once. Our function needs three edits: `init` becomes a vector, `rnorm()` draws one perturbation per component, and the draws are stored in a matrix.
+Almost every real model has several parameters. The Metropolis algorithm generalizes with no change to the logic: propose a new *vector* $\boldsymbol{\theta}^\star$ by adding Normal noise to every component of the current vector, compute the ratio of the target at the two vectors, and accept or reject the whole vector at once. Our function needs three edits: `init` becomes a vector, `rnorm()` draws one perturbation per component, and the draws are stored in a matrix. The `...` argument again forwards extra arguments to `log_target`.
 
 ```{r}
 metropolis <- function(log_target, init, n_iter, step_size, ...) {
@@ -514,11 +519,13 @@ metropolis <- function(log_target, init, n_iter, step_size, ...) {
   draws <- matrix(NA_real_, nrow = n_iter, ncol = d)
   current <- init
   current_lp <- log_target(current, ...)
+  if (!is.finite(current_lp)) stop("log_target() is not finite at init")
   n_accept <- 0
 
   for (t in seq_len(n_iter)) {
     proposal <- rnorm(d, mean = current, sd = step_size)
     proposal_lp <- log_target(proposal, ...)
+    if (is.nan(proposal_lp)) stop("log_target() returned NaN; return -Inf outside the support")
     if (log(runif(1)) < proposal_lp - current_lp) {
       current <- proposal
       current_lp <- proposal_lp
@@ -548,6 +555,7 @@ c(along = exp(log_bvn(c(1, 1)) - log_bvn(c(0, 0))),
 From $(0,0)$, the proposed vectors $(1,1)$ and $(1,-1)$ change both coordinates by one unit. Positive correlation makes $(1,1)$ much more compatible with the target: its acceptance probability is about 0.59, whereas $(1,-1)$ is accepted with probability only about 0.000045. Both proposals are equally plausible under our independent Normal perturbations. The difference comes from the target's shape.
 
 ```{r}
+set.seed(84735)
 fit_bvn <- metropolis(log_bvn, init = c(0, 0), n_iter = 10000, step_size = 0.5)
 fit_bvn$accept_rate
 ```
@@ -559,18 +567,21 @@ fit_bvn$accept_rate
 #| fig-pos: H
 #| echo: false
 #| out-width: "75%"
-#| fig-cap: "A bivariate Normal target with correlation 0.9. Contours mark equal target density; dots show 2,000 draws and the path connects the first 80 updates. The draws spread farther along the diagonal than across it."
+#| fig-cap: "A bivariate Normal target with correlation 0.9. Dots show the first 2,000 draws and the path connects the first 80 updates; the contours, drawn on top, enclose 50%, 90%, and 99% of the target probability. The draws spread farther along the diagonal than across it."
 #| fig-height: 3
 bvn_grid <- expand_grid(theta_1 = seq(-3.5, 3.5, length.out = 100),
                         theta_2 = seq(-3.5, 3.5, length.out = 100)) |>
   mutate(density = dmvnorm(cbind(theta_1, theta_2), sigma = Sigma))
+# For a bivariate Normal, the contour enclosing probability p has density (1 - p) times the peak.
+peak <- dmvnorm(c(0, 0), sigma = Sigma)
 fit_bvn$draws |>
   filter(iteration <= 2000) |>
   ggplot(aes(theta_1, theta_2)) +
-  geom_contour(data = bvn_grid, aes(z = density), color = "gray65", bins = 5) +
+  geom_point(color = "#552E6B", size = 0.6, alpha = 0.35) +
   geom_path(data = filter(fit_bvn$draws, iteration <= 80),
             color = "gray35", linewidth = 0.3) +
-  geom_point(color = "#552E6B", size = 0.6, alpha = 0.5) +
+  geom_contour(data = bvn_grid, aes(z = density), color = "gray20", linewidth = 0.4,
+               breaks = peak * c(0.5, 0.1, 0.01)) +
   coord_equal() +
   labs(x = expression(theta[1]), y = expression(theta[2]))
 ```
@@ -580,14 +591,14 @@ It works, but look at the acceptance rate and at the shape of the target. The pr
 The following comparison keeps the step size at 1 while increasing the number of coordinates. Each target has independent standard Normal coordinates, so this isolates the cost of changing many coordinates at once. We start with an independent target draw to avoid confusing this comparison with initial movement toward the target region.
 
 ```{r}
-set.seed(12550)
+set.seed(84735)
 log_std_normal <- function(theta) sum(dnorm(theta, log = TRUE))
 
 dims <- c(1, 2, 5, 10, 20, 50)
 by_dim <- tibble(d = dims) |>
-  mutate(fit = map(d, \(d) metropolis(log_std_normal, init = rnorm(d), n_iter = 5000, step_size = 1)),
+  mutate(fit = map(d, \(k) metropolis(log_std_normal, init = rnorm(k), n_iter = 5000, step_size = 1)),
          accept_rate = map_dbl(fit, "accept_rate"),
-         ess = map_dbl(fit, \(f) ess_basic(f$draws[[2]]))) |>
+         ess = map_dbl(fit, \(f) ess_basic(pull(f$draws, 2)))) |>   # first parameter column
   select(-fit)
 
 by_dim
@@ -683,7 +694,7 @@ b. For each chain, compute the posterior mean from all 2,000 draws and from the 
 **Exercise 5.7 (Two chains catch a mode)**
 Return to the bimodal target `log_bimodal()` with step size 0.5.
 
-a. Run two chains of 5,000 iterations, one from $-3$ and one from $3$. Compute the posterior mean of $\theta$ from each chain separately and from the two chains pooled.
+a. Run two chains of 5,000 iterations, one from $-5$ and one from $5$. Compute the posterior mean of $\theta$ from each chain separately and from the two chains pooled.
 b. Compute $\widehat{R}$ for $\theta$ using `posterior::rhat()` on a matrix with one column per chain. What does the value tell you?
 c. Compare step sizes 0.5, 1, 2, and 5 using the two chains at each value. Report $\widehat{R}$, acceptance rates, and the fraction of states above zero in each chain. Which settings give more convincing exploration, and why does $\widehat{R}<1.01$ alone not settle the question?
 :::

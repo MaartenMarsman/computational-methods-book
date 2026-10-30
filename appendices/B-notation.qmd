@@ -50,7 +50,7 @@ This appendix collects the symbols used throughout the book. We follow *Bayes Ru
 | $f(\theta_j \mid \boldsymbol{\theta}_{-j}, y)$ | full conditional of $\theta_j$ given all other parameters (Chapter 7 (Gibbs Sampling and Metropolis-within-Gibbs)) |
 | $\rho_k$ | autocorrelation of a chain at lag $k$ (@sec-diagnostics) |
 | $\text{ESS}$ | effective sample size, the number of independent draws the chain is worth |
-| $\widehat{R}$ | R-hat, the ratio of between-plus-within to within-chain variance; close to 1 at convergence |
+| $\widehat{R}$ | R-hat, the square root of the ratio of between-plus-within to within-chain variance; close to 1 at convergence |
 | $\text{MCSE}$ | Monte Carlo standard error of a posterior estimate, roughly $\text{sd}/\sqrt{\text{ESS}}$ |
 
 ## Model uncertainty

@@ -16,7 +16,6 @@ We will distinguish the value of a chain at one time from the distribution of th
 ```{r}
 library(tidyverse)
 library(patchwork)
-set.seed(84735)
 ```
 
 ::: {.bookbox title="Goals"}
@@ -69,26 +68,29 @@ rowSums(P)
 
 The column sums need not equal one. A matrix with non-negative entries and row sums of one is called a **stochastic matrix**. Together with an initial distribution, it specifies a time-homogeneous Markov chain.
 
-A note on notation. In this chapter the states are moods, so we call the chain $X^{(t)}$ and the states $i$ and $j$. From @sec-metropolis on, the states are candidate values of a parameter, and we write the chain as $\theta^{(t)}$, as in @sec-notation. The states then describe a computational sequence rather than an observed sequence of moods. We use bold $\boldsymbol{\pi}$ for a vector of stationary probabilities and plain $\pi$ for an unknown proportion.
+A note on notation. In this chapter the states are moods, so we call the chain $X^{(t)}$ and the states $i$ and $j$. From @sec-transition-kernels onward, the states are candidate values of a parameter, and we write the chain as $\theta^{(t)}$, as in @sec-notation. The states then describe a computational sequence rather than an observed sequence of moods. We use bold $\boldsymbol{\pi}$ for a vector of stationary probabilities and plain $\pi$ for an unknown proportion.
 
 ### Simulating the chain
 
 At each transition, select the row for the current mood and draw the next mood using that row's probabilities. `sample()` takes the state labels, the number of draws, and the probabilities. For example, `sample(moods, 1, prob = P["happy", ])` generates a possible next state after a happy day.
 
-A simulated chain of length $N$ contains the states $X^{(0)},\ldots,X^{(N-1)}$, including the initial state. The function below takes `T` transitions and returns $N=T+1$ states. With `T = 60`, it returns 61 states at times 0 through 60. The first stored element, `x[1]`, represents $X^{(0)}$.
+A simulated chain of length $N$ contains the states $X^{(0)},\ldots,X^{(N-1)}$, including the initial state. The function below makes `n_iter` transitions and returns one state more than that, because the initial state is included. With `n_iter = 60`, it returns 61 states at times 0 through 60. The first stored element, `x[1]`, represents $X^{(0)}$.
 
 ```{r}
-simulate_chain <- function(P, init, T) {
+simulate_chain <- function(P, init, n_iter) {
   states <- rownames(P)
-  x <- character(T + 1)
+  x <- character(n_iter + 1)
   x[1] <- init
-  for (t in seq_len(T)) {
+  for (t in seq_len(n_iter)) {
     x[t + 1] <- sample(states, size = 1, prob = P[x[t], ])
   }
   x
 }
+```
 
-diary <- simulate_chain(P, init = "happy", T = 60)
+```{r}
+set.seed(84735)
+diary <- simulate_chain(P, init = "happy", n_iter = 60)
 head(diary, 14)
 ```
 
@@ -217,8 +219,9 @@ mat_power(P, 50)[1, ]
 **Run the chain and count.** The third way is the one that matters for the rest of the book. Simulate a long diary, and count how often each mood occurs:
 
 ```{r}
-long_diary <- simulate_chain(P, init = "sad", T = 20000)
-freq_mood <- table(factor(long_diary[-1], levels = moods)) / 20000
+set.seed(84735)
+long_diary <- simulate_chain(P, init = "sad", n_iter = 20000)
+freq_mood <- table(factor(long_diary[-1], levels = moods)) / (length(long_diary) - 1)
 freq_mood
 ```
 
@@ -331,7 +334,7 @@ A useful sufficient condition in an irreducible chain is a self-loop. If some $P
 #| fig-height: 2.6
 p_happy <- function(P, start, t) {
   mu0 <- setNames(as.numeric(rownames(P) == start), rownames(P))
-  if (t == 0) mu0["happy"] else (mu0 %*% mat_power(P, t))[1, "happy"]
+  (mu0 %*% mat_power(P, t))[1, "happy"]
 }
 bind_rows(
   tibble(chain = "Mood chain", day = 0:12,
@@ -377,14 +380,15 @@ $$
 $N$ is the number of sampled states included in the average. Long-run averages along one chain converge to expectations under the stationary distribution.
 :::
 
-Take $h(i) = 1$ if $i$ is happy and $0$ otherwise. The theorem says that the fraction of happy days in a long diary converges to $\pi_{\text{happy}}$, which is what @fig-three-ways showed. @fig-running-average shows the convergence in progress: three diaries of 2,000 days, started in the three moods, and for each the running fraction of happy days. Here the running fractions include the initial state, so they begin at 1, 0, and 0. Including one initial value does not change their limiting values, although finite-simulation estimates differ.
+Take $h(i) = 1$ if $i$ is happy and $0$ otherwise. The theorem says that the fraction of happy days in a long diary converges to $\pi_{\text{happy}}$, which is what @fig-three-ways showed. @fig-running-average shows the convergence in progress: three diaries of 2,000 transitions, started in the three moods, and for each the running fraction of happy days over the 2,001 days including day zero. Here the running fractions include the initial state, so they begin at 1, 0, and 0. Including one initial value does not change their limiting values, although finite-simulation estimates differ.
 
 ```{r}
 #| label: fig-running-average
-#| fig-cap: "Running fraction of happy days in three simulated diaries of 2,000 days, one started in each mood. The dashed line is $\\pi_{\\text{happy}}$. The finite-run estimates fluctuate; the finite-state ergodic theorem establishes their common limiting value."
+#| fig-cap: "Running fraction of happy days in three simulated diaries of 2,000 transitions, one started in each mood. The dashed line is $\\pi_{\\text{happy}}$. The finite-run estimates fluctuate; the finite-state ergodic theorem establishes their common limiting value."
 #| fig-height: 2.8
+set.seed(84735)
 running <- map(moods, \(s) {
-  x <- simulate_chain(P, init = s, T = 2000)
+  x <- simulate_chain(P, init = s, n_iter = 2000)
   tibble(start = s, day = 0:2000, running_mean = cummean(x == "happy"))
 }) |> list_rbind()
 
@@ -401,9 +405,10 @@ The alternating chain illustrates the difference between the two kinds of conver
 Dependence also does not invalidate the time-average result. It does affect numerical precision. To isolate that effect, compare 365 observations from the mood chain with 365 independent draws from its stationary distribution. We draw the chain's initial state from $\boldsymbol\pi$ so that all 365 states have that marginal distribution and the comparison is not confounded by a fixed starting mood.
 
 ```{r}
+set.seed(84735)
 one_year <- function() {
   initial_mood <- sample(moods, size = 1, prob = pi_mood)
-  chain <- simulate_chain(P, init = initial_mood, T = 364)
+  chain <- simulate_chain(P, init = initial_mood, n_iter = 364)
   iid   <- sample(moods, size = 365, replace = TRUE, prob = pi_mood)
   c(chain = mean(chain == "happy"), iid = mean(iid == "happy"))
 }
@@ -493,7 +498,7 @@ If the target is known up to a common normalizing constant, that constant cancel
 A chain has only two states, with $P_{12} = a$ and $P_{21} = b$, both positive. Find its stationary distribution, and show that every such two-state chain satisfies detailed balance. Why is the three-state mood chain different?
 :::
 
-## From transition matrices to transition kernels
+## From transition matrices to transition kernels {#sec-transition-kernels}
 
 Most parameters in this book take values in intervals or in a continuous space with several coordinates. We can no longer list a transition probability for each possible next value in a finite matrix. Instead, a **transition kernel** specifies the distribution of the next state given the current state.
 
@@ -512,6 +517,7 @@ $$
 For example, from $\theta=1$, the next-state distribution is $\text{N}(0.6,0.8^2)$. We can generate possible next values or calculate an interval probability:
 
 ```{r}
+set.seed(84735)
 current <- 1
 rnorm(5, mean = 0.6 * current, sd = 0.8)
 pnorm(1, mean = 0.6 * current, sd = 0.8) -
@@ -523,7 +529,6 @@ The five draws are independent possible next states from the **same** current va
 ```{r}
 #| label: fig-normal-kernel
 #| fig-cap: "Conditional densities for the Normal transition rule, from current states -1, 0, and 1. Each curve integrates to one and describes a possible next value. Changing the current state shifts the mean to 0.6 times that state. These conditional densities are different from a stationary density."
-#| echo: false
 #| fig-width: 3.6
 #| fig-height: 3.6
 #| out-width: "60%"
@@ -685,13 +690,13 @@ The first result should be a range whose endpoints are both one. The other two r
 The matrix is useful for verification, but simulation can apply the transition rule directly. The function below first records the current index as the next one. It changes that entry only if a valid proposal is accepted. Repeated values are therefore included automatically.
 
 ```{r}
-walk_grid <- function(log_target, init, T) {
+walk_grid <- function(log_target, init, n_iter) {
   G <- length(log_target)
-  g <- integer(T + 1)
+  g <- integer(n_iter + 1)
   g[1] <- init
-  for (t in seq_len(T)) {
+  for (t in seq_len(n_iter)) {
     g[t + 1] <- g[t]
-    proposal <- g[t] + sample(c(-1, 1), size = 1)
+    proposal <- g[t] + sample(c(-1L, 1L), size = 1)
     if (proposal >= 1 && proposal <= G) {
       log_alpha <- min(0, log_target[proposal] - log_target[g[t]])
       if (log(runif(1)) < log_alpha) g[t + 1] <- proposal
@@ -701,18 +706,19 @@ walk_grid <- function(log_target, init, T) {
 }
 ```
 
-When the proposed log weight is at least the current one, `log_alpha` is zero and the proposal is always accepted. Otherwise, the comparison accepts with the appropriate weight ratio. No normalizing constant is needed.
+When the proposed log weight is at least the current one, `log_alpha` is zero and the proposal is always accepted. Otherwise, the comparison accepts with the appropriate weight ratio. No normalizing constant is needed. The samplers of later chapters follow the same calling pattern, `sampler(log_target, init, n_iter, ...)`, but return a tibble of draws rather than a bare vector.
 
-Start at index 51, corresponding to $\pi=0.505$, and make 50,000 transitions. The returned vector includes the initial state, so it contains 50,001 indices.
+Start at index 51, corresponding to $\pi=0.505$, and make `n_iter = 50000` transitions. The returned vector includes the initial state, so it contains 50,001 indices.
 
 ```{r}
-walk <- walk_grid(log_target, init = 51, T = 50000)
+set.seed(84735)
+walk <- walk_grid(log_target, init = 51, n_iter = 50000)
 draws <- tibble(step = 0:50000, pi = grid[walk])
 ```
 
 ```{r}
 #| label: fig-grid-walk
-#| fig-cap: "Left: the first 500 steps of the hand-built chain, started at $\\pi = 0.505$. Repeated values appear as horizontal stretches. Right: frequencies after the first 500 transitions (bars), compared with the normalized grid target (line and dots)."
+#| fig-cap: "Left: steps 0 to 500 of the hand-built chain, started at $\\pi = 0.505$. Repeated values appear as horizontal stretches. Right: frequencies after the first 500 transitions (bars), compared with the normalized grid target (line and dots)."
 #| fig-height: 3
 p_trace <- draws |>
   filter(step <= 500) |>
@@ -731,7 +737,7 @@ p_hist <- draws |>
   coord_cartesian(xlim = c(0.05, 0.35)) +
   labs(x = expression(pi), y = "Probability")
 
-patchwork::wrap_plots(p_trace, p_hist)
+wrap_plots(p_trace, p_hist)
 ```
 
 Compare the empirical frequencies in @fig-grid-walk with the normalized grid target. The following code also compares posterior summaries after omitting the first 500 transitions with the continuous Beta benchmark. The initial omission is illustrative; @sec-diagnostics develops ways to assess simulations more systematically.
@@ -820,7 +826,7 @@ Assume the transition kernel has an ordinary conditional density, as in the Norm
 Use `mat_power()` and the mood transition matrix `P` of this chapter.
 
 a. Find the smallest $t$ for which every entry in each row of $\mathbf P^t$ differs from the corresponding entry of its first row by less than 0.001. Use the same numerical criterion in part b.
-b. Change $P_{\text{happy},\text{happy}}$ to $0.95$ and $P_{\text{happy},\text{neutral}}$ to $0.04$ (keeping $P_{\text{happy},\text{sad}} = 0.01$), and repeat. Explain the difference in terms of how sticky the happy state has become.
+b. Change the first row of $\mathbf P$ to $P_{\text{happy},\text{happy}} = 0.95$, $P_{\text{happy},\text{neutral}} = 0.04$, and $P_{\text{happy},\text{sad}} = 0.01$, so that the row still sums to one, and repeat. Explain the difference in terms of how sticky the happy state has become.
 c. For both matrices, compute the largest absolute value among the eigenvalues other than 1 with `eigen()` and relate it to your answers in a. and b.
 :::
 
@@ -847,7 +853,7 @@ c. Run both versions for 50,000 transitions from `init = 51` and compare the fir
 Define a log target on the same grid with `log_target2 <- log(dnorm(grid, 0.25, 0.04) + dnorm(grid, 0.75, 0.04))`. It represents two separated modes with equal target probability.
 
 a. Build the matrix with `build_walk(log_target2)` and check that its stationary distribution is proportional to `exp(log_target2)`. Normalize by subtracting the maximum log weight before exponentiating.
-b. Run `walk_grid(log_target2, init = 25, T = 20000)` and plot the trace. How often does the chain cross from one bump to the other?
+b. Run `walk_grid(log_target2, init = 25, n_iter = 20000)` and plot the trace. How often does the chain cross from one bump to the other?
 c. Compute the fraction of steps spent below $\pi = 0.5$ and compare it with the target's mass there. Explain the discrepancy using the distinction between a stationary distribution existing and a chain having reached it.
 :::
 
