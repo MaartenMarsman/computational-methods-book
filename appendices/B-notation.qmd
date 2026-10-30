@@ -2,15 +2,15 @@
 
 <!-- SOURCES: CONVENTIONS.md (notation section); Bayes Rules! notation (f for every density, pi for a proportion, N(mu, sigma^2)); the chapters themselves. This appendix is the single source of truth: if a chapter and this table disagree, the chapter is wrong. -->
 
-This appendix collects the symbols used throughout the book. We follow *Bayes Rules!* [@johnson2022bayes] wherever it has a convention, so that nothing you learned there has to be unlearned, and add the symbols that Markov chains and samplers need.
+This appendix collects the symbols used for data, probability distributions, Markov chains, and sampling algorithms throughout the book.
 
 ## Conventions
 
-**Every density is $f$.** The prior, the likelihood, the posterior, and the density of a proposal are all written $f(\cdot)$, and the arguments tell you which one is meant: $f(\theta)$ is the prior, $f(y \mid \theta)$ the likelihood, and $f(\theta \mid y)$ the posterior. We do not use $p(\cdot)$ or $\pi(\cdot)$ for densities, because $\pi$ is a proportion parameter in *Bayes Rules!* and $\mathbf{p}$ is a momentum in Chapter 10 (Hamiltonian Monte Carlo). When a chapter builds a sampler for a generic target, that target is written $f(\theta)$, and you should read it as "the posterior, up to a constant we cannot compute."
+**Probability functions.** We write $f(\cdot)$ for probability mass functions and densities. The arguments distinguish the prior $f(\theta)$, the likelihood contribution $f(y\mid\theta)$, and the posterior $f(\theta\mid y)$. In descriptions of a sampler, $f(\theta)$ can instead denote the chosen target density. A proportion parameter is written $\pi$; the proposal density has its own symbol $q$.
 
-**Work on the log scale.** Every sampler in this book takes a function that returns $\log f(\theta)$, never $f(\theta)$, and the code calls it `log_target` or `log_posterior`. The reason is numerical: a likelihood of 2,000 observations is a product of 2,000 small numbers and underflows to zero, while its logarithm is a sum of 2,000 moderate numbers. On the log scale a ratio becomes a difference, $\log r = \log f(\theta^\star) - \log f(\theta^{(t)})$, and the acceptance test becomes $\log u < \log r$ (@sec-metropolis). R's `d*` functions all take `log = TRUE` for exactly this purpose.
+**Work on the log scale.** Where a sampler takes a target-density function, we supply its logarithm, typically called `log_target` or `log_posterior`. Products of many small likelihood contributions can round to zero; logarithms let us add their values instead. A log density ratio is a difference, $\log r=\log f(\theta^\star)-\log f(\theta^{(t)})$, and the acceptance test becomes $\log u<\log r$ (@sec-metropolis). R's density functions can compute log densities directly with `log = TRUE`.
 
-**Vectors are bold, indices are subscripts, iterations are superscripts.** A single parameter is $\theta$; a vector of parameters is $\boldsymbol{\theta} = (\theta_1, \ldots, \theta_d)$; a matrix is a bold capital such as $\mathbf{P}$ or $\boldsymbol{\Sigma}$. Observations are indexed $i = 1, \ldots, n$, predictors $j = 1, \ldots, p$, and models $m = 1, \ldots, M$. The state of a Markov chain at iteration $t$ is $\theta^{(t)}$, with parentheses so that it is not mistaken for a power; a proposed value is $\theta^\star$. Chains start at $t = 0$ and run for $t = 1, \ldots, T$ iterations. Hats denote estimates computed from draws, as in $\widehat{R}$.
+**Vectors are bold, indices are subscripts, iterations are superscripts.** A single parameter is $\theta$; a vector of parameters is $\boldsymbol{\theta} = (\theta_1, \ldots, \theta_d)$; a matrix is a bold capital such as $\mathbf{P}$ or $\boldsymbol{\Sigma}$. Observations are indexed $i = 1, \ldots, n$, predictors $j = 1, \ldots, p$, and models $m = 1, \ldots, M$. The state of a Markov chain at iteration $t$ is $\theta^{(t)}$, with parentheses so that it is not mistaken for a power; a proposed value is $\theta^\star$. The starting state is indexed $t=0$. A run recording $N$ sampled states has updates $t=1,\ldots,N$; summaries after warm-up use the retained states. Hats denote estimates computed from draws, as in $\widehat{R}$.
 
 ## Data, parameters, and densities
 
@@ -19,7 +19,7 @@ This appendix collects the symbols used throughout the book. We follow *Bayes Ru
 | $y$, $\mathbf{y} = (y_1, \ldots, y_n)$ | observed data; $n$ observations |
 | $\mathbf{X}$, $x_{ij}$ | design matrix with $n$ rows and $p$ predictors |
 | $\theta$, $\boldsymbol{\theta}$ | a generic parameter; a vector of $d$ parameters |
-| $\pi$ | a proportion parameter, as in *Bayes Rules!* |
+| $\pi$ | a proportion parameter |
 | $\mu$, $\sigma$, $\sigma^2$ | a mean, a standard deviation, a variance |
 | $\beta_0, \beta_1, \ldots, \beta_p$ | regression coefficients |
 | $f(\theta)$ | prior density |
@@ -35,7 +35,8 @@ This appendix collects the symbols used throughout the book. We follow *Bayes Ru
 | Symbol | Meaning |
 |---|---|
 | $\theta^{(t)}$ | state of a Markov chain at iteration $t$; $\theta^{(0)}$ is the starting value |
-| $T$ | number of iterations; draws after warm-up are $\theta^{(t)}$ for $t > T_{\text{warm}}$ |
+| $N$ | number of sampled states; for summaries after warm-up, the count refers to retained states |
+| $m$, $L$ | number of chains and retained states per chain; with equal chain lengths, $N=mL$ (@sec-diagnostics) |
 | $\theta^\star$ | a proposed value |
 | $q(\theta^\star \mid \theta)$ | proposal density; symmetric in the Metropolis algorithm, general in Metropolis–Hastings |
 | $r$ | acceptance ratio, $f(\theta^\star) / f(\theta^{(t)})$ for a symmetric proposal |
@@ -44,14 +45,14 @@ This appendix collects the symbols used throughout the book. We follow *Bayes Ru
 | $c$ | step size of a random-walk proposal, $\theta^\star \sim \text{N}(\theta^{(t)}, c^2)$ |
 | $\alpha^\ast$, $\gamma_t$ | target acceptance rate and learning rate in Robbins–Monro adaptation (Chapter 6 (Metropolis–Hastings and Adaptive Proposals)) |
 | $\mathbf{P}$, $P_{ij}$ | transition matrix of a discrete chain; probability of moving from state $i$ to state $j$ (@sec-markov-chains) |
-| $K(\theta, \theta')$ | transition kernel of a continuous chain, the density of moving from $\theta$ to $\theta'$ |
+| $K(\theta, \theta')$ | transition density between distinct states of a continuous chain; rejections also give a probability of staying at the current state |
 | $\boldsymbol{\pi}$ | stationary distribution of a discrete chain, a row vector with $\boldsymbol{\pi} \mathbf{P} = \boldsymbol{\pi}$ |
 | $f(\theta) K(\theta, \theta') = f(\theta') K(\theta', \theta)$ | detailed balance with respect to $f$ |
 | $f(\theta_j \mid \boldsymbol{\theta}_{-j}, y)$ | full conditional of $\theta_j$ given all other parameters (Chapter 7 (Gibbs Sampling and Metropolis-within-Gibbs)) |
 | $\rho_k$ | autocorrelation of a chain at lag $k$ (@sec-diagnostics) |
-| $\text{ESS}$ | effective sample size, the number of independent draws the chain is worth |
-| $\widehat{R}$ | R-hat, the square root of the ratio of between-plus-within to within-chain variance; close to 1 at convergence |
-| $\text{MCSE}$ | Monte Carlo standard error of a posterior estimate, roughly $\text{sd}/\sqrt{\text{ESS}}$ |
+| $\text{ESS}$ | effective sample size; the equivalent independent-draw count for the precision of a specified summary |
+| $\widehat{R}$ | R-hat, a diagnostic comparing behavior within and between chains; use a value below 1.01 alongside the other checks in @sec-diagnostics |
+| $\text{MCSE}$ | Monte Carlo standard error of an estimated summary; for a mean, approximately $\text{sd}/\sqrt{\text{ESS}}$ |
 
 ## Model uncertainty
 
@@ -76,11 +77,11 @@ This appendix collects the symbols used throughout the book. We follow *Bayes Ru
 | $\varepsilon$ | leapfrog step size |
 | $L$ | number of leapfrog steps per proposal; trajectory length is $\varepsilon L$ |
 
-Note the three different uses of $\pi$-like and $\gamma$-like symbols: plain $\pi$ is a proportion, bold $\boldsymbol{\pi}$ is a stationary distribution, and $\pi = 3.14\ldots$ never appears except inside the Normal density; $\gamma_j$ with a predictor index is an inclusion indicator, while $\gamma_t$ with an iteration index is a learning rate. Context and the index should always make clear which is meant.
+Plain $\pi$ denotes a proportion, while bold $\boldsymbol{\pi}$ denotes a stationary probability vector. In geometric formulas and Normal densities, $\pi$ can also be the mathematical constant $3.14\ldots$. Similarly, $\gamma_j$ with a predictor index denotes an inclusion indicator, while $\gamma_t$ with an iteration index denotes a learning rate. The context and index distinguish these uses.
 
 ## Distributions
 
-The book writes distributions in the abbreviations below, parameterized the way *Bayes Rules!* does. The last column gives the R function that computes the density, because you will write log posteriors as sums of `d*(..., log = TRUE)` calls, and R's argument names do not always match the mathematical parameters. Two traps: the Normal is written with its variance $\sigma^2$ but `dnorm()` takes the standard deviation `sd`, and the Gamma and Exponential are written with a *rate*, which is what `dgamma()` and `dexp()` take by default, not a scale. The `r*` function with the same name and arguments draws random values.
+The table gives the distribution notation and parameterizations used in this book. The last column gives the R function that computes the density, because you will write log posteriors as sums of `d*(..., log = TRUE)` calls, and R's argument names do not always match the mathematical parameters. Two traps: the Normal is written with its variance $\sigma^2$ but `dnorm()` takes the standard deviation `sd`, and the Gamma and Exponential are written with a *rate*, which is what `dgamma()` and `dexp()` take by default, not a scale. The `r*` function with the same name and arguments draws random values.
 
 | Notation | Parameters | Density in R |
 |---|---|---|
@@ -97,9 +98,10 @@ The book writes distributions in the abbreviations below, parameterized the way 
 | $\text{Binomial}(n, \pi)$ | number of trials $n$, success probability $\pi$ | `dbinom(x, size = n, prob = pi)` |
 | $\text{Poisson}(\lambda)$ | rate $\lambda$; mean and variance $\lambda$ | `dpois(x, lambda = lambda)` |
 
-A quick check of the two traps, which you can run yourself. The $\text{N}(7, 0.5^2)$ prior of @sec-metropolis has standard deviation $0.5$, and a $\text{Gamma}(2, 4)$ variable has mean $2/4$:
+For example, check the distinction between variance and standard deviation in the Normal notation, and between shape and rate in the Gamma notation. The $\text{N}(7, 0.5^2)$ prior of @sec-metropolis has standard deviation $0.5$, and a $\text{Gamma}(2, 4)$ variable has mean $2/4$:
 
 ```{r}
+set.seed(84735)
 dnorm(7, mean = 7, sd = 0.5, log = TRUE)
 mean(rgamma(1e5, shape = 2, rate = 4))
 ```

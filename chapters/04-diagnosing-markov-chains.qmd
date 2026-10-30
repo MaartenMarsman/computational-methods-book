@@ -739,7 +739,7 @@ Explain the difference between burn-in and Stan's warm-up. Why are adaptation dr
 **Exercise 4.2 (Thinning by the numbers)**
 A chain of $N = 20{,}000$ draws has autocorrelations $\rho_k = 0.9^k$.
 
-a. Compute its effective sample size.
+a. Approximate its effective sample size using the long-run formula.
 b. The chain is thinned by keeping every fifth draw. What are the autocorrelations of the thinned chain, and what is its effective sample size?
 c. A colleague argues that the thinned chain is better because its draws are "almost independent." Explain what they have confused.
 :::
@@ -823,8 +823,8 @@ c. For each $\phi$, compute the MCSE of the posterior mean using `mcse_mean()`. 
 **Exercise 4.7 ($\widehat{R}$ by hand; optional)**
 Optional extension: Use `rhat_by_hand()` and `split_halves()` from @sec-rhat-calculations.
 
-a. Simulate four records of $N=1{,}000$ stored states from `ar1_chain()` with $\phi=0.95$, each started at `init=0`. Compute unsplit and split basic R-hat by hand. Compare them with `rhat_basic(split=FALSE)` and `rhat_basic(split=TRUE)`, and also report `posterior::rhat()`. Are these fixed-start records stationary at time zero?
-b. Now start the four chains at $-10, -5, 5$, and $10$. Repeat the same comparisons. Then discard the first 200 iterations of each chain and compute them again. Explain what changed.
+a. Simulate four records of $N=1{,}000$ stored states from `ar1_chain()` with $\phi=0.95$, each started at `init=0`. Compute unsplit and split basic R-hat by hand. Compare them with `rhat_basic(split=FALSE)` and `rhat_basic(split=TRUE)`, and also report `posterior::rhat()`. Are these fixed-start records stationary at time zero? Repeat with each initial state drawn independently from N$(0,1)$. Does starting in stationarity ensure that R-hat is below 1.01 in a run of this length? Explain the role of dependence.
+b. To examine a more persistent effect of initialization, use $\phi=0.99$ and $N=2{,}000$ stored states, starting the four chains at $-50, -25, 25$, and $50$. Plot the traces and repeat the R-hat comparisons. Discard the first 500 states of each chain, then plot and compute again. What changes, and why might R-hat still exceed 1.01 after the early movement toward the target region has disappeared?
 c. Construct four chains that have the same mean but where two chains have three times the spread of the other two, as in @sec-rank-folding. Compare `rhat_basic()` and `posterior::rhat()` and identify any difference in the values relative to 1.01, and explain which of the two ingredients of the rank-normalized $\widehat{R}$, rank normalization or folding, is responsible.
 :::
 

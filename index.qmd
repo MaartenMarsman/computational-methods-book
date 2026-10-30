@@ -8,7 +8,7 @@
 :::
 :::
 
-Stochastic simulation provides a way to study Bayesian models when the quantities of interest are difficult to calculate directly. By generating draws from a probability distribution, we can estimate posterior means, probabilities, and predictions. This book develops the methods behind those calculations and shows how to implement them in R.
+Stochastic simulation provides a way to study Bayesian models when the quantities of interest are difficult to calculate directly. By generating draws from a probability distribution, we can estimate posterior means, probabilities, and predictions. This book develops the methods behind those calculations and shows how to implement them in R. Implementing the algorithms helps reveal how they work, why they sometimes perform poorly, and how to assess the results produced by statistical software.
 
 ## Why we wrote this book {.unnumbered}
 
@@ -18,7 +18,7 @@ Bringing the two courses together required a text that connected introductory Ba
 
 ## Who this book is for {.unnumbered}
 
-This book is intended for research master's students in psychology who want to understand how stochastic simulation supports Bayesian analysis. You should be familiar with elementary probability and statistics, including means, variances, and probability distributions, and be comfortable writing basic R code using vectors, functions, and loops. Familiarity with Bayesian inference is helpful; the opening chapters introduce the probability and Bayesian concepts used throughout the book.
+This book is for students and researchers who want to understand how stochastic simulation supports Bayesian analysis. The examples draw primarily on psychology, but the methods apply across disciplines. You should be familiar with elementary probability and statistics, including means, variances, and probability distributions, and be comfortable writing basic R code using vectors, functions, and loops. Familiarity with Bayesian inference is helpful; the opening chapters introduce the probability and Bayesian concepts used throughout the book.
 
 By working through the text and code, you will learn to
 
@@ -46,6 +46,8 @@ The book has five parts. Each builds on the concepts and methods introduced earl
 ## How to read this book {.unnumbered}
 
 Each chapter introduces a problem and its learning goals, develops the methods through worked examples, and closes with a summary and exercises. Read the explanations alongside the code, run the examples, and examine how the results change when you alter the inputs or simulation settings.
+
+The appendices provide software guidance, a reference for notation, and detailed mathematical derivations that supplement the main explanations.
 
 The exercises take three forms. *Conceptual* exercises ask you to explain or derive an idea. *Practical* exercises develop your ability to implement and assess a method. *Applied* exercises use the methods to answer questions about data.
 

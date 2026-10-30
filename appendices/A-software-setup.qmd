@@ -1,43 +1,53 @@
 # Software Setup {#sec-software}
 
-<!-- SOURCES: Bayes Rules! Preface and §6.2 (rstan usage); rstan "Getting Started" wiki on mc-stan.org; cmdstanr "Getting started" vignette; BOOK-PLAN.md §3 (rstan default, cmdstanr fallback, no brms). -->
+<!-- SOURCES: Current chapter setup code and package calls; RStan Getting Started and platform toolchain documentation; CmdStanR Getting Started and install_cmdstan reference; R Random documentation; Stan reproducibility documentation. -->
 
-Everything in this book runs in R. Most of it needs nothing beyond a handful of CRAN packages, because the point of the book is that you write the samplers yourself. The one exception is Stan, which we use in @sec-diagnostics and Chapter 10 (Hamiltonian Monte Carlo), and which needs a C++ compiler on your machine. This appendix walks you through the installation in the order that causes the fewest problems, gives you a small model to confirm that Stan works, and tells you what to do if it does not.
+The examples in this book run in R. Packages help with data, plots, and diagnostics, while you implement many of the samplers yourself. Fitting a Stan model also requires a C++ compiler. This appendix explains how to install the software, test a small model, and identify where to look if the test fails.
 
-If you took the Bayesian Statistics course on this machine, you probably already have everything. Skip to @sec-software-check and run the test model; if it passes, you are done.
+If you already use R and Stan on this computer, begin with the test in @sec-software-check. A successful run confirms that this example can compile and sample in your current installation. If a package or compiler is missing, return to the relevant setup step below.
 
 ## R and RStudio
 
 Install R first and RStudio second; RStudio is an editor and needs R to be there already.
 
-1. **R (4.4 or later).** Download the installer for your operating system from [cran.r-project.org](https://cran.r-project.org). On macOS, pick the build that matches your processor (Apple silicon or Intel). If you already have R, check its version with `R.version.string` and upgrade if it is older than 4.4, because several packages we use no longer support older versions.
-2. **RStudio.** Download RStudio Desktop from [posit.co](https://posit.co). Any recent version is fine.
+1. **R.** Download a current release from [CRAN](https://cran.r-project.org/) using the link for your operating system. On Windows, use the Windows installer. On macOS, choose the installer for your processor (Apple silicon or Intel). On Linux, follow CRAN's instructions for your distribution. If R is already installed, `R.version.string` reports its version; older installations may need an update to install current packages.
+2. **RStudio.** Install [RStudio Desktop](https://posit.co/download/rstudio-desktop/) for the same operating system. RStudio provides an editor, console, and tools for managing your R work.
 
 Both are free. Quarto, which we use to build this book, ships inside RStudio; you do not need it for the course.
 
 ## R packages
 
-The packages below cover the whole book. Copy this block into the R console and run it once. It downloads binaries on macOS and Windows and takes a few minutes; on Linux it compiles from source and takes longer.
+The following packages cover Chapters 1–5 and the installation checks in this appendix. On Linux, complete the compiler setup in @sec-software-stan before installing R packages from source. Run the installation block once in the R console. Later, use `library()` to load the packages listed at the start of the chapter you are studying.
 
 ```{r}
 #| eval: false
 install.packages(c(
-  "tidyverse",   # data handling and plots
-  "bayesrules",  # data sets from Bayes Rules!
-  "bayesplot",   # trace plots and other MCMC graphics
-  "posterior",   # effective sample size, R-hat, draws objects
-  "coda",        # classic MCMC diagnostics
-  "mvtnorm",     # multivariate Normal densities and draws
-  "patchwork",   # combining ggplot2 figures
-  "rstan",       # Stan
-  "bgms",        # Bayesian graphical models, Chapters 7-9
-  "lars"         # the diabetes data, Chapters 8-9
+  "tidyverse",  # data handling and plotting
+  "bayesrules", # course data sets
+  "patchwork",  # combining plots
+  "mvtnorm",    # multivariate Normal densities and draws
+  "posterior",  # draws objects, ESS, R-hat, and MCSE
+  "bayesplot",  # plots of simulation output
+  "rstan",      # fitting Stan models from R
+  "knitr",      # displaying tables in the examples
+  "pkgbuild"    # checking the compiler setup
 ))
 ```
 
-`rstan` is on CRAN like the others, and on macOS and Windows it installs as a pre-built binary without compiling anything. That is the easy half. The hard half is that *using* `rstan` means compiling each Stan model into C++ the first time you run it, and for that your machine needs a C++ toolchain. The next section installs it.
+Packages that these depend on, such as `dplyr`, `tidyr`, and `scales`, are installed automatically. For the later chapters, also install
 
-## Installing Stan
+```{r}
+#| eval: false
+install.packages(c(
+  "lars",     # diabetes data, Chapters 7–9
+  "bgms",     # graphical-model examples, Chapters 7–9
+  "numDeriv"  # numerical gradient checks, Chapter 10
+))
+```
+
+On Windows and macOS, CRAN usually provides precompiled packages for current supported R versions. On Linux, packages are commonly compiled from source. Installing `rstan` and compiling a Stan model are separate steps: even with a precompiled R package, fitting your own Stan model requires a C++ compiler.
+
+## Installing Stan {#sec-software-stan}
 
 `rstan` is the R interface to Stan [@carpenter2017stan]. The Stan program you write is translated to C++ and compiled, so you need a compiler that R knows how to call. What that means depends on your operating system.
 
@@ -47,11 +57,11 @@ install.packages(c(
 xcode-select --install
 ```
 
-A dialog asks you to confirm; the download is a few gigabytes and takes a while. You do not need the full Xcode application from the App Store. If you already have the tools, the command says so and you can move on.
+This installs the Command Line Tools, the smaller toolset containing the compiler and other command-line utilities. You do not need the full Xcode application. If the tools are already installed, the command reports this.
 
-**Windows.** Install **Rtools** from CRAN, choosing the version that matches your R version: Rtools 4.4 for R 4.4.x, Rtools 4.5 for R 4.5.x, and so on. The CRAN download page for Windows lists them under "Rtools". Accept the default installation location. A mismatch between the Rtools version and the R version is the most common reason that Stan will not compile on Windows, so check `R.version.string` before you download.
+**Windows.** Install [Rtools](https://cran.r-project.org/bin/windows/Rtools/) using the version recommended for your installed R version. Check `R.version.string` first and follow the matching link on the Rtools page. Use the default installation location unless your institution provides different instructions.
 
-**Linux.** You need `g++` and `make`, which on Debian and Ubuntu come with the `build-essential` package, plus the R development headers (`r-base-dev`). `install.packages("rstan")` then compiles `rstan` and its dependencies from source, which takes ten to twenty minutes. The Stan website, [mc-stan.org](https://mc-stan.org), has distribution-specific notes.
+**Linux.** Install a C++ compiler, `make`, and R's development files. On Debian and Ubuntu, these are supplied by `build-essential` and `r-base-dev`. Other distributions use different package names; follow their R installation instructions. The [RStan installation guide](https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started) links to platform-specific toolchain instructions.
 
 On all three platforms, restart R after installing the toolchain, and confirm that R can see it:
 
@@ -60,29 +70,29 @@ On all three platforms, restart R after installing the toolchain, and confirm th
 pkgbuild::has_build_tools(debug = TRUE)
 ```
 
-The answer should be `TRUE`. If it is `FALSE`, the toolchain is not installed or R cannot find it, and no Stan model will compile until that is fixed; on Windows, an Rtools version mismatch shows up here.
+A result of `TRUE` indicates that the build-tools check succeeded. If it returns `FALSE`, inspect the diagnostic messages and the instructions for your platform before attempting the model below. This check helps locate compiler problems; compiling the actual Stan model is the next test.
 
-::: {.bookbox title="Two settings worth putting in every Stan script"}
+::: {.bookbox title="Stan settings used in the examples"}
 ```{r}
 #| eval: false
 library(rstan)
-options(mc.cores = parallel::detectCores())   # run the chains in parallel
-rstan_options(auto_write = TRUE)              # keep the compiled model on disk
+rstan_options(auto_write = TRUE)
+options(mc.cores = 1)
 ```
-The first line runs one chain per processor core instead of one after the other. The second saves the compiled C++ next to your Stan file so that the same model is not recompiled every time you fit it. Both are the settings *Bayes Rules!* uses, and every Stan chunk in this book assumes them.
+`auto_write = TRUE` allows RStan to reuse saved compiled models. `mc.cores = 1` runs the chains one after another, as in the setup for @sec-diagnostics. Multiple chains still run; this setting controls how many can run at the same time. On a suitably configured computer, a larger value allows parallel chains.
 :::
 
 ## Checking your installation {#sec-software-check}
 
-Here is the model you will meet again in @sec-diagnostics: the Beta-Binomial. Suppose 14 of 20 students in a seminar say they use a spaced-repetition app, and suppose a $\text{Beta}(2, 2)$ prior for the proportion $\pi$ who do. The posterior is $\text{Beta}(16, 8)$, with mean $16/24 \approx 0.667$, and that number is what we check against.
+We use a small Beta-Binomial model whose posterior can be checked exactly. Suppose 14 of 20 students in a seminar say they use a spaced-repetition app. With a $\text{Beta}(2,2)$ prior on the proportion $\pi$, the posterior is $\text{Beta}(16,8)$, with mean $16/24\approx0.667$.
 
-Run the following in a fresh R session. The first time you run it, it will take about a minute, and you will see a line saying that the model is being compiled, possibly followed by compiler warnings. The warnings are normal; only an error that stops the run is a problem.
+Run this example in a fresh R session after installing the compiler and packages. Compilation may take longer than sampling. The `refresh = 0` argument suppresses the sampling progress display.
 
 ```{r}
-#| eval: false
+#| results: hide
 library(rstan)
-options(mc.cores = parallel::detectCores())
 rstan_options(auto_write = TRUE)
+options(mc.cores = 1)
 
 bb_model <- "
 data {
@@ -97,75 +107,90 @@ model {
   y ~ binomial(n, pi);
 }
 "
-
-fit <- stan(model_code = bb_model, data = list(n = 20, y = 14),
-            chains = 4, iter = 2000, seed = 84735)
-print(fit)
+bb_data <- list(n = 20, y = 14)
+fit <- stan(model_code = bb_model, data = bb_data,
+            chains = 4, iter = 2000, warmup = 1000,
+            seed = 84735, refresh = 0)
 ```
 
-Success looks like this. `print(fit)` starts with a header saying "4 chains, each with iter=2000; warmup=1000" and "total post-warmup draws=4000", followed by a table with a row for `pi` and a row for `lp__`. The `mean` for `pi` is 0.67 give or take 0.01, `Rhat` is 1, and `n_eff` is somewhere in the low thousands. If you see that, Stan compiles and runs on your machine, and you can use every chapter of the book.
+The following output shows a completed run:
 
-Two things that look alarming but are not: `rstan` may print long compiler warnings about "unused variable" or "deprecated" declarations while compiling, and on macOS the very first compilation can take noticeably longer than a minute. Two things that are actual failures: an error mentioning `make`, `g++`, `clang`, or "compilation failed" means the toolchain is missing or not found, so go back to the previous section; an error mentioning `stanc` or a line number in the model is a mistake in the Stan code, so check that you copied the model exactly.
+```{r}
+print(fit, pars = "pi", probs = c(0.025, 0.975), digits_summary = 3)
+```
+
+The header reports four chains and 4,000 retained draws in total: each chain runs for 2,000 iterations and discards its first 1,000 as warm-up. The estimated mean for `pi` should be close to the exact value 0.667. The `sd` column describes posterior uncertainty; `se_mean` describes Monte Carlo uncertainty in the estimated mean. Different software versions or machines can give somewhat different simulation results.
+
+Completing this example confirms that the installation can compile and sample this model. Examine any warnings as well as the printed estimates. An error mentioning `make`, `g++`, `clang`, or compilation often points to the compiler setup. A Stan syntax error points to the model text. Warnings about the sampled chains require the checks described in @sec-diagnostics; successful compilation alone does not establish accurate inference.
 
 ## If rstan will not compile
 
-On some machines, most often a managed university laptop or a very new operating system that CRAN's binaries do not yet target, `rstan` installs fine but refuses to compile any model, and the error message does not point to a fix. Rather than lose an afternoon, switch to `cmdstanr`. It is a second R interface to the same Stan, developed by the Stan team, that talks to a separate CmdStan installation instead of compiling inside R's own toolchain. It is less convenient to install but more robust once it runs.
+If the compiler check succeeds but RStan still fails to compile, consult the platform-specific [RStan guide](https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started) using the complete error message. On a managed computer, installation changes may require help from your university's support service.
 
-`cmdstanr` is not on CRAN. Install it from the Stan team's R-universe repository, let it repair the toolchain, and then let it download and build CmdStan:
+An alternative is `cmdstanr`, another R interface to Stan. It uses a separate CmdStan installation, so it can avoid some RStan-specific compiler-configuration problems. It still needs a working C++ toolchain. The [CmdStanR getting-started guide](https://mc-stan.org/cmdstanr/articles/cmdstanr.html) gives the installation steps:
 
 ```{r}
 #| eval: false
 install.packages("cmdstanr",
                  repos = c("https://stan-dev.r-universe.dev", getOption("repos")))
 library(cmdstanr)
-check_cmdstan_toolchain(fix = TRUE)   # installs what the compiler is missing, if it can
-install_cmdstan(cores = 2)            # downloads and builds CmdStan; several minutes
-cmdstan_version()                     # a version number means it worked
+check_cmdstan_toolchain()
+install_cmdstan(cores = 2)
+cmdstan_version()
 ```
 
-On Windows, `check_cmdstan_toolchain(fix = TRUE)` also needs Rtools, so install that first. On macOS it needs the Xcode Command Line Tools, so the previous section still applies; what `cmdstanr` sidesteps is the integration between the compiler and R's own build settings, which is where `rstan` usually fails.
+On Windows, `check_cmdstan_toolchain(fix = TRUE)` can attempt to configure missing toolchain components; this option does not repair macOS or Linux installations. Follow the compiler instructions for your platform first.
 
-All Stan code in this book is written for `rstan`, and translating it takes two lines. Where the book writes
-
-```{r}
-#| eval: false
-fit <- stan(model_code = bb_model, data = bb_data, chains = 4, iter = 2000, seed = 84735)
-```
-
-you instead compile and sample in two steps:
+To fit the same test model with CmdStanR, use the `bb_model` and `bb_data` objects defined above:
 
 ```{r}
 #| eval: false
 mod <- cmdstan_model(write_stan_file(bb_model))
-fit <- mod$sample(data = bb_data, chains = 4, iter_warmup = 1000, iter_sampling = 1000, seed = 84735)
+fit_cmdstan <- mod$sample(
+  data = bb_data, chains = 4, parallel_chains = 1,
+  iter_warmup = 1000, iter_sampling = 1000, seed = 84735)
 ```
 
-Note that `cmdstanr` counts warm-up and sampling iterations separately, while `rstan`'s `iter` includes warm-up (by default, the first half). Everything after sampling can be the same, because the `posterior` and `bayesplot` packages work with both kinds of fit. To get a draws object that the book's diagnostic code can use:
+RStan's `iter = 2000` includes warm-up. CmdStanR specifies the 1,000 warm-up and 1,000 retained iterations separately. Its fitted object also has different methods: for example, `fit_cmdstan$summary()` gives its summary table.
+
+For the diagnostic workflow in @sec-diagnostics, convert either fitted object to the draws format used by `posterior` and `bayesplot`. With RStan:
 
 ```{r}
 #| eval: false
-draws <- posterior::as_draws_array(as.array(fit))   # rstan
-draws <- fit$draws()                                # cmdstanr
+draws <- posterior::as_draws_array(as.array(fit))
 ```
 
-From here on, `posterior::summarise_draws(draws)` and `bayesplot::mcmc_trace(draws)` behave identically. If you use `cmdstanr`, `fit$summary()` plays the role of `print(fit)`, and `fit$draws(format = "df")` gives you the draws as a data frame.
+With CmdStanR:
+
+```{r}
+#| eval: false
+draws <- fit_cmdstan$draws()
+```
+
+Both draws objects can then be used with functions such as `posterior::summarise_draws()` and `bayesplot::mcmc_trace(draws, pars = "pi")`.
 
 ## Reproducibility: seeds and sessions
 
-Every method in this book is a simulation, so running the same code twice gives different numbers unless you fix the random number generator. Two seeds matter.
+Examples that generate random draws use seeds so that you can repeat the calculation. R and Stan have separate random number generators.
 
-**R's seed.** `set.seed()` fixes the state of R's random number generator, so that every `rnorm()`, `runif()`, and `sample()` call that follows is reproducible. The book sets `set.seed(84735)` at the top of every chapter, a nod to *Bayes Rules!*. Set it once, at the top of your script, not before every sampler call: re-seeding inside a loop gives you the same "random" numbers again and again.
+**R's seed.** Run the package setup and any earlier code that defines the data and functions needed for an example. In Chapters 1–5, the simulation chunks set their own seed before drawing random numbers. Rerunning one of these chunks therefore restarts its random sequence. Follow the seed shown in the example; some illustrations deliberately use a different value.
 
-**Stan's seed.** Stan runs outside R and has its own generator, so `set.seed()` does not reach it. Pass `seed =` to `stan()` (or to `$sample()` in `cmdstanr`), as the test model above does. With the same seed, the same model, the same data, and the same number of chains, Stan produces the same draws, though not necessarily across different Stan versions or operating systems.
+The following two calls produce the same values because we reset the seed between them:
 
 ```{r}
 set.seed(84735)
-x <- rnorm(3)
+first <- rnorm(3)
 set.seed(84735)
-identical(x, rnorm(3))
+second <- rnorm(3)
+rbind(first = first, second = second)
+identical(first, second)
 ```
 
-Reproducible does not mean correct. A seed makes a bug repeatable, which is useful for finding it, but when you want to know whether a sampler works, run it with *several* seeds and check that the conclusions do not change. @sec-diagnostics makes this idea precise.
+Resetting a seed at the start of an example is different from resetting it inside a sampler's iteration loop. Inside the loop, the reset would repeatedly generate the same numbers and change the sampling procedure. The [R random-number documentation](https://stat.ethz.ch/R-manual/R-devel/library/base/html/Random.html) explains how `set.seed()` controls the generator.
+
+**Stan's seed.** `set.seed()` does not set Stan's generator. Supply `seed =` to `stan()` or the CmdStanR `$sample()` method, as in the examples above. Exact reproduction also depends on the model, data, initialization, chain configuration, software, and computing environment; see the [Stan reproducibility documentation](https://mc-stan.org/docs/reference-manual/reproducibility.html). Small differences across installations are possible even with the same seed. Compare posterior summaries with their Monte Carlo uncertainty rather than expecting every saved value to match.
+
+A reproducible calculation can still contain an error. When assessing a sampler, also try other seeds and starting values, and use the diagnostics in @sec-diagnostics.
 
 Finally, when you report a problem or hand in an assignment, include the output of `sessionInfo()`. It lists your R version, your operating system, and the version of every loaded package, which is usually the first thing anyone helping you will ask for.
 
@@ -175,10 +200,9 @@ sessionInfo()
 ```
 
 ::: {.bookbox title="Setup checklist"}
-1. R 4.4 or later, and RStudio.
-2. The package block above, run once.
-3. A C++ toolchain: Xcode Command Line Tools (macOS), Rtools matching your R version (Windows), or `build-essential` (Linux).
-4. The Beta-Binomial test model compiles and reports a posterior mean for `pi` near 0.67.
-5. If step 4 fails: `cmdstanr` from the Stan R-universe, `check_cmdstan_toolchain(fix = TRUE)`, `install_cmdstan()`.
-6. Seeds: `set.seed()` for R, `seed =` for Stan; `sessionInfo()` when asking for help.
+1. R and RStudio installed for your operating system.
+2. The packages needed for your chapters installed; the chapter's setup code loaded.
+3. A working C++ toolchain for Stan: Command Line Tools on macOS, matching Rtools on Windows, or the appropriate compiler and R development packages on Linux.
+4. The Beta-Binomial test model compiles and runs, with an estimated mean near 0.667 and its output and warnings inspected.
+5. Seeds supplied separately for R and Stan; `sessionInfo()` available when reporting a problem.
 :::

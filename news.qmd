@@ -19,7 +19,9 @@ What the next release will contain: everything in version 0.1 plus the changes b
 
 Changes since version 0.1:
 
-- Nothing yet.
+- 30 October 2026. Welcome page: who the book is for and how it teaches, rewritten.
+- 30 October 2026. Appendices: updated setup instructions and package lists, revised notation, and a step-by-step derivation of the variance of a dependent average.
+- 30 October 2026. Chapters 4 and 5: clearer exercise instructions and stronger simulation comparisons.
 :::
 <!-- dev-end -->
 
