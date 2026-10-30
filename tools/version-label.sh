@@ -4,13 +4,16 @@
 # development version. Run before quarto render (the workflow does this).
 set -euo pipefail
 cd "$(dirname "$0")/.."
-tag="$(git describe --tags --exact-match HEAD 2>/dev/null || true)"
-case "$tag" in
-  v[0-9]*) label="Version ${tag#v}" ;;
-  *)       label="Development version" ;;
+# On main the label is the release this commit belongs to (the nearest tag):
+# cosmetic changes to the website do not make a new version of the text.
+ref="${GITHUB_REF:-$(git symbolic-ref -q --short HEAD || true)}"
+tag="$(git describe --tags --abbrev=0 --match 'v[0-9]*' 2>/dev/null || true)"
+case "$ref:$tag" in
+  refs/heads/development:*|development:*) label="Development version" ;;
+  *:v[0-9]*)                              label="Version ${tag#v}" ;;
+  *)                                      label="Development version" ;;
 esac
 printf 'format:\n  pdf:\n    date: "%s"\n    date-format: "[%s,] D MMMM YYYY"\n' "$(date -u +%F)" "$label" > _version.yml
 # The development build (our staging area) also shows the changes in preparation on the News page.
-ref="${GITHUB_REF:-$(git symbolic-ref -q --short HEAD || true)}"
 case "$ref" in refs/heads/development|development) echo 'dev-build: true' >> _version.yml ;; esac
 echo "$label, $(date -u +%F)"
