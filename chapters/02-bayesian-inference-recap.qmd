@@ -475,7 +475,7 @@ sd_table
 #| fig-cap: "Prior (dashed) and posterior (solid) densities for $\\pi$ under three priors. The Savage–Dickey Bayes factor for $\\pi = 0.2$ is the ratio of the heights of the two dots. Under the diffuse prior the data raise the density at 0.2 a lot; under the concentrated prior they lower it slightly."
 #| fig-height: 3.3
 panels <- sd_table |>
-  mutate(panel = paste0(prior, ", BF01 = ", round(BF_01, 2)),
+  mutate(panel = paste0("'", prior, "'~~BF[\"01\"] == ", round(BF_01, 2)),
          panel = factor(panel, levels = panel))
 
 curves <- panels |>
@@ -493,7 +493,7 @@ dots <- panels |>
 ggplot(curves, aes(pi, density, linetype = curve)) +
   geom_line(color = "#552E6B") +
   geom_point(data = dots, aes(x = pi0, y = density), size = 2) +
-  facet_wrap(~ panel) +
+  facet_wrap(~ panel, labeller = label_parsed) +
   coord_cartesian(xlim = c(0, 0.6), ylim = c(0, 16)) +
   scale_linetype_manual(values = c(prior = "dashed", posterior = "solid"), name = NULL) +
   labs(x = expression(pi), y = "Density")
