@@ -38,6 +38,11 @@ case "$ref" in
     ;;
   refs/heads/main)
     publish_root
+    # A release is pushed as main plus a tag. GitHub may cancel the queued tag
+    # build when another build arrives, so the main build also fills the
+    # version folder when its commit carries a release tag.
+    tag="$(git describe --tags --exact-match HEAD 2>/dev/null || true)"
+    case "$tag" in v[0-9]*) rm -rf "${pages:?}/${tag:?}"; cp -R "$src" "$pages/$tag" ;; esac
     message="Publish main (${GITHUB_SHA:0:7})"
     ;;
   refs/heads/development)
