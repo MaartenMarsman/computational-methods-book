@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.10.19">
+<meta name="generator" content="quarto-1.10.20">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -61,27 +61,7 @@ div.sourceCode
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-/* CSS for citations */
-div.csl-bib-body { }
-div.csl-entry {
-  clear: both;
-  margin-bottom: 0em;
-}
-.hanging-indent div.csl-entry {
-  margin-left:2em;
-  text-indent:-2em;
-}
-div.csl-left-margin {
-  min-width:2em;
-  float:left;
-}
-div.csl-right-inline {
-  margin-left:2em;
-  padding-left:1em;
-}
-div.csl-indent {
-  margin-left: 2em;
-}</style>
+</style>
 
 
 <script src="../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -99,7 +79,7 @@ div.csl-indent {
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-11098932bb39e8ccbcedcb139d3d0c2d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-3f446edc70b0757b4dde2b060815ebc9.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="../site_libs/bootstrap/bootstrap-2fcf8a0ee316d604ebc18c0691cf69d6.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
@@ -360,12 +340,12 @@ window.Quarto = {
 
 
 <!-- SOURCES: CONVENTIONS.md (notation section); Bayes Rules! notation (f for every density, pi for a proportion, N(mu, sigma^2)); the chapters themselves. This appendix is the single source of truth: if a chapter and this table disagree, the chapter is wrong. -->
-<p>This appendix collects the symbols used throughout the book. We follow <em>Bayes Rules!</em> <span class="citation" data-cites="johnson2022bayes">(<a href="../references.html#ref-johnson2022bayes" role="doc-biblioref">Johnson et al., 2022</a>)</span> wherever it has a convention, so that nothing you learned there has to be unlearned, and add the symbols that Markov chains and samplers need.</p>
+<p>This appendix collects the symbols used for data, probability distributions, Markov chains, and sampling algorithms throughout the book.</p>
 <section id="conventions" class="level2" data-number="B.1">
 <h2 data-number="B.1" class="anchored" data-anchor-id="conventions"><span class="header-section-number">B.1</span> Conventions</h2>
-<p><strong>Every density is <span class="math inline">\(f\)</span>.</strong> The prior, the likelihood, the posterior, and the density of a proposal are all written <span class="math inline">\(f(\cdot)\)</span>, and the arguments tell you which one is meant: <span class="math inline">\(f(\theta)\)</span> is the prior, <span class="math inline">\(f(y \mid \theta)\)</span> the likelihood, and <span class="math inline">\(f(\theta \mid y)\)</span> the posterior. We do not use <span class="math inline">\(p(\cdot)\)</span> or <span class="math inline">\(\pi(\cdot)\)</span> for densities, because <span class="math inline">\(\pi\)</span> is a proportion parameter in <em>Bayes Rules!</em> and <span class="math inline">\(\mathbf{p}\)</span> is a momentum in Chapter 10 (Hamiltonian Monte Carlo). When a chapter builds a sampler for a generic target, that target is written <span class="math inline">\(f(\theta)\)</span>, and you should read it as “the posterior, up to a constant we cannot compute.”</p>
-<p><strong>Work on the log scale.</strong> Every sampler in this book takes a function that returns <span class="math inline">\(\log f(\theta)\)</span>, never <span class="math inline">\(f(\theta)\)</span>, and the code calls it <code>log_target</code> or <code>log_posterior</code>. The reason is numerical: a likelihood of 2,000 observations is a product of 2,000 small numbers and underflows to zero, while its logarithm is a sum of 2,000 moderate numbers. On the log scale a ratio becomes a difference, <span class="math inline">\(\log r = \log f(\theta^\star) - \log f(\theta^{(t)})\)</span>, and the acceptance test becomes <span class="math inline">\(\log u &lt; \log r\)</span> (<a href="../chapters/05-metropolis.html" class="quarto-xref"><span>Chapter 5</span></a>). R’s <code>d*</code> functions all take <code>log = TRUE</code> for exactly this purpose.</p>
-<p><strong>Vectors are bold, indices are subscripts, iterations are superscripts.</strong> A single parameter is <span class="math inline">\(\theta\)</span>; a vector of parameters is <span class="math inline">\(\boldsymbol{\theta} = (\theta_1, \ldots, \theta_d)\)</span>; a matrix is a bold capital such as <span class="math inline">\(\mathbf{P}\)</span> or <span class="math inline">\(\boldsymbol{\Sigma}\)</span>. Observations are indexed <span class="math inline">\(i = 1, \ldots, n\)</span>, predictors <span class="math inline">\(j = 1, \ldots, p\)</span>, and models <span class="math inline">\(m = 1, \ldots, M\)</span>. The state of a Markov chain at iteration <span class="math inline">\(t\)</span> is <span class="math inline">\(\theta^{(t)}\)</span>, with parentheses so that it is not mistaken for a power; a proposed value is <span class="math inline">\(\theta^\star\)</span>. Chains start at <span class="math inline">\(t = 0\)</span> and run for <span class="math inline">\(t = 1, \ldots, T\)</span> iterations. Hats denote estimates computed from draws, as in <span class="math inline">\(\widehat{R}\)</span>.</p>
+<p><strong>Probability functions.</strong> We write <span class="math inline">\(f(\cdot)\)</span> for probability mass functions and densities. The arguments distinguish the prior <span class="math inline">\(f(\theta)\)</span>, the likelihood contribution <span class="math inline">\(f(y\mid\theta)\)</span>, and the posterior <span class="math inline">\(f(\theta\mid y)\)</span>. In descriptions of a sampler, <span class="math inline">\(f(\theta)\)</span> can instead denote the chosen target density. A proportion parameter is written <span class="math inline">\(\pi\)</span>; the proposal density has its own symbol <span class="math inline">\(q\)</span>.</p>
+<p><strong>Work on the log scale.</strong> Where a sampler takes a target-density function, we supply its logarithm, typically called <code>log_target</code> or <code>log_posterior</code>. Products of many small likelihood contributions can round to zero; logarithms let us add their values instead. A log density ratio is a difference, <span class="math inline">\(\log r=\log f(\theta^\star)-\log f(\theta^{(t)})\)</span>, and the acceptance test becomes <span class="math inline">\(\log u&lt;\log r\)</span> (<a href="../chapters/05-metropolis.html" class="quarto-xref"><span>Chapter 5</span></a>). R’s density functions can compute log densities directly with <code>log = TRUE</code>.</p>
+<p><strong>Vectors are bold, indices are subscripts, iterations are superscripts.</strong> A single parameter is <span class="math inline">\(\theta\)</span>; a vector of parameters is <span class="math inline">\(\boldsymbol{\theta} = (\theta_1, \ldots, \theta_d)\)</span>; a matrix is a bold capital such as <span class="math inline">\(\mathbf{P}\)</span> or <span class="math inline">\(\boldsymbol{\Sigma}\)</span>. Observations are indexed <span class="math inline">\(i = 1, \ldots, n\)</span>, predictors <span class="math inline">\(j = 1, \ldots, p\)</span>, and models <span class="math inline">\(m = 1, \ldots, M\)</span>. The state of a Markov chain at iteration <span class="math inline">\(t\)</span> is <span class="math inline">\(\theta^{(t)}\)</span>, with parentheses so that it is not mistaken for a power; a proposed value is <span class="math inline">\(\theta^\star\)</span>. The starting state is indexed <span class="math inline">\(t=0\)</span>. A run recording <span class="math inline">\(N\)</span> sampled states has updates <span class="math inline">\(t=1,\ldots,N\)</span>; summaries after warm-up use the retained states. Hats denote estimates computed from draws, as in <span class="math inline">\(\widehat{R}\)</span>.</p>
 </section>
 <section id="data-parameters-and-densities" class="level2" data-number="B.2">
 <h2 data-number="B.2" class="anchored" data-anchor-id="data-parameters-and-densities"><span class="header-section-number">B.2</span> Data, parameters, and densities</h2>
@@ -395,7 +375,7 @@ window.Quarto = {
 </tr>
 <tr class="even">
 <td><span class="math inline">\(\pi\)</span></td>
-<td>a proportion parameter, as in <em>Bayes Rules!</em></td>
+<td>a proportion parameter</td>
 </tr>
 <tr class="odd">
 <td><span class="math inline">\(\mu\)</span>, <span class="math inline">\(\sigma\)</span>, <span class="math inline">\(\sigma^2\)</span></td>
@@ -455,72 +435,76 @@ window.Quarto = {
 <td>state of a Markov chain at iteration <span class="math inline">\(t\)</span>; <span class="math inline">\(\theta^{(0)}\)</span> is the starting value</td>
 </tr>
 <tr class="even">
-<td><span class="math inline">\(T\)</span></td>
-<td>number of iterations; draws after warm-up are <span class="math inline">\(\theta^{(t)}\)</span> for <span class="math inline">\(t &gt; T_{\text{warm}}\)</span></td>
+<td><span class="math inline">\(N\)</span></td>
+<td>number of sampled states; for summaries after warm-up, the count refers to retained states</td>
 </tr>
 <tr class="odd">
+<td><span class="math inline">\(m\)</span>, <span class="math inline">\(L\)</span></td>
+<td>number of chains and retained states per chain; with equal chain lengths, <span class="math inline">\(N=mL\)</span> (<a href="../chapters/04-diagnosing-markov-chains.html" class="quarto-xref"><span>Chapter 4</span></a>)</td>
+</tr>
+<tr class="even">
 <td><span class="math inline">\(\theta^\star\)</span></td>
 <td>a proposed value</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><span class="math inline">\(q(\theta^\star \mid \theta)\)</span></td>
 <td>proposal density; symmetric in the Metropolis algorithm, general in Metropolis–Hastings</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><span class="math inline">\(r\)</span></td>
 <td>acceptance ratio, <span class="math inline">\(f(\theta^\star) / f(\theta^{(t)})\)</span> for a symmetric proposal</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><span class="math inline">\(\alpha(\theta, \theta^\star) = \min\{1, r\}\)</span></td>
 <td>acceptance probability</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><span class="math inline">\(u \sim \text{Unif}(0, 1)\)</span></td>
 <td>the uniform draw that decides acceptance</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><span class="math inline">\(c\)</span></td>
 <td>step size of a random-walk proposal, <span class="math inline">\(\theta^\star \sim \text{N}(\theta^{(t)}, c^2)\)</span></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><span class="math inline">\(\alpha^\ast\)</span>, <span class="math inline">\(\gamma_t\)</span></td>
 <td>target acceptance rate and learning rate in Robbins–Monro adaptation (Chapter 6 (Metropolis–Hastings and Adaptive Proposals))</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><span class="math inline">\(\mathbf{P}\)</span>, <span class="math inline">\(P_{ij}\)</span></td>
 <td>transition matrix of a discrete chain; probability of moving from state <span class="math inline">\(i\)</span> to state <span class="math inline">\(j\)</span> (<a href="../chapters/03-markov-chains.html" class="quarto-xref"><span>Chapter 3</span></a>)</td>
 </tr>
-<tr class="odd">
-<td><span class="math inline">\(K(\theta, \theta')\)</span></td>
-<td>transition kernel of a continuous chain, the density of moving from <span class="math inline">\(\theta\)</span> to <span class="math inline">\(\theta'\)</span></td>
-</tr>
 <tr class="even">
+<td><span class="math inline">\(K(\theta, \theta')\)</span></td>
+<td>transition density between distinct states of a continuous chain; rejections also give a probability of staying at the current state</td>
+</tr>
+<tr class="odd">
 <td><span class="math inline">\(\boldsymbol{\pi}\)</span></td>
 <td>stationary distribution of a discrete chain, a row vector with <span class="math inline">\(\boldsymbol{\pi} \mathbf{P} = \boldsymbol{\pi}\)</span></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><span class="math inline">\(f(\theta) K(\theta, \theta') = f(\theta') K(\theta', \theta)\)</span></td>
 <td>detailed balance with respect to <span class="math inline">\(f\)</span></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><span class="math inline">\(f(\theta_j \mid \boldsymbol{\theta}_{-j}, y)\)</span></td>
 <td>full conditional of <span class="math inline">\(\theta_j\)</span> given all other parameters (Chapter 7 (Gibbs Sampling and Metropolis-within-Gibbs))</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><span class="math inline">\(\rho_k\)</span></td>
 <td>autocorrelation of a chain at lag <span class="math inline">\(k\)</span> (<a href="../chapters/04-diagnosing-markov-chains.html" class="quarto-xref"><span>Chapter 4</span></a>)</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><span class="math inline">\(\text{ESS}\)</span></td>
-<td>effective sample size, the number of independent draws the chain is worth</td>
+<td>effective sample size; the equivalent independent-draw count for the precision of a specified summary</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(\widehat{R}\)</span></td>
+<td>R-hat, a diagnostic comparing behavior within and between chains; use a value below 1.01 alongside the other checks in <a href="../chapters/04-diagnosing-markov-chains.html" class="quarto-xref"><span>Chapter 4</span></a></td>
 </tr>
 <tr class="odd">
-<td><span class="math inline">\(\widehat{R}\)</span></td>
-<td>R-hat, the square root of the ratio of between-plus-within to within-chain variance; close to 1 at convergence</td>
-</tr>
-<tr class="even">
 <td><span class="math inline">\(\text{MCSE}\)</span></td>
-<td>Monte Carlo standard error of a posterior estimate, roughly <span class="math inline">\(\text{sd}/\sqrt{\text{ESS}}\)</span></td>
+<td>Monte Carlo standard error of an estimated summary; for a mean, approximately <span class="math inline">\(\text{sd}/\sqrt{\text{ESS}}\)</span></td>
 </tr>
 </tbody>
 </table>
@@ -610,11 +594,11 @@ window.Quarto = {
 </tr>
 </tbody>
 </table>
-<p>Note the three different uses of <span class="math inline">\(\pi\)</span>-like and <span class="math inline">\(\gamma\)</span>-like symbols: plain <span class="math inline">\(\pi\)</span> is a proportion, bold <span class="math inline">\(\boldsymbol{\pi}\)</span> is a stationary distribution, and <span class="math inline">\(\pi = 3.14\ldots\)</span> never appears except inside the Normal density; <span class="math inline">\(\gamma_j\)</span> with a predictor index is an inclusion indicator, while <span class="math inline">\(\gamma_t\)</span> with an iteration index is a learning rate. Context and the index should always make clear which is meant.</p>
+<p>Plain <span class="math inline">\(\pi\)</span> denotes a proportion, while bold <span class="math inline">\(\boldsymbol{\pi}\)</span> denotes a stationary probability vector. In geometric formulas and Normal densities, <span class="math inline">\(\pi\)</span> can also be the mathematical constant <span class="math inline">\(3.14\ldots\)</span>. Similarly, <span class="math inline">\(\gamma_j\)</span> with a predictor index denotes an inclusion indicator, while <span class="math inline">\(\gamma_t\)</span> with an iteration index denotes a learning rate. The context and index distinguish these uses.</p>
 </section>
 <section id="distributions" class="level2" data-number="B.6">
 <h2 data-number="B.6" class="anchored" data-anchor-id="distributions"><span class="header-section-number">B.6</span> Distributions</h2>
-<p>The book writes distributions in the abbreviations below, parameterized the way <em>Bayes Rules!</em> does. The last column gives the R function that computes the density, because you will write log posteriors as sums of <code>d*(..., log = TRUE)</code> calls, and R’s argument names do not always match the mathematical parameters. Two traps: the Normal is written with its variance <span class="math inline">\(\sigma^2\)</span> but <code>dnorm()</code> takes the standard deviation <code>sd</code>, and the Gamma and Exponential are written with a <em>rate</em>, which is what <code>dgamma()</code> and <code>dexp()</code> take by default, not a scale. The <code>r*</code> function with the same name and arguments draws random values.</p>
+<p>The table gives the distribution notation and parameterizations used in this book. The last column gives the R function that computes the density, because you will write log posteriors as sums of <code>d*(..., log = TRUE)</code> calls, and R’s argument names do not always match the mathematical parameters. Two traps: the Normal is written with its variance <span class="math inline">\(\sigma^2\)</span> but <code>dnorm()</code> takes the standard deviation <code>sd</code>, and the Gamma and Exponential are written with a <em>rate</em>, which is what <code>dgamma()</code> and <code>dexp()</code> take by default, not a scale. The <code>r*</code> function with the same name and arguments draws random values.</p>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 33%">
@@ -691,24 +675,20 @@ window.Quarto = {
 </tr>
 </tbody>
 </table>
-<p>A quick check of the two traps, which you can run yourself. The <span class="math inline">\(\text{N}(7, 0.5^2)\)</span> prior of <a href="../chapters/05-metropolis.html" class="quarto-xref"><span>Chapter 5</span></a> has standard deviation <span class="math inline">\(0.5\)</span>, and a <span class="math inline">\(\text{Gamma}(2, 4)\)</span> variable has mean <span class="math inline">\(2/4\)</span>:</p>
+<p>For example, check the distinction between variance and standard deviation in the Normal notation, and between shape and rate in the Gamma notation. The <span class="math inline">\(\text{N}(7, 0.5^2)\)</span> prior of <a href="../chapters/05-metropolis.html" class="quarto-xref"><span>Chapter 5</span></a> has standard deviation <span class="math inline">\(0.5\)</span>, and a <span class="math inline">\(\text{Gamma}(2, 4)\)</span> variable has mean <span class="math inline">\(2/4\)</span>:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dnorm</span>(<span class="dv">7</span>, <span class="at">mean =</span> <span class="dv">7</span>, <span class="at">sd =</span> <span class="fl">0.5</span>, <span class="at">log =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">84735</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">dnorm</span>(<span class="dv">7</span>, <span class="at">mean =</span> <span class="dv">7</span>, <span class="at">sd =</span> <span class="fl">0.5</span>, <span class="at">log =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] -0.2257914</code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(<span class="fu">rgamma</span>(<span class="fl">1e5</span>, <span class="at">shape =</span> <span class="dv">2</span>, <span class="at">rate =</span> <span class="dv">4</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.5003583</code></pre>
+<pre><code>[1] 0.5018234</code></pre>
 </div>
 </div>
 
 
-<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" data-line-spacing="2" role="list" style="display: none">
-<div id="ref-johnson2022bayes" class="csl-entry" role="listitem">
-Johnson, A. A., Ott, M. Q., &amp; Dogucu, M. (2022). <em>Bayes rules! <span>A</span>n introduction to applied <span>B</span>ayesian modeling</em>. CRC Press.
-</div>
-</div>
 </section>
 
 </main> <!-- /main -->

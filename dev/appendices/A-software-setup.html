@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.10.19">
+<meta name="generator" content="quarto-1.10.20">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -99,7 +99,7 @@ div.csl-indent {
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-11098932bb39e8ccbcedcb139d3d0c2d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-3f446edc70b0757b4dde2b060815ebc9.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="../site_libs/bootstrap/bootstrap-2fcf8a0ee316d604ebc18c0691cf69d6.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
@@ -330,7 +330,7 @@ window.Quarto = {
   <ul>
   <li><a href="#r-and-rstudio" id="toc-r-and-rstudio" class="nav-link active" data-scroll-target="#r-and-rstudio"><span class="header-section-number">A.1</span> R and RStudio</a></li>
   <li><a href="#r-packages" id="toc-r-packages" class="nav-link" data-scroll-target="#r-packages"><span class="header-section-number">A.2</span> R packages</a></li>
-  <li><a href="#installing-stan" id="toc-installing-stan" class="nav-link" data-scroll-target="#installing-stan"><span class="header-section-number">A.3</span> Installing Stan</a></li>
+  <li><a href="#sec-software-stan" id="toc-sec-software-stan" class="nav-link" data-scroll-target="#sec-software-stan"><span class="header-section-number">A.3</span> Installing Stan</a></li>
   <li><a href="#sec-software-check" id="toc-sec-software-check" class="nav-link" data-scroll-target="#sec-software-check"><span class="header-section-number">A.4</span> Checking your installation</a></li>
   <li><a href="#if-rstan-will-not-compile" id="toc-if-rstan-will-not-compile" class="nav-link" data-scroll-target="#if-rstan-will-not-compile"><span class="header-section-number">A.5</span> If rstan will not compile</a></li>
   <li><a href="#reproducibility-seeds-and-sessions" id="toc-reproducibility-seeds-and-sessions" class="nav-link" data-scroll-target="#reproducibility-seeds-and-sessions"><span class="header-section-number">A.6</span> Reproducibility: seeds and sessions</a></li>
@@ -359,151 +359,185 @@ window.Quarto = {
 </header>
 
 
-<!-- SOURCES: Bayes Rules! Preface and §6.2 (rstan usage); rstan "Getting Started" wiki on mc-stan.org; cmdstanr "Getting started" vignette; BOOK-PLAN.md §3 (rstan default, cmdstanr fallback, no brms). -->
-<p>Everything in this book runs in R. Most of it needs nothing beyond a handful of CRAN packages, because the point of the book is that you write the samplers yourself. The one exception is Stan, which we use in <a href="../chapters/04-diagnosing-markov-chains.html" class="quarto-xref"><span>Chapter 4</span></a> and Chapter 10 (Hamiltonian Monte Carlo), and which needs a C++ compiler on your machine. This appendix walks you through the installation in the order that causes the fewest problems, gives you a small model to confirm that Stan works, and tells you what to do if it does not.</p>
-<p>If you took the Bayesian Statistics course on this machine, you probably already have everything. Skip to <a href="#sec-software-check" class="quarto-xref"><span>Section A.4</span></a> and run the test model; if it passes, you are done.</p>
+<!-- SOURCES: Current chapter setup code and package calls; RStan Getting Started and platform toolchain documentation; CmdStanR Getting Started and install_cmdstan reference; R Random documentation; Stan reproducibility documentation. -->
+<p>The examples in this book run in R. Packages help with data, plots, and diagnostics, while you implement many of the samplers yourself. Fitting a Stan model also requires a C++ compiler. This appendix explains how to install the software, test a small model, and identify where to look if the test fails.</p>
+<p>If you already use R and Stan on this computer, begin with the test in <a href="#sec-software-check" class="quarto-xref"><span>Section A.4</span></a>. A successful run confirms that this example can compile and sample in your current installation. If a package or compiler is missing, return to the relevant setup step below.</p>
 <section id="r-and-rstudio" class="level2" data-number="A.1">
 <h2 data-number="A.1" class="anchored" data-anchor-id="r-and-rstudio"><span class="header-section-number">A.1</span> R and RStudio</h2>
 <p>Install R first and RStudio second; RStudio is an editor and needs R to be there already.</p>
 <ol type="1">
-<li><strong>R (4.4 or later).</strong> Download the installer for your operating system from <a href="https://cran.r-project.org">cran.r-project.org</a>. On macOS, pick the build that matches your processor (Apple silicon or Intel). If you already have R, check its version with <code>R.version.string</code> and upgrade if it is older than 4.4, because several packages we use no longer support older versions.</li>
-<li><strong>RStudio.</strong> Download RStudio Desktop from <a href="https://posit.co">posit.co</a>. Any recent version is fine.</li>
+<li><strong>R.</strong> Download a current release from <a href="https://cran.r-project.org/">CRAN</a> using the link for your operating system. On Windows, use the Windows installer. On macOS, choose the installer for your processor (Apple silicon or Intel). On Linux, follow CRAN’s instructions for your distribution. If R is already installed, <code>R.version.string</code> reports its version; older installations may need an update to install current packages.</li>
+<li><strong>RStudio.</strong> Install <a href="https://posit.co/download/rstudio-desktop/">RStudio Desktop</a> for the same operating system. RStudio provides an editor, console, and tools for managing your R work.</li>
 </ol>
 <p>Both are free. Quarto, which we use to build this book, ships inside RStudio; you do not need it for the course.</p>
 </section>
 <section id="r-packages" class="level2" data-number="A.2">
 <h2 data-number="A.2" class="anchored" data-anchor-id="r-packages"><span class="header-section-number">A.2</span> R packages</h2>
-<p>The packages below cover the whole book. Copy this block into the R console and run it once. It downloads binaries on macOS and Windows and takes a few minutes; on Linux it compiles from source and takes longer.</p>
+<p>The following packages cover Chapters 1–5 and the installation checks in this appendix. On Linux, complete the compiler setup in <a href="#sec-software-stan" class="quarto-xref"><span>Section A.3</span></a> before installing R packages from source. Run the installation block once in the R console. Later, use <code>library()</code> to load the packages listed at the start of the chapter you are studying.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="fu">c</span>(</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"tidyverse"</span>,   <span class="co"># data handling and plots</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"bayesrules"</span>,  <span class="co"># data sets from Bayes Rules!</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"bayesplot"</span>,   <span class="co"># trace plots and other MCMC graphics</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">"posterior"</span>,   <span class="co"># effective sample size, R-hat, draws objects</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">"coda"</span>,        <span class="co"># classic MCMC diagnostics</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">"mvtnorm"</span>,     <span class="co"># multivariate Normal densities and draws</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="st">"patchwork"</span>,   <span class="co"># combining ggplot2 figures</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="st">"rstan"</span>,       <span class="co"># Stan</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="st">"bgms"</span>,        <span class="co"># Bayesian graphical models, Chapters 7-9</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  <span class="st">"lars"</span>         <span class="co"># the diabetes data, Chapters 8-9</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"tidyverse"</span>,  <span class="co"># data handling and plotting</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"bayesrules"</span>, <span class="co"># course data sets</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"patchwork"</span>,  <span class="co"># combining plots</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">"mvtnorm"</span>,    <span class="co"># multivariate Normal densities and draws</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">"posterior"</span>,  <span class="co"># draws objects, ESS, R-hat, and MCSE</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">"bayesplot"</span>,  <span class="co"># plots of simulation output</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="st">"rstan"</span>,      <span class="co"># fitting Stan models from R</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="st">"knitr"</span>,      <span class="co"># displaying tables in the examples</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="st">"pkgbuild"</span>    <span class="co"># checking the compiler setup</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p><code>rstan</code> is on CRAN like the others, and on macOS and Windows it installs as a pre-built binary without compiling anything. That is the easy half. The hard half is that <em>using</em> <code>rstan</code> means compiling each Stan model into C++ the first time you run it, and for that your machine needs a C++ toolchain. The next section installs it.</p>
+<p>Packages that these depend on, such as <code>dplyr</code>, <code>tidyr</code>, and <code>scales</code>, are installed automatically. For the later chapters, also install</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="fu">c</span>(</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"lars"</span>,     <span class="co"># diabetes data, Chapters 7–9</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"bgms"</span>,     <span class="co"># graphical-model examples, Chapters 7–9</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"numDeriv"</span>  <span class="co"># numerical gradient checks, Chapter 10</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>On Windows and macOS, CRAN usually provides precompiled packages for current supported R versions. On Linux, packages are commonly compiled from source. Installing <code>rstan</code> and compiling a Stan model are separate steps: even with a precompiled R package, fitting your own Stan model requires a C++ compiler.</p>
 </section>
-<section id="installing-stan" class="level2" data-number="A.3">
-<h2 data-number="A.3" class="anchored" data-anchor-id="installing-stan"><span class="header-section-number">A.3</span> Installing Stan</h2>
+<section id="sec-software-stan" class="level2" data-number="A.3">
+<h2 data-number="A.3" class="anchored" data-anchor-id="sec-software-stan"><span class="header-section-number">A.3</span> Installing Stan</h2>
 <p><code>rstan</code> is the R interface to Stan <span class="citation" data-cites="carpenter2017stan">(<a href="../references.html#ref-carpenter2017stan" role="doc-biblioref">Carpenter et al., 2017</a>)</span>. The Stan program you write is translated to C++ and compiled, so you need a compiler that R knows how to call. What that means depends on your operating system.</p>
 <p><strong>macOS.</strong> Install the Xcode Command Line Tools by opening the Terminal app and running</p>
 <pre><code>xcode-select --install</code></pre>
-<p>A dialog asks you to confirm; the download is a few gigabytes and takes a while. You do not need the full Xcode application from the App Store. If you already have the tools, the command says so and you can move on.</p>
-<p><strong>Windows.</strong> Install <strong>Rtools</strong> from CRAN, choosing the version that matches your R version: Rtools 4.4 for R 4.4.x, Rtools 4.5 for R 4.5.x, and so on. The CRAN download page for Windows lists them under “Rtools”. Accept the default installation location. A mismatch between the Rtools version and the R version is the most common reason that Stan will not compile on Windows, so check <code>R.version.string</code> before you download.</p>
-<p><strong>Linux.</strong> You need <code>g++</code> and <code>make</code>, which on Debian and Ubuntu come with the <code>build-essential</code> package, plus the R development headers (<code>r-base-dev</code>). <code>install.packages("rstan")</code> then compiles <code>rstan</code> and its dependencies from source, which takes ten to twenty minutes. The Stan website, <a href="https://mc-stan.org">mc-stan.org</a>, has distribution-specific notes.</p>
+<p>This installs the Command Line Tools, the smaller toolset containing the compiler and other command-line utilities. You do not need the full Xcode application. If the tools are already installed, the command reports this.</p>
+<p><strong>Windows.</strong> Install <a href="https://cran.r-project.org/bin/windows/Rtools/">Rtools</a> using the version recommended for your installed R version. Check <code>R.version.string</code> first and follow the matching link on the Rtools page. Use the default installation location unless your institution provides different instructions.</p>
+<p><strong>Linux.</strong> Install a C++ compiler, <code>make</code>, and R’s development files. On Debian and Ubuntu, these are supplied by <code>build-essential</code> and <code>r-base-dev</code>. Other distributions use different package names; follow their R installation instructions. The <a href="https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started">RStan installation guide</a> links to platform-specific toolchain instructions.</p>
 <p>On all three platforms, restart R after installing the toolchain, and confirm that R can see it:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>pkgbuild<span class="sc">::</span><span class="fu">has_build_tools</span>(<span class="at">debug =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>pkgbuild<span class="sc">::</span><span class="fu">has_build_tools</span>(<span class="at">debug =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>The answer should be <code>TRUE</code>. If it is <code>FALSE</code>, the toolchain is not installed or R cannot find it, and no Stan model will compile until that is fixed; on Windows, an Rtools version mismatch shows up here.</p>
+<p>A result of <code>TRUE</code> indicates that the build-tools check succeeded. If it returns <code>FALSE</code>, inspect the diagnostic messages and the instructions for your platform before attempting the model below. This check helps locate compiler problems; compiling the actual Stan model is the next test.</p>
 <div class="bookbox bookgraybox">
 <div class="title">
-<p>Two settings worth putting in every Stan script</p>
+<p>Stan settings used in the examples</p>
 </div>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rstan)</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">mc.cores =</span> parallel<span class="sc">::</span><span class="fu">detectCores</span>())   <span class="co"># run the chains in parallel</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">rstan_options</span>(<span class="at">auto_write =</span> <span class="cn">TRUE</span>)              <span class="co"># keep the compiled model on disk</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rstan)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">rstan_options</span>(<span class="at">auto_write =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">mc.cores =</span> <span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>The first line runs one chain per processor core instead of one after the other. The second saves the compiled C++ next to your Stan file so that the same model is not recompiled every time you fit it. Both are the settings <em>Bayes Rules!</em> uses, and every Stan chunk in this book assumes them.</p>
+<p><code>auto_write = TRUE</code> allows RStan to reuse saved compiled models. <code>mc.cores = 1</code> runs the chains one after another, as in the setup for <a href="../chapters/04-diagnosing-markov-chains.html" class="quarto-xref"><span>Chapter 4</span></a>. Multiple chains still run; this setting controls how many can run at the same time. On a suitably configured computer, a larger value allows parallel chains.</p>
 </div>
 </section>
 <section id="sec-software-check" class="level2" data-number="A.4">
 <h2 data-number="A.4" class="anchored" data-anchor-id="sec-software-check"><span class="header-section-number">A.4</span> Checking your installation</h2>
-<p>Here is the model you will meet again in <a href="../chapters/04-diagnosing-markov-chains.html" class="quarto-xref"><span>Chapter 4</span></a>: the Beta-Binomial. Suppose 14 of 20 students in a seminar say they use a spaced-repetition app, and suppose a <span class="math inline">\(\text{Beta}(2, 2)\)</span> prior for the proportion <span class="math inline">\(\pi\)</span> who do. The posterior is <span class="math inline">\(\text{Beta}(16, 8)\)</span>, with mean <span class="math inline">\(16/24 \approx 0.667\)</span>, and that number is what we check against.</p>
-<p>Run the following in a fresh R session. The first time you run it, it will take about a minute, and you will see a line saying that the model is being compiled, possibly followed by compiler warnings. The warnings are normal; only an error that stops the run is a problem.</p>
+<p>We use a small Beta-Binomial model whose posterior can be checked exactly. Suppose 14 of 20 students in a seminar say they use a spaced-repetition app. With a <span class="math inline">\(\text{Beta}(2,2)\)</span> prior on the proportion <span class="math inline">\(\pi\)</span>, the posterior is <span class="math inline">\(\text{Beta}(16,8)\)</span>, with mean <span class="math inline">\(16/24\approx0.667\)</span>.</p>
+<p>Run this example in a fresh R session after installing the compiler and packages. Compilation may take longer than sampling. The <code>refresh = 0</code> argument suppresses the sampling progress display.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rstan)</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">mc.cores =</span> parallel<span class="sc">::</span><span class="fu">detectCores</span>())</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">rstan_options</span>(<span class="at">auto_write =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>bb_model <span class="ot">&lt;-</span> <span class="st">"</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="st">data {</span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="st">  int&lt;lower=0&gt; n;</span></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="st">  int&lt;lower=0, upper=n&gt; y;</span></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="st">}</span></span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="st">parameters {</span></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="st">  real&lt;lower=0, upper=1&gt; pi;</span></span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="st">}</span></span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="st">model {</span></span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="st">  pi ~ beta(2, 2);</span></span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="st">  y ~ binomial(n, pi);</span></span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="st">}</span></span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="st">"</span></span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">stan</span>(<span class="at">model_code =</span> bb_model, <span class="at">data =</span> <span class="fu">list</span>(<span class="at">n =</span> <span class="dv">20</span>, <span class="at">y =</span> <span class="dv">14</span>),</span>
-<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>            <span class="at">chains =</span> <span class="dv">4</span>, <span class="at">iter =</span> <span class="dv">2000</span>, <span class="at">seed =</span> <span class="dv">84735</span>)</span>
-<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(fit)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rstan)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">rstan_options</span>(<span class="at">auto_write =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">mc.cores =</span> <span class="dv">1</span>)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>bb_model <span class="ot">&lt;-</span> <span class="st">"</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="st">data {</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="st">  int&lt;lower=0&gt; n;</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="st">  int&lt;lower=0, upper=n&gt; y;</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="st">}</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="st">parameters {</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="st">  real&lt;lower=0, upper=1&gt; pi;</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="st">}</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="st">model {</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="st">  pi ~ beta(2, 2);</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="st">  y ~ binomial(n, pi);</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a><span class="st">}</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a><span class="st">"</span></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>bb_data <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">n =</span> <span class="dv">20</span>, <span class="at">y =</span> <span class="dv">14</span>)</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">stan</span>(<span class="at">model_code =</span> bb_model, <span class="at">data =</span> bb_data,</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>            <span class="at">chains =</span> <span class="dv">4</span>, <span class="at">iter =</span> <span class="dv">2000</span>, <span class="at">warmup =</span> <span class="dv">1000</span>,</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>            <span class="at">seed =</span> <span class="dv">84735</span>, <span class="at">refresh =</span> <span class="dv">0</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>Success looks like this. <code>print(fit)</code> starts with a header saying “4 chains, each with iter=2000; warmup=1000” and “total post-warmup draws=4000”, followed by a table with a row for <code>pi</code> and a row for <code>lp__</code>. The <code>mean</code> for <code>pi</code> is 0.67 give or take 0.01, <code>Rhat</code> is 1, and <code>n_eff</code> is somewhere in the low thousands. If you see that, Stan compiles and runs on your machine, and you can use every chapter of the book.</p>
-<p>Two things that look alarming but are not: <code>rstan</code> may print long compiler warnings about “unused variable” or “deprecated” declarations while compiling, and on macOS the very first compilation can take noticeably longer than a minute. Two things that are actual failures: an error mentioning <code>make</code>, <code>g++</code>, <code>clang</code>, or “compilation failed” means the toolchain is missing or not found, so go back to the previous section; an error mentioning <code>stanc</code> or a line number in the model is a mistake in the Stan code, so check that you copied the model exactly.</p>
+<p>The following output shows a completed run:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(fit, <span class="at">pars =</span> <span class="st">"pi"</span>, <span class="at">probs =</span> <span class="fu">c</span>(<span class="fl">0.025</span>, <span class="fl">0.975</span>), <span class="at">digits_summary =</span> <span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Inference for Stan model: anon_model.
+4 chains, each with iter=2000; warmup=1000; thin=1; 
+post-warmup draws per chain=1000, total post-warmup draws=4000.
+
+    mean se_mean    sd  2.5% 97.5% n_eff  Rhat
+pi 0.671   0.002 0.093 0.474 0.838  1399 1.002
+
+Samples were drawn using NUTS(diag_e) at Fri Oct 30 13:38:20 2026.
+For each parameter, n_eff is a crude measure of effective sample size,
+and Rhat is the potential scale reduction factor on split chains (at 
+convergence, Rhat=1).</code></pre>
+</div>
+</div>
+<p>The header reports four chains and 4,000 retained draws in total: each chain runs for 2,000 iterations and discards its first 1,000 as warm-up. The estimated mean for <code>pi</code> should be close to the exact value 0.667. The <code>sd</code> column describes posterior uncertainty; <code>se_mean</code> describes Monte Carlo uncertainty in the estimated mean. Different software versions or machines can give somewhat different simulation results.</p>
+<p>Completing this example confirms that the installation can compile and sample this model. Examine any warnings as well as the printed estimates. An error mentioning <code>make</code>, <code>g++</code>, <code>clang</code>, or compilation often points to the compiler setup. A Stan syntax error points to the model text. Warnings about the sampled chains require the checks described in <a href="../chapters/04-diagnosing-markov-chains.html" class="quarto-xref"><span>Chapter 4</span></a>; successful compilation alone does not establish accurate inference.</p>
 </section>
 <section id="if-rstan-will-not-compile" class="level2" data-number="A.5">
 <h2 data-number="A.5" class="anchored" data-anchor-id="if-rstan-will-not-compile"><span class="header-section-number">A.5</span> If rstan will not compile</h2>
-<p>On some machines, most often a managed university laptop or a very new operating system that CRAN’s binaries do not yet target, <code>rstan</code> installs fine but refuses to compile any model, and the error message does not point to a fix. Rather than lose an afternoon, switch to <code>cmdstanr</code>. It is a second R interface to the same Stan, developed by the Stan team, that talks to a separate CmdStan installation instead of compiling inside R’s own toolchain. It is less convenient to install but more robust once it runs.</p>
-<p><code>cmdstanr</code> is not on CRAN. Install it from the Stan team’s R-universe repository, let it repair the toolchain, and then let it download and build CmdStan:</p>
+<p>If the compiler check succeeds but RStan still fails to compile, consult the platform-specific <a href="https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started">RStan guide</a> using the complete error message. On a managed computer, installation changes may require help from your university’s support service.</p>
+<p>An alternative is <code>cmdstanr</code>, another R interface to Stan. It uses a separate CmdStan installation, so it can avoid some RStan-specific compiler-configuration problems. It still needs a working C++ toolchain. The <a href="https://mc-stan.org/cmdstanr/articles/cmdstanr.html">CmdStanR getting-started guide</a> gives the installation steps:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"cmdstanr"</span>,</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>                 <span class="at">repos =</span> <span class="fu">c</span>(<span class="st">"https://stan-dev.r-universe.dev"</span>, <span class="fu">getOption</span>(<span class="st">"repos"</span>)))</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(cmdstanr)</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="fu">check_cmdstan_toolchain</span>(<span class="at">fix =</span> <span class="cn">TRUE</span>)   <span class="co"># installs what the compiler is missing, if it can</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="fu">install_cmdstan</span>(<span class="at">cores =</span> <span class="dv">2</span>)            <span class="co"># downloads and builds CmdStan; several minutes</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="fu">cmdstan_version</span>()                     <span class="co"># a version number means it worked</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"cmdstanr"</span>,</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>                 <span class="at">repos =</span> <span class="fu">c</span>(<span class="st">"https://stan-dev.r-universe.dev"</span>, <span class="fu">getOption</span>(<span class="st">"repos"</span>)))</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(cmdstanr)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="fu">check_cmdstan_toolchain</span>()</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="fu">install_cmdstan</span>(<span class="at">cores =</span> <span class="dv">2</span>)</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="fu">cmdstan_version</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>On Windows, <code>check_cmdstan_toolchain(fix = TRUE)</code> also needs Rtools, so install that first. On macOS it needs the Xcode Command Line Tools, so the previous section still applies; what <code>cmdstanr</code> sidesteps is the integration between the compiler and R’s own build settings, which is where <code>rstan</code> usually fails.</p>
-<p>All Stan code in this book is written for <code>rstan</code>, and translating it takes two lines. Where the book writes</p>
+<p>On Windows, <code>check_cmdstan_toolchain(fix = TRUE)</code> can attempt to configure missing toolchain components; this option does not repair macOS or Linux installations. Follow the compiler instructions for your platform first.</p>
+<p>To fit the same test model with CmdStanR, use the <code>bb_model</code> and <code>bb_data</code> objects defined above:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">stan</span>(<span class="at">model_code =</span> bb_model, <span class="at">data =</span> bb_data, <span class="at">chains =</span> <span class="dv">4</span>, <span class="at">iter =</span> <span class="dv">2000</span>, <span class="at">seed =</span> <span class="dv">84735</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">cmdstan_model</span>(<span class="fu">write_stan_file</span>(bb_model))</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>fit_cmdstan <span class="ot">&lt;-</span> mod<span class="sc">$</span><span class="fu">sample</span>(</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> bb_data, <span class="at">chains =</span> <span class="dv">4</span>, <span class="at">parallel_chains =</span> <span class="dv">1</span>,</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">iter_warmup =</span> <span class="dv">1000</span>, <span class="at">iter_sampling =</span> <span class="dv">1000</span>, <span class="at">seed =</span> <span class="dv">84735</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>you instead compile and sample in two steps:</p>
+<p>RStan’s <code>iter = 2000</code> includes warm-up. CmdStanR specifies the 1,000 warm-up and 1,000 retained iterations separately. Its fitted object also has different methods: for example, <code>fit_cmdstan$summary()</code> gives its summary table.</p>
+<p>For the diagnostic workflow in <a href="../chapters/04-diagnosing-markov-chains.html" class="quarto-xref"><span>Chapter 4</span></a>, convert either fitted object to the draws format used by <code>posterior</code> and <code>bayesplot</code>. With RStan:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">cmdstan_model</span>(<span class="fu">write_stan_file</span>(bb_model))</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> mod<span class="sc">$</span><span class="fu">sample</span>(<span class="at">data =</span> bb_data, <span class="at">chains =</span> <span class="dv">4</span>, <span class="at">iter_warmup =</span> <span class="dv">1000</span>, <span class="at">iter_sampling =</span> <span class="dv">1000</span>, <span class="at">seed =</span> <span class="dv">84735</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>draws <span class="ot">&lt;-</span> posterior<span class="sc">::</span><span class="fu">as_draws_array</span>(<span class="fu">as.array</span>(fit))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>Note that <code>cmdstanr</code> counts warm-up and sampling iterations separately, while <code>rstan</code>’s <code>iter</code> includes warm-up (by default, the first half). Everything after sampling can be the same, because the <code>posterior</code> and <code>bayesplot</code> packages work with both kinds of fit. To get a draws object that the book’s diagnostic code can use:</p>
+<p>With CmdStanR:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>draws <span class="ot">&lt;-</span> posterior<span class="sc">::</span><span class="fu">as_draws_array</span>(<span class="fu">as.array</span>(fit))   <span class="co"># rstan</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>draws <span class="ot">&lt;-</span> fit<span class="sc">$</span><span class="fu">draws</span>()                                <span class="co"># cmdstanr</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>draws <span class="ot">&lt;-</span> fit_cmdstan<span class="sc">$</span><span class="fu">draws</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>From here on, <code>posterior::summarise_draws(draws)</code> and <code>bayesplot::mcmc_trace(draws)</code> behave identically. If you use <code>cmdstanr</code>, <code>fit$summary()</code> plays the role of <code>print(fit)</code>, and <code>fit$draws(format = "df")</code> gives you the draws as a data frame.</p>
+<p>Both draws objects can then be used with functions such as <code>posterior::summarise_draws()</code> and <code>bayesplot::mcmc_trace(draws, pars = "pi")</code>.</p>
 </section>
 <section id="reproducibility-seeds-and-sessions" class="level2" data-number="A.6">
 <h2 data-number="A.6" class="anchored" data-anchor-id="reproducibility-seeds-and-sessions"><span class="header-section-number">A.6</span> Reproducibility: seeds and sessions</h2>
-<p>Every method in this book is a simulation, so running the same code twice gives different numbers unless you fix the random number generator. Two seeds matter.</p>
-<p><strong>R’s seed.</strong> <code>set.seed()</code> fixes the state of R’s random number generator, so that every <code>rnorm()</code>, <code>runif()</code>, and <code>sample()</code> call that follows is reproducible. The book sets <code>set.seed(84735)</code> at the top of every chapter, a nod to <em>Bayes Rules!</em>. Set it once, at the top of your script, not before every sampler call: re-seeding inside a loop gives you the same “random” numbers again and again.</p>
-<p><strong>Stan’s seed.</strong> Stan runs outside R and has its own generator, so <code>set.seed()</code> does not reach it. Pass <code>seed =</code> to <code>stan()</code> (or to <code>$sample()</code> in <code>cmdstanr</code>), as the test model above does. With the same seed, the same model, the same data, and the same number of chains, Stan produces the same draws, though not necessarily across different Stan versions or operating systems.</p>
+<p>Examples that generate random draws use seeds so that you can repeat the calculation. R and Stan have separate random number generators.</p>
+<p><strong>R’s seed.</strong> Run the package setup and any earlier code that defines the data and functions needed for an example. In Chapters 1–5, the simulation chunks set their own seed before drawing random numbers. Rerunning one of these chunks therefore restarts its random sequence. Follow the seed shown in the example; some illustrations deliberately use a different value.</p>
+<p>The following two calls produce the same values because we reset the seed between them:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">84735</span>)</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">3</span>)</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">84735</span>)</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="fu">identical</span>(x, <span class="fu">rnorm</span>(<span class="dv">3</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">84735</span>)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>first <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">3</span>)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">84735</span>)</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>second <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">3</span>)</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="fu">rbind</span>(<span class="at">first =</span> first, <span class="at">second =</span> second)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>            [,1]       [,2]      [,3]
+first  0.6672327 -0.1238403 0.7808676
+second 0.6672327 -0.1238403 0.7808676</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">identical</span>(first, second)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] TRUE</code></pre>
 </div>
 </div>
-<p>Reproducible does not mean correct. A seed makes a bug repeatable, which is useful for finding it, but when you want to know whether a sampler works, run it with <em>several</em> seeds and check that the conclusions do not change. <a href="../chapters/04-diagnosing-markov-chains.html" class="quarto-xref"><span>Chapter 4</span></a> makes this idea precise.</p>
+<p>Resetting a seed at the start of an example is different from resetting it inside a sampler’s iteration loop. Inside the loop, the reset would repeatedly generate the same numbers and change the sampling procedure. The <a href="https://stat.ethz.ch/R-manual/R-devel/library/base/html/Random.html">R random-number documentation</a> explains how <code>set.seed()</code> controls the generator.</p>
+<p><strong>Stan’s seed.</strong> <code>set.seed()</code> does not set Stan’s generator. Supply <code>seed =</code> to <code>stan()</code> or the CmdStanR <code>$sample()</code> method, as in the examples above. Exact reproduction also depends on the model, data, initialization, chain configuration, software, and computing environment; see the <a href="https://mc-stan.org/docs/reference-manual/reproducibility.html">Stan reproducibility documentation</a>. Small differences across installations are possible even with the same seed. Compare posterior summaries with their Monte Carlo uncertainty rather than expecting every saved value to match.</p>
+<p>A reproducible calculation can still contain an error. When assessing a sampler, also try other seeds and starting values, and use the diagnostics in <a href="../chapters/04-diagnosing-markov-chains.html" class="quarto-xref"><span>Chapter 4</span></a>.</p>
 <p>Finally, when you report a problem or hand in an assignment, include the output of <code>sessionInfo()</code>. It lists your R version, your operating system, and the version of every loaded package, which is usually the first thing anyone helping you will ask for.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="bookbox bookgraybox">
 <div class="title">
 <p>Setup checklist</p>
 </div>
 <ol type="1">
-<li>R 4.4 or later, and RStudio.</li>
-<li>The package block above, run once.</li>
-<li>A C++ toolchain: Xcode Command Line Tools (macOS), Rtools matching your R version (Windows), or <code>build-essential</code> (Linux).</li>
-<li>The Beta-Binomial test model compiles and reports a posterior mean for <code>pi</code> near 0.67.</li>
-<li>If step 4 fails: <code>cmdstanr</code> from the Stan R-universe, <code>check_cmdstan_toolchain(fix = TRUE)</code>, <code>install_cmdstan()</code>.</li>
-<li>Seeds: <code>set.seed()</code> for R, <code>seed =</code> for Stan; <code>sessionInfo()</code> when asking for help.</li>
+<li>R and RStudio installed for your operating system.</li>
+<li>The packages needed for your chapters installed; the chapter’s setup code loaded.</li>
+<li>A working C++ toolchain for Stan: Command Line Tools on macOS, matching Rtools on Windows, or the appropriate compiler and R development packages on Linux.</li>
+<li>The Beta-Binomial test model compiles and runs, with an estimated mean near 0.667 and its output and warnings inspected.</li>
+<li>Seeds supplied separately for R and Stan; <code>sessionInfo()</code> available when reporting a problem.</li>
 </ol>
 </div>
 

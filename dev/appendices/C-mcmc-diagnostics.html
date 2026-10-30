@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.10.19">
+<meta name="generator" content="quarto-1.10.20">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -99,7 +99,7 @@ div.csl-indent {
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-11098932bb39e8ccbcedcb139d3d0c2d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-3f446edc70b0757b4dde2b060815ebc9.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="../site_libs/bootstrap/bootstrap-2fcf8a0ee316d604ebc18c0691cf69d6.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
@@ -328,7 +328,12 @@ window.Quarto = {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#sec-mcmc-variance" id="toc-sec-mcmc-variance" class="nav-link active" data-scroll-target="#sec-mcmc-variance"><span class="header-section-number">C.1</span> The variance of a dependent average</a></li>
+  <li><a href="#sec-mcmc-variance" id="toc-sec-mcmc-variance" class="nav-link active" data-scroll-target="#sec-mcmc-variance"><span class="header-section-number">C.1</span> The variance of a dependent average</a>
+  <ul class="collapse">
+  <li><a href="#start-with-three-sampled-states" id="toc-start-with-three-sampled-states" class="nav-link" data-scroll-target="#start-with-three-sampled-states"><span class="header-section-number">C.1.1</span> Start with three sampled states</a></li>
+  <li><a href="#count-the-pairs-in-a-run-of-length-n" id="toc-count-the-pairs-in-a-run-of-length-n" class="nav-link" data-scroll-target="#count-the-pairs-in-a-run-of-length-n"><span class="header-section-number">C.1.2</span> Count the pairs in a run of length <span class="math inline">\(N\)</span></a></li>
+  <li><a href="#approximation-for-a-long-run" id="toc-approximation-for-a-long-run" class="nav-link" data-scroll-target="#approximation-for-a-long-run"><span class="header-section-number">C.1.3</span> Approximation for a long run</a></li>
+  </ul></li>
   <li><a href="#sec-rhat-calculations" id="toc-sec-rhat-calculations" class="nav-link" data-scroll-target="#sec-rhat-calculations"><span class="header-section-number">C.2</span> Calculating basic and split R-hat</a></li>
   <li><a href="#sec-rank-folding" id="toc-sec-rank-folding" class="nav-link" data-scroll-target="#sec-rank-folding"><span class="header-section-number">C.3</span> Rank normalization and folding</a></li>
   <li><a href="#sec-metropolis-acceptance-derivation" id="toc-sec-metropolis-acceptance-derivation" class="nav-link" data-scroll-target="#sec-metropolis-acceptance-derivation"><span class="header-section-number">C.4</span> Deriving the Metropolis acceptance probability</a>
@@ -365,20 +370,60 @@ window.Quarto = {
 <p>These notes expand on the diagnostics in <a href="../chapters/04-diagnosing-markov-chains.html" class="quarto-xref"><span>Chapter 4</span></a> and derive the acceptance rule used in <a href="../chapters/05-metropolis.html" class="quarto-xref"><span>Chapter 5</span></a> and Chapter 6 (Metropolis–Hastings and Adaptive Proposals). Exercise 4.7 uses the R-hat functions in <a href="#sec-rhat-calculations" class="quarto-xref"><span>Section C.2</span></a>.</p>
 <section id="sec-mcmc-variance" class="level2" data-number="C.1">
 <h2 data-number="C.1" class="anchored" data-anchor-id="sec-mcmc-variance"><span class="header-section-number">C.1</span> The variance of a dependent average</h2>
-<p>For <span class="math inline">\(N\)</span> independent draws, the variance of their average is <span class="math inline">\(\sigma^2/N\)</span>. With dependent draws, the covariances also contribute. For a stationary chain, <span class="math inline">\(\operatorname{Cov}(\theta^{(t)},\theta^{(t+k)})=\sigma^2\rho_k\)</span>. There are <span class="math inline">\(N-k\)</span> pairs of values separated by lag <span class="math inline">\(k\)</span>, giving <span id="eq-mcmc-finite-var"><span class="math display">\[
+<p>For <span class="math inline">\(N\)</span> independent draws with variance <span class="math inline">\(\sigma^2\)</span>, the variance of their average is <span class="math inline">\(\sigma^2/N\)</span>. Dependent draws can vary together, so their covariances also contribute. We derive that contribution first for three states and then for a run of length <span class="math inline">\(N\)</span>.</p>
+<p>Assume the chain is stationary, with the same mean and finite variance at every iteration. Write <span class="math inline">\(\rho_k\)</span> for its autocorrelation at lag <span class="math inline">\(k\)</span>. Two states separated by <span class="math inline">\(k\)</span> iterations then have covariance <span class="math display">\[
+\operatorname{Cov}(\theta^{(t)},\theta^{(t+k)})=\sigma^2\rho_k.
+\]</span> Stationarity makes this covariance depend on the separation <span class="math inline">\(k\)</span>, rather than on which iteration we start from.</p>
+<section id="start-with-three-sampled-states" class="level3" data-number="C.1.1">
+<h3 data-number="C.1.1" class="anchored" data-anchor-id="start-with-three-sampled-states"><span class="header-section-number">C.1.1</span> Start with three sampled states</h3>
+<p>For <span class="math inline">\(N=3\)</span>, the average is <span class="math inline">\(\bar\theta=(\theta^{(1)}+\theta^{(2)}+\theta^{(3)})/3\)</span>. Dividing by three divides the variance by <span class="math inline">\(3^2=9\)</span>. The variance of a sum includes each individual variance and twice the covariance of each distinct pair: <span class="math display">\[
+\begin{aligned}
+\operatorname{Var}(\bar\theta)=\frac19\bigl[&amp;
+\operatorname{Var}(\theta^{(1)})+
+\operatorname{Var}(\theta^{(2)})+
+\operatorname{Var}(\theta^{(3)})\\
+&amp;+2\operatorname{Cov}(\theta^{(1)},\theta^{(2)})
++2\operatorname{Cov}(\theta^{(1)},\theta^{(3)})\\
+&amp;+2\operatorname{Cov}(\theta^{(2)},\theta^{(3)})\bigr].
+\end{aligned}
+\]</span> The factor two comes from the cross-products when we square a sum, just as <span class="math inline">\((a+b)^2=a^2+2ab+b^2\)</span>.</p>
+<p>There are two pairs one iteration apart: <span class="math inline">\((1,2)\)</span> and <span class="math inline">\((2,3)\)</span>. Both have covariance <span class="math inline">\(\sigma^2\rho_1\)</span>. The remaining pair, <span class="math inline">\((1,3)\)</span>, is two iterations apart and has covariance <span class="math inline">\(\sigma^2\rho_2\)</span>. Substituting gives <span class="math display">\[
+\operatorname{Var}(\bar\theta)
+=\frac{\sigma^2}{9}\bigl(3+4\rho_1+2\rho_2\bigr).
+\]</span> For independent draws, both correlations are zero and we recover <span class="math inline">\(\sigma^2/3\)</span>. For the stationary AR(1) chain with <span class="math inline">\(\phi=0.5\)</span> and target variance one, <span class="math inline">\(\rho_1=0.5\)</span> and <span class="math inline">\(\rho_2=0.25\)</span>. The variance of the average is then <span class="math inline">\((3+4\times0.5+2\times0.25)/9\approx0.611\)</span>, compared with <span class="math inline">\(1/3\approx0.333\)</span> for three independent draws. The positive correlations make the average more variable across repeated runs.</p>
+</section>
+<section id="count-the-pairs-in-a-run-of-length-n" class="level3" data-number="C.1.2">
+<h3 data-number="C.1.2" class="anchored" data-anchor-id="count-the-pairs-in-a-run-of-length-n"><span class="header-section-number">C.1.2</span> Count the pairs in a run of length <span class="math inline">\(N\)</span></h3>
+<p>For an average of <span class="math inline">\(N\)</span> states, the same variance-of-a-sum calculation gives <span class="math display">\[
+\operatorname{Var}(\bar\theta)
+=\frac1{N^2}\left[
+\sum_{t=1}^N\operatorname{Var}(\theta^{(t)})
++2\sum_{1\leq t&lt;s\leq N}
+\operatorname{Cov}(\theta^{(t)},\theta^{(s)})\right].
+\]</span> The second sum includes every distinct pair once. Group the pairs by their separation. At lag one there are <span class="math inline">\(N-1\)</span> pairs; at lag two there are <span class="math inline">\(N-2\)</span>; at lag <span class="math inline">\(k\)</span> there are <span class="math inline">\(N-k\)</span>. Every pair in that last group has covariance <span class="math inline">\(\sigma^2\rho_k\)</span>. Therefore <span class="math display">\[
+\operatorname{Var}(\bar\theta)
+=\frac1{N^2}\left[N\sigma^2
++2\sigma^2\sum_{k=1}^{N-1}(N-k)\rho_k\right].
+\]</span> Factoring out <span class="math inline">\(\sigma^2/N\)</span> yields <span id="eq-mcmc-finite-var"><span class="math display">\[
 \operatorname{Var}(\bar\theta)
 =\frac{\sigma^2}{N}\left[1+2\sum_{k=1}^{N-1}
 \left(1-\frac{k}{N}\right)\rho_k\right].
-\tag{C.1}\]</span></span> This expression is exact for a stationary chain with finite variance. When <span class="math inline">\(N\)</span> is large relative to the lags with appreciable correlation, the weights <span class="math inline">\(1-k/N\)</span> are close to one. Extending the sum gives the large-<span class="math inline">\(N\)</span> approximation used in <a href="../chapters/04-diagnosing-markov-chains.html" class="quarto-xref"><span>Chapter 4</span></a>: <span class="math display">\[
+\tag{C.1}\]</span></span> This is the exact finite-run variance for the stationary chain. The weight <span class="math inline">\(1-k/N\)</span> records that there are fewer pairs at longer lags. Substituting <span class="math inline">\(N=3\)</span> reproduces the expression above.</p>
+</section>
+<section id="approximation-for-a-long-run" class="level3" data-number="C.1.3">
+<h3 data-number="C.1.3" class="anchored" data-anchor-id="approximation-for-a-long-run"><span class="header-section-number">C.1.3</span> Approximation for a long run</h3>
+<p>When <span class="math inline">\(N\)</span> is large relative to the lags with appreciable correlation, the corresponding weights <span class="math inline">\(1-k/N\)</span> are close to one. If correlations also become small fast enough that <span class="math inline">\(\sum_{k=1}^{\infty}|\rho_k|\)</span> is finite, we can approximate the weighted finite sum by the infinite sum: <span class="math display">\[
 \operatorname{Var}(\bar\theta)\approx\frac{\sigma^2}{N}
 \left(1+2\sum_{k=1}^{\infty}\rho_k\right).
 \]</span></p>
-<p>Positive autocorrelation increases this variance. Negative autocorrelation can reduce it: for example, the AR(1) formula gives <span class="math inline">\(N_{\mathrm{eff}}&gt;N\)</span> when <span class="math inline">\(\phi&lt;0\)</span>. Thinning such a chain can remove the benefit of its negative autocorrelation.</p>
-<p>Bias and variation can also be combined in one expression. For an estimate <span class="math inline">\(\widehat\mu\)</span> of a mean <span class="math inline">\(\mu\)</span>, <span id="eq-mcmc-mse"><span class="math display">\[
-\mathbb E[(\widehat\mu-\mu)^2]
-=\bigl(\mathbb E[\widehat\mu]-\mu\bigr)^2
-+\operatorname{Var}(\widehat\mu).
-\tag{C.2}\]</span></span> The mean squared error on the left is the sum of squared bias and Monte Carlo variance. Bias describes a systematic displacement from the true mean; Monte Carlo variance describes how much the estimates vary between runs <span class="citation" data-cites="margossian2024iterations">(<a href="../references.html#ref-margossian2024iterations" role="doc-biblioref">Margossian &amp; Gelman, 2026</a>)</span>.</p>
+<p>For an AR(1) chain with <span class="math inline">\(|\phi|&lt;1\)</span>, <span class="math inline">\(\rho_k=\phi^k\)</span>. The geometric series gives <span class="math inline">\(\sum_{k=1}^{\infty}\phi^k=\phi/(1-\phi)\)</span>, so <span class="math display">\[
+1+2\sum_{k=1}^{\infty}\rho_k
+=1+\frac{2\phi}{1-\phi}
+=\frac{1+\phi}{1-\phi}.
+\]</span> Equating this approximate variance to <span class="math inline">\(\sigma^2/N_{\mathrm{eff}}\)</span> gives <span class="math display">\[
+N_{\mathrm{eff}}\approx N\frac{1-\phi}{1+\phi},
+\]</span> the AR(1) expression used in <a href="../chapters/04-diagnosing-markov-chains.html" class="quarto-xref"><span>Chapter 4</span></a>. Positive <span class="math inline">\(\phi\)</span> reduces the effective sample size. Negative <span class="math inline">\(\phi\)</span> can give <span class="math inline">\(N_{\mathrm{eff}}&gt;N\)</span> because alternating deviations can make the average more precise than an independent-sample average of the same length. Thinning can remove that benefit.</p>
+</section>
 </section>
 <section id="sec-rhat-calculations" class="level2" data-number="C.2">
 <h2 data-number="C.2" class="anchored" data-anchor-id="sec-rhat-calculations"><span class="header-section-number">C.2</span> Calculating basic and split R-hat</h2>
@@ -468,42 +513,39 @@ Figure&nbsp;C.1: Folding makes a spread difference easier to compare. Left: reco
 <p>Detailed balance is satisfied when <span id="eq-acceptance-balance"><span class="math display">\[
 f(a)q(b\mid a)\alpha_{\mathrm{fwd}}
 =f(b)q(a\mid b)\alpha_{\mathrm{rev}}.
-\tag{C.3}\]</span></span> For the symmetric proposals in <a href="../chapters/05-metropolis.html" class="quarto-xref"><span>Chapter 5</span></a>, <span class="math inline">\(q(b\mid a)=q(a\mid b)\)</span>, so these factors cancel. Dividing by <span class="math inline">\(f(a)\)</span> leaves <span id="eq-acceptance-directions"><span class="math display">\[
+\tag{C.2}\]</span></span> For the symmetric proposals in <a href="../chapters/05-metropolis.html" class="quarto-xref"><span>Chapter 5</span></a>, <span class="math inline">\(q(b\mid a)=q(a\mid b)\)</span>, so these factors cancel. Dividing by <span class="math inline">\(f(a)\)</span> leaves <span id="eq-acceptance-directions"><span class="math display">\[
 \alpha_{\mathrm{fwd}}=r\alpha_{\mathrm{rev}},
 \qquad r=\frac{f(b)}{f(a)}.
-\tag{C.4}\]</span></span> Once we choose an acceptance probability in one direction, this equation fixes the probability in the other. The choices must also lie between zero and one.</p>
+\tag{C.3}\]</span></span> Once we choose an acceptance probability in one direction, this equation fixes the probability in the other. The choices must also lie between zero and one.</p>
 <p>Since <span class="math inline">\(\alpha_{\mathrm{rev}}\leq1\)</span>, the equation gives <span class="math inline">\(\alpha_{\mathrm{fwd}}\leq r\)</span>. We also require <span class="math inline">\(\alpha_{\mathrm{fwd}}\leq1\)</span>. The largest permitted forward probability is therefore <span class="math inline">\(\min(1,r)\)</span>. Taking this value gives the Metropolis rule: <span id="eq-derived-metropolis-acceptance"><span class="math display">\[
 \alpha_{\mathrm{fwd}}=\min(1,r),
 \qquad
 \alpha_{\mathrm{rev}}=\min(1,1/r).
-\tag{C.5}\]</span></span></p>
+\tag{C.4}\]</span></span></p>
 <p>If <span class="math inline">\(r&lt;1\)</span>, set <span class="math inline">\(\alpha_{\mathrm{rev}}=1\)</span> and obtain <span class="math inline">\(\alpha_{\mathrm{fwd}}=r\)</span>. The proposal goes to a lower target density, so it is accepted only sometimes. If <span class="math inline">\(r\geq1\)</span>, set <span class="math inline">\(\alpha_{\mathrm{fwd}}=1\)</span> and obtain <span class="math inline">\(\alpha_{\mathrm{rev}}=1/r\)</span>. The proposal goes to an equal or higher target density and is always accepted. In either case, the equation is satisfied in both directions. Proposals outside the target support are rejected.</p>
 </section>
 <section id="a-numerical-comparison" class="level3" data-number="C.4.2">
 <h3 data-number="C.4.2" class="anchored" data-anchor-id="a-numerical-comparison"><span class="header-section-number">C.4.2</span> A numerical comparison</h3>
-<p>Suppose <span class="math inline">\(f(a)=0.2\)</span>, <span class="math inline">\(f(b)=0.1\)</span>, and the symmetric proposal density is 0.3 in either direction. Then <span class="math inline">\(r=0.5\)</span>. The two sides of <a href="#eq-acceptance-balance" class="quarto-xref">Equation&nbsp;<span>C.3</span></a> are <span class="math display">\[
+<p>Suppose <span class="math inline">\(f(a)=0.2\)</span>, <span class="math inline">\(f(b)=0.1\)</span>, and the symmetric proposal density is 0.3 in either direction. Then <span class="math inline">\(r=0.5\)</span>. The two sides of <a href="#eq-acceptance-balance" class="quarto-xref">Equation&nbsp;<span>C.2</span></a> are <span class="math display">\[
 \underbrace{0.2\times0.3\times0.5}_{a\text{ to }b}
 =\underbrace{0.1\times0.3\times1}_{b\text{ to }a}
 =0.03.
 \]</span> The target assigns a higher density to <span class="math inline">\(a\)</span>, but the smaller acceptance probability from <span class="math inline">\(a\)</span> to <span class="math inline">\(b\)</span> compensates for that difference.</p>
-<p>There are other balanced choices. For example, <span class="math inline">\(\alpha_{\mathrm{fwd}}=0.25\)</span> and <span class="math inline">\(\alpha_{\mathrm{rev}}=0.5\)</span> also satisfy <a href="#eq-acceptance-directions" class="quarto-xref">Equation&nbsp;<span>C.4</span></a>, since <span class="math inline">\(0.25=0.5\times0.5\)</span>. Both sides of the balance equation then equal 0.015. Both directions would produce more rejections. The Metropolis choice makes both acceptance probabilities as large as possible while preserving their required relationship; detailed balance alone does not specify a unique rule.</p>
+<p>There are other balanced choices. For example, <span class="math inline">\(\alpha_{\mathrm{fwd}}=0.25\)</span> and <span class="math inline">\(\alpha_{\mathrm{rev}}=0.5\)</span> also satisfy <a href="#eq-acceptance-directions" class="quarto-xref">Equation&nbsp;<span>C.3</span></a>, since <span class="math inline">\(0.25=0.5\times0.5\)</span>. Both sides of the balance equation then equal 0.015. Both directions would produce more rejections. The Metropolis choice makes both acceptance probabilities as large as possible while preserving their required relationship; detailed balance alone does not specify a unique rule.</p>
 </section>
 <section id="allowing-asymmetric-proposals" class="level3" data-number="C.4.3">
 <h3 data-number="C.4.3" class="anchored" data-anchor-id="allowing-asymmetric-proposals"><span class="header-section-number">C.4.3</span> Allowing asymmetric proposals</h3>
-<p>When proposal densities differ between directions, retain them in <a href="#eq-acceptance-balance" class="quarto-xref">Equation&nbsp;<span>C.3</span></a>. The same rearrangement gives <span class="math display">\[
+<p>When proposal densities differ between directions, retain them in <a href="#eq-acceptance-balance" class="quarto-xref">Equation&nbsp;<span>C.2</span></a>. The same rearrangement gives <span class="math display">\[
 \alpha_{\mathrm{fwd}}=R\alpha_{\mathrm{rev}},
 \qquad
 R=\frac{f(b)q(a\mid b)}{f(a)q(b\mid a)}.
 \]</span> Applying the same bounds yields the <strong>Metropolis–Hastings</strong> acceptance probability <span id="eq-derived-hastings-acceptance"><span class="math display">\[
 \alpha(a,b)=\min\!\left\{1,
 \frac{f(b)q(a\mid b)}{f(a)q(b\mid a)}\right\}.
-\tag{C.6}\]</span></span> The reverse proposal density is in the numerator and the forward proposal density is in the denominator. This adjustment accounts for a proposal mechanism that favors one direction. Chapter 6 (Metropolis–Hastings and Adaptive Proposals) develops examples of such proposals. With a symmetric proposal, their ratio is one and the expression reduces to the rule derived above.</p>
+\tag{C.5}\]</span></span> The reverse proposal density is in the numerator and the forward proposal density is in the denominator. This adjustment accounts for a proposal mechanism that favors one direction. Chapter 6 (Metropolis–Hastings and Adaptive Proposals) develops examples of such proposals. With a symmetric proposal, their ratio is one and the expression reduces to the rule derived above.</p>
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" data-line-spacing="2" role="list" style="display: none">
-<div id="ref-margossian2024iterations" class="csl-entry" role="listitem">
-Margossian, C. C., &amp; Gelman, A. (2026). For how many iterations should we run <span>M</span>arkov chain <span>M</span>onte <span>C</span>arlo? In R. V. Craiu, D. Vats, G. L. Jones, S. Brooks, A. Gelman, &amp; X.-L. Meng (Eds.), <em>Handbook of <span>M</span>arkov chain <span>M</span>onte <span>C</span>arlo</em> (2nd ed., pp. 110–131). CRC Press. <a href="https://doi.org/10.1201/9781003453420-4">https://doi.org/10.1201/9781003453420-4</a>
-</div>
 <div id="ref-vandenbergh2026reversible" class="csl-entry" role="listitem">
 <span class="nocase">van den Bergh, D., Clyde, M. A., Raftery, A. E., &amp; Marsman, M.</span> (2026). <em>Reversible jump <span>MCMC</span> with no regrets: <span>B</span>ayesian variable selection using mixtures of mutually singular distributions</em>.
 </div>
