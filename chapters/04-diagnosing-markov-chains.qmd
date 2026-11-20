@@ -39,13 +39,13 @@ color_scheme_set("purple")       # colors for the diagnostic plots
 - Evaluate a Stan fit and justify whether its posterior summaries are precise enough for a stated purpose.
 :::
 
-## Inspecting a run
+## Inspecting a run {#sec-ar1}
 
 We begin with the Normal transition rule from @sec-markov-chains. At each step, combine part of the current value with a new random draw:
 $$
 \theta^{(t+1)}=\phi\theta^{(t)}+\sqrt{1-\phi^2}\,\varepsilon_t,
 \qquad \varepsilon_t\sim\text{N}(0,1).
-$$
+$$ {#eq-ar1}
 Each new $\varepsilon_t$ is drawn independently. The parameter $\phi$, with $-1<\phi<1$, controls how much of the current value carries over to the next. With $\phi=0$, the next value is a fresh standard Normal draw. With $\phi$ close to one, successive values tend to stay close together. This rule is called a **first-order autoregressive process**, or **AR(1) process**.
 
 These choices of $\phi$ preserve the same standard Normal target. To check this, suppose the current state is standard Normal. A weighted sum of independent Normal variables is also Normal, as we saw in @sec-markov-chains. The next state has mean zero and variance

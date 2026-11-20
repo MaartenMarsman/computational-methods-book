@@ -418,7 +418,7 @@ years |> summarize(across(everything(), list(mean = mean, sd = sd)))
 
 Both estimates have expectation $\pi_{\text{happy}}$. In this experiment, the standard deviation across the dependent-chain estimates is about `r round(sd(years$chain) / sd(years$iid), 1)` times the standard deviation across the independent estimates. The persistence of moods makes the chain estimates more variable. The ergodic theorem establishes their limiting behavior, but does not supply a standard error for a finite run. @sec-diagnostics develops effective sample size and Monte Carlo standard errors for dependent draws.
 
-## Detailed balance
+## Detailed balance {#sec-detailed-balance}
 
 So far, we have specified a transition matrix and investigated its stationary distribution. For posterior simulation, we work in the other direction. We specify the target distribution and choose transitions that preserve it. Many different transition matrices can have the same stationary distribution. **Detailed balance** provides a convenient way to construct one of them.
 
@@ -432,7 +432,7 @@ This is a **balance** condition: it constrains the sums. **Detailed** balance as
 A transition matrix $\mathbf{P}$ satisfies **detailed balance** with respect to a probability vector $\boldsymbol{\pi}$ if
 $$
 \pi_i P_{ij} = \pi_j P_{ji} \qquad \text{for all states } i, j.
-$$
+$$ {#eq-detailed-balance}
 If detailed balance holds, then $\boldsymbol{\pi}$ is a stationary distribution of the chain.
 :::
 

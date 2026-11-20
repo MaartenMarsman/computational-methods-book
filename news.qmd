@@ -15,15 +15,25 @@ tools/release.sh turns the block into the entry for the new version.
 ::: {.content-visible when-meta="dev-build"}
 ## In preparation {.unnumbered}
 
-What the next release will contain: everything in version 0.1 plus the changes below.
+What the next release will contain: everything in version 0.1.1 plus the changes below.
+
+Changes since version 0.1.1:
+
+- Nothing yet.
+:::
+<!-- dev-end -->
+
+## Version 0.1.1 (20 November 2026) {.unnumbered}
+
+Released 20 November 2026. Every changed line since version 0.1: [compare on GitHub](https://github.com/MaartenMarsman/computational-methods-book/compare/v0.1...v0.1.1).
 
 Changes since version 0.1:
 
 - 30 October 2026. Welcome page: who the book is for and how it teaches, rewritten.
 - 30 October 2026. Appendices: updated setup instructions and package lists, revised notation, and a step-by-step derivation of the variance of a dependent average.
 - 30 October 2026. Chapters 4 and 5: clearer exercise instructions and stronger simulation comparisons.
-:::
-<!-- dev-end -->
+- 20 November 2026. Chapter 5 has been substantially revised to develop the Metropolis algorithm step by step: constructing and implementing the sampler, explaining why it works, and showing why a valid sampler can still explore poorly. The revised step-size section connects acceptance rates to effective sample size and explains how to use them when tuning the sampler.
+
 
 ## Version 0.1 (30 October 2026) {.unnumbered}
 
