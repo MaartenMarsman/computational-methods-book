@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.10.20">
+<meta name="generator" content="quarto-1.11.9">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -95,14 +95,15 @@ div.csl-indent {
 <link href="../chapters/03-markov-chains.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/scrollable-regions/scrollable-regions.js" type="module"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-3f446edc70b0757b4dde2b060815ebc9.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-85f7a32731ed2b609fa7be27e34d4366.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-0b1eb3394df00950b6534c3d03f09fce.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-3877788a10dd0e6e4125c918014a3bfa.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -164,16 +165,16 @@ window.Quarto = {
 <link rel="stylesheet" href="../style/bayesrules.css">
 </head>
 
-<body class="nav-sidebar floating quarto-light">
+<body class="nav-sidebar floating quarto-light"><a id="quarto-skip-link" class="visually-hidden-focusable" href="#quarto-document-content">Skip to main content</a>
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
-  <nav class="quarto-secondary-nav">
+  <nav class="quarto-secondary-nav" aria-label="Toolbar">
     <div class="container-fluid d-flex">
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <a class="flex-grow-1 no-decor" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        <a class="flex-grow-1 no-decor" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
           <h1 class="quarto-secondary-nav-title"><span id="sec-diagnostics" class="quarto-section-identifier"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Diagnosing Markov Chains</span></span></h1>
         </a>     
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -185,7 +186,7 @@ window.Quarto = {
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto" aria-label="Site">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="../">Stochastic Simulation for Bayesian Modeling in Psychology</a> 
@@ -206,13 +207,10 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
- <span class="menu-text">Foundations</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
+            <button type="button" class="sidebar-item-text sidebar-item-toggle sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-controls="quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text" id="quarto-sidebar-section-1-label">Foundations</span><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
       </div>
-      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+      <ul id="quarto-sidebar-section-1" aria-labelledby="quarto-sidebar-section-1-label" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/01-probability-and-simulation.html" class="sidebar-item-text sidebar-link">
@@ -229,13 +227,10 @@ window.Quarto = {
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
- <span class="menu-text">Markov Chains</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
+            <button type="button" class="sidebar-item-text sidebar-item-toggle sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-controls="quarto-sidebar-section-2" aria-expanded="true">
+ <span class="menu-text" id="quarto-sidebar-section-2-label">Markov Chains</span><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
       </div>
-      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+      <ul id="quarto-sidebar-section-2" aria-labelledby="quarto-sidebar-section-2-label" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/03-markov-chains.html" class="sidebar-item-text sidebar-link">
@@ -252,13 +247,10 @@ window.Quarto = {
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
- <span class="menu-text">Sampling Algorithms</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
+            <button type="button" class="sidebar-item-text sidebar-item-toggle sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-controls="quarto-sidebar-section-3" aria-expanded="true">
+ <span class="menu-text" id="quarto-sidebar-section-3-label">Sampling Algorithms</span><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
       </div>
-      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+      <ul id="quarto-sidebar-section-3" aria-labelledby="quarto-sidebar-section-3-label" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/05-metropolis.html" class="sidebar-item-text sidebar-link">
@@ -281,13 +273,10 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
- <span class="menu-text">Appendices</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
+            <button type="button" class="sidebar-item-text sidebar-item-toggle sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-controls="quarto-sidebar-section-4" aria-expanded="true">
+ <span class="menu-text" id="quarto-sidebar-section-4-label">Appendices</span><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
       </div>
-      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+      <ul id="quarto-sidebar-section-4" aria-labelledby="quarto-sidebar-section-4-label" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../appendices/A-software-setup.html" class="sidebar-item-text sidebar-link">
@@ -316,11 +305,11 @@ window.Quarto = {
   </li>
     </ul>
     </div>
-    <nav id="TOC" role="doc-toc" class="toc-active">
+    <nav id="TOC" role="doc-toc" aria-labelledby="toc-title" class="toc-active">
     <h2 id="toc-title">Table of contents</h2>
    
   <ul class="collapse">
-  <li><a href="#inspecting-a-run" id="toc-inspecting-a-run" class="nav-link active" data-scroll-target="#inspecting-a-run"><span class="header-section-number">4.1</span> Inspecting a run</a></li>
+  <li><a href="#sec-ar1" id="toc-sec-ar1" class="nav-link active" data-scroll-target="#sec-ar1"><span class="header-section-number">4.1</span> Inspecting a run</a></li>
   <li><a href="#dependence-and-the-accuracy-of-an-average" id="toc-dependence-and-the-accuracy-of-an-average" class="nav-link" data-scroll-target="#dependence-and-the-accuracy-of-an-average"><span class="header-section-number">4.2</span> Dependence and the accuracy of an average</a></li>
   <li><a href="#effective-sample-size-and-monte-carlo-standard-error" id="toc-effective-sample-size-and-monte-carlo-standard-error" class="nav-link" data-scroll-target="#effective-sample-size-and-monte-carlo-standard-error"><span class="header-section-number">4.3</span> Effective sample size and Monte Carlo standard error</a></li>
   <li><a href="#comparing-several-chains" id="toc-comparing-several-chains" class="nav-link" data-scroll-target="#comparing-several-chains"><span class="header-section-number">4.4</span> Comparing several chains</a></li>
@@ -337,7 +326,7 @@ window.Quarto = {
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
+<main class="content" id="quarto-document-content" tabindex="-1">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
@@ -385,12 +374,12 @@ window.Quarto = {
 <li>Evaluate a Stan fit and justify whether its posterior summaries are precise enough for a stated purpose.</li>
 </ul>
 </div>
-<section id="inspecting-a-run" class="level2" data-number="4.1">
-<h2 data-number="4.1" class="anchored" data-anchor-id="inspecting-a-run"><span class="header-section-number">4.1</span> Inspecting a run</h2>
-<p>We begin with the Normal transition rule from <a href="03-markov-chains.html" class="quarto-xref"><span>Chapter 3</span></a>. At each step, combine part of the current value with a new random draw: <span class="math display">\[
+<section id="sec-ar1" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="sec-ar1"><span class="header-section-number">4.1</span> Inspecting a run</h2>
+<p>We begin with the Normal transition rule from <a href="03-markov-chains.html" class="quarto-xref"><span>Chapter 3</span></a>. At each step, combine part of the current value with a new random draw: <span id="eq-ar1"><span class="math display">\[
 \theta^{(t+1)}=\phi\theta^{(t)}+\sqrt{1-\phi^2}\,\varepsilon_t,
 \qquad \varepsilon_t\sim\text{N}(0,1).
-\]</span> Each new <span class="math inline">\(\varepsilon_t\)</span> is drawn independently. The parameter <span class="math inline">\(\phi\)</span>, with <span class="math inline">\(-1&lt;\phi&lt;1\)</span>, controls how much of the current value carries over to the next. With <span class="math inline">\(\phi=0\)</span>, the next value is a fresh standard Normal draw. With <span class="math inline">\(\phi\)</span> close to one, successive values tend to stay close together. This rule is called a <strong>first-order autoregressive process</strong>, or <strong>AR(1) process</strong>.</p>
+\tag{4.1}\]</span></span> Each new <span class="math inline">\(\varepsilon_t\)</span> is drawn independently. The parameter <span class="math inline">\(\phi\)</span>, with <span class="math inline">\(-1&lt;\phi&lt;1\)</span>, controls how much of the current value carries over to the next. With <span class="math inline">\(\phi=0\)</span>, the next value is a fresh standard Normal draw. With <span class="math inline">\(\phi\)</span> close to one, successive values tend to stay close together. This rule is called a <strong>first-order autoregressive process</strong>, or <strong>AR(1) process</strong>.</p>
 <p>These choices of <span class="math inline">\(\phi\)</span> preserve the same standard Normal target. To check this, suppose the current state is standard Normal. A weighted sum of independent Normal variables is also Normal, as we saw in <a href="03-markov-chains.html" class="quarto-xref"><span>Chapter 3</span></a>. The next state has mean zero and variance <span class="math display">\[
 \phi^2\times1+(1-\phi^2)\times1=1.
 \]</span> It is therefore standard Normal too. Changing <span class="math inline">\(\phi\)</span> changes how the chain moves, while keeping its stationary distribution fixed.</p>
@@ -426,7 +415,7 @@ window.Quarto = {
 <span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> phi, <span class="at">ncol =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
 <span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Iteration"</span>, <span class="at">y =</span> <span class="fu">expression</span>(theta))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<div id="fig-ar1-traces" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-pos="H" data-fig-align="center">
+<div id="fig-ar1-traces" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center" data-fig-pos="H">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-ar1-traces-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="04-diagnosing-markov-chains_files/figure-html/fig-ar1-traces-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%" data-fig-pos="H">
@@ -445,7 +434,7 @@ Figure&nbsp;4.1: The first 500 iterations of three chains that all have the N(0,
 <p>Consider four chains with <span class="math inline">\(\phi=0.99\)</span>, started at <span class="math inline">\(-6\)</span>, <span class="math inline">\(-3\)</span>, <span class="math inline">\(3\)</span>, and <span class="math inline">\(6\)</span>. The standard Normal target puts most of its probability between <span class="math inline">\(-2\)</span> and <span class="math inline">\(2\)</span>. <a href="#fig-warmup" class="quarto-xref">Figure&nbsp;<span>4.2</span></a> shows how these chains move from their starts toward that region.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
-<div id="fig-warmup" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-pos="H" data-fig-align="center">
+<div id="fig-warmup" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center" data-fig-pos="H">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-warmup-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="04-diagnosing-markov-chains_files/figure-html/fig-warmup-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%" data-fig-pos="H">
@@ -465,7 +454,7 @@ Figure&nbsp;4.2: Four AR(1) chains with phi = 0.99, started at -6, -3, 3, and 6.
 <p>The same questions arise with a posterior whose shape we do not know. Does the chain keep drifting? Does it remain near one value for long stretches? Do different chains explore different regions? <a href="#fig-pathologies" class="quarto-xref">Figure&nbsp;<span>4.3</span></a> illustrates these three patterns on a proportion scale.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
-<div id="fig-pathologies" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-pos="H" data-fig-align="center">
+<div id="fig-pathologies" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center" data-fig-pos="H">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-pathologies-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="04-diagnosing-markov-chains_files/figure-html/fig-pathologies-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%" data-fig-pos="H">
@@ -501,7 +490,7 @@ Figure&nbsp;4.3: Three exaggerated synthetic warning patterns. Top: upward drift
 <p>R estimates the autocorrelations from a simulated chain with <code>acf()</code>. For example, <code>acf(ar1_chains[[3]])</code> plots them for the chain with <span class="math inline">\(\phi=0.95\)</span>. <a href="#fig-acf" class="quarto-xref">Figure&nbsp;<span>4.4</span></a> compares all three chains.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
-<div id="fig-acf" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-pos="H" data-fig-align="center">
+<div id="fig-acf" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center" data-fig-pos="H">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-acf-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="04-diagnosing-markov-chains_files/figure-html/fig-acf-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%" data-fig-pos="H">
@@ -525,7 +514,7 @@ Figure&nbsp;4.4: Estimated autocorrelations of the three Normal chains. Dependen
 <p><a href="#fig-repeated-means" class="quarto-xref">Figure&nbsp;<span>4.5</span></a> compares these averages with those from <span class="math inline">\(\phi=0\)</span> and <span class="math inline">\(\phi=0.5\)</span>.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
-<div id="fig-repeated-means" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-pos="H" data-fig-align="center">
+<div id="fig-repeated-means" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center" data-fig-pos="H">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-repeated-means-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="04-diagnosing-markov-chains_files/figure-html/fig-repeated-means-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%" data-fig-pos="H">
@@ -548,7 +537,7 @@ Figure&nbsp;4.5: Estimated means from 200 independent runs for each value of phi
 <p>For a stationary chain, the corresponding large-<span class="math inline">\(N\)</span> approximation is <span id="eq-ess"><span class="math display">\[
 \operatorname{Var}(\bar\theta)\approx\frac{\sigma^2}{N}
 \left(1+2\sum_{k=1}^{\infty}\rho_k\right).
-\tag{4.1}\]</span></span> This assumes a finite target variance and autocorrelations that die away fast enough for their sum to be finite. The factor in parentheses describes the effect of dependence. For independent draws, all the <span class="math inline">\(\rho_k\)</span> are zero and the factor is one. Positive autocorrelations make it larger.</p>
+\tag{4.2}\]</span></span> This assumes a finite target variance and autocorrelations that die away fast enough for their sum to be finite. The factor in parentheses describes the effect of dependence. For independent draws, all the <span class="math inline">\(\rho_k\)</span> are zero and the factor is one. Positive autocorrelations make it larger.</p>
 <p>We can express this loss of precision as an <strong>effective sample size</strong> (ESS): the number of independent draws that would give approximately the same spread of estimated means across repeated runs. Writing <span class="math inline">\(\operatorname{Var}(\bar\theta)\approx\sigma^2/N_{\mathrm{eff}}\)</span> gives <span class="math display">\[
 N_{\mathrm{eff}}=\frac{N}{1+2\sum_{k=1}^{\infty}\rho_k}.
 \]</span> For the AR(1) chain, <span class="math inline">\(\rho_k=\phi^k\)</span>. Summing the geometric series gives <span class="math display">\[
@@ -574,7 +563,7 @@ N_{\mathrm{eff}}
 <h3 data-number="4.3.1" class="anchored" data-anchor-id="expressing-precision-in-the-units-of-the-estimate"><span class="header-section-number">4.3.1</span> Expressing precision in the units of the estimate</h3>
 <p>ESS tells us how much precision we have relative to independent sampling. To express that precision in the units of the mean, take the square root of its variance: <span id="eq-mcse-mean"><span class="math display">\[
 \operatorname{MCSE}(\bar\theta)\approx\frac{\sigma}{\sqrt{N_{\mathrm{eff}}}}.
-\tag{4.2}\]</span></span> This is the <strong>Monte Carlo standard error</strong> (MCSE). It estimates the standard deviation of the averages we would obtain across repeated runs, as illustrated in <a href="#fig-repeated-means" class="quarto-xref">Figure&nbsp;<span>4.5</span></a>.</p>
+\tag{4.3}\]</span></span> This is the <strong>Monte Carlo standard error</strong> (MCSE). It estimates the standard deviation of the averages we would obtain across repeated runs, as illustrated in <a href="#fig-repeated-means" class="quarto-xref">Figure&nbsp;<span>4.5</span></a>.</p>
 <p>For the standard Normal target, <span class="math inline">\(\sigma=1\)</span>. The three 20,000-state runs therefore have approximate MCSEs of <span class="math inline">\(1/\sqrt{20{,}000}=0.007\)</span> when <span class="math inline">\(\phi=0\)</span>, <span class="math inline">\(1/\sqrt{6{,}667}=0.012\)</span> when <span class="math inline">\(\phi=0.5\)</span>, and <span class="math inline">\(1/\sqrt{513}=0.044\)</span> when <span class="math inline">\(\phi=0.95\)</span>.</p>
 <p>An estimated mean of 0.04 is thus less than one MCSE from zero for the slowest chain, but more than five MCSEs away for independent draws. An error of 0.04 would thus be quite ordinary for the slowest chain and unusual for independent draws. <code>mcse_mean()</code> estimates the MCSE from the draws:</p>
 <div class="cell" data-layout-align="center">
@@ -624,7 +613,7 @@ N\approx2{,}500\frac{1+0.95}{1-0.95}=97{,}500
 <p>We can see both effects by repeating the Normal simulation from the fixed starting value 6, using <span class="math inline">\(\phi=0.99\)</span>. In <a href="#fig-bias-variance" class="quarto-xref">Figure&nbsp;<span>4.6</span></a> we vary how many early states we discard and how many later states we retain. Each panel contains the estimated means from 200 runs.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
-<div id="fig-bias-variance" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-pos="H" data-fig-align="center">
+<div id="fig-bias-variance" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center" data-fig-pos="H">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-bias-variance-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="04-diagnosing-markov-chains_files/figure-html/fig-bias-variance-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%" data-fig-pos="H">
@@ -659,7 +648,7 @@ Figure&nbsp;4.6: Repeated estimates of the mean of a standard Normal target, usi
 </div>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
-<div id="fig-chain-agreement" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-pos="H" data-fig-align="center">
+<div id="fig-chain-agreement" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center" data-fig-pos="H">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-chain-agreement-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="04-diagnosing-markov-chains_files/figure-html/fig-chain-agreement-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%" data-fig-pos="H">
@@ -796,7 +785,7 @@ W\approx\frac{0.966+0.966+0.999+1.019}{4}=0.988.
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  (<span class="fu">mcmc_acf</span>(radio_array, <span class="at">pars =</span> <span class="st">"pi"</span>, <span class="at">lags =</span> <span class="dv">20</span>) <span class="sc">|</span></span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>     (<span class="fu">mcmc_dens_overlay</span>(radio_array, <span class="at">pars =</span> <span class="st">"pi"</span>) <span class="sc">+</span> <span class="fu">legend_none</span>()))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<div id="fig-radio-workflow" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-pos="H" data-fig-align="center">
+<div id="fig-radio-workflow" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center" data-fig-pos="H">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-radio-workflow-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="04-diagnosing-markov-chains_files/figure-html/fig-radio-workflow-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%" data-fig-pos="H">
@@ -888,7 +877,7 @@ Figure&nbsp;4.8: The radio posterior from four Stan chains. Top: retained values
 <p><a href="#fig-radio-exact" class="quarto-xref">Figure&nbsp;<span>4.9</span></a> compares the simulated distribution with the known posterior. In a more complex model this exact check may be unavailable, but the diagnostic questions remain the same.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
-<div id="fig-radio-exact" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-pos="H" data-fig-align="center">
+<div id="fig-radio-exact" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center" data-fig-pos="H">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-radio-exact-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="04-diagnosing-markov-chains_files/figure-html/fig-radio-exact-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%" data-fig-pos="H">
@@ -918,7 +907,7 @@ Figure&nbsp;4.9: Histogram of the 4,000 Stan draws for the proportion of Dutch-l
 <p>Agreement over a short interval does not establish that a longer run will behave the same way. <a href="#fig-late-change" class="quarto-xref">Figure&nbsp;<span>4.10</span></a> illustrates a record that looks stable for its first 1,000 values but later moves to a different level.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
-<div id="fig-late-change" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-pos="H" data-fig-align="center">
+<div id="fig-late-change" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center" data-fig-pos="H">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-late-change-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="04-diagnosing-markov-chains_files/figure-html/fig-late-change-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%" data-fig-pos="H">
@@ -935,7 +924,7 @@ Figure&nbsp;4.10: A synthetic example of a late change. The first 1,000 values (
 <p>We can illustrate that output with four AR(1) records centered at <span class="math inline">\(-3\)</span>. These sample the left Normal component; they are not samplers for the full mixture. <a href="#fig-trapped" class="quarto-xref">Figure&nbsp;<span>4.11</span></a> compares their output with the whole target.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
-<div id="fig-trapped" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-pos="H" data-fig-align="center">
+<div id="fig-trapped" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center" data-fig-pos="H">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-trapped-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="04-diagnosing-markov-chains_files/figure-html/fig-trapped-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%" data-fig-pos="H">
@@ -1003,7 +992,7 @@ Figure&nbsp;4.11: Four records representing exploration of only the left mode of
 <p><strong>Exercise 4.5 (Diagnose these chains)</strong> <a href="#fig-exercise-traces" class="quarto-xref">Figure&nbsp;<span>4.12</span></a> shows trace plots of four sets of chains, labelled A to D, and <a href="#fig-exercise-overlays" class="quarto-xref">Figure&nbsp;<span>4.13</span></a> shows the corresponding density overlays. The patterns are subtler than the ones in <a href="#fig-pathologies" class="quarto-xref">Figure&nbsp;<span>4.3</span></a>. For each set, decide whether the chains look healthy, and if not, name the pathology and the diagnostic that reveals it most clearly. Then say, for each unhealthy set, what further information would be needed to judge whether a longer run would help. The records illustrate patterns; do not assume that their generating rules are valid posterior samplers.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
-<div id="fig-exercise-traces" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-pos="H" data-fig-align="center">
+<div id="fig-exercise-traces" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center" data-fig-pos="H">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-exercise-traces-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="04-diagnosing-markov-chains_files/figure-html/fig-exercise-traces-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%" data-fig-pos="H">
@@ -1017,7 +1006,7 @@ Figure&nbsp;4.12: Trace plots for Exercise 4.5.
 </div>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
-<div id="fig-exercise-overlays" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-pos="H" data-fig-align="center">
+<div id="fig-exercise-overlays" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center" data-fig-pos="H">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-exercise-overlays-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="04-diagnosing-markov-chains_files/figure-html/fig-exercise-overlays-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%" data-fig-pos="H">
@@ -1303,7 +1292,8 @@ Vehtari, A., Gelman, A., Simpson, D., Carpenter, B., &amp; Bürkner, P.-C. (2021
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }
       // Inspect non-navigation links and adorn them if external
-     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      window.quartoDecorateExternalLinks = function (root) {
+     var links = (root || window.document).querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
       for (var i=0; i<links.length; i++) {
         const link = links[i];
         if (!isInternal(link.href)) {
@@ -1312,8 +1302,69 @@ Vehtari, A., Gelman, A., Simpson, D., Carpenter, B., &amp; Bürkner, P.-C. (2021
           if (link.dataset.originalHref !== undefined) {
             link.href = link.dataset.originalHref;
           }
+          if (!link.classList.contains('no-external-icon')) {
+          }
         }
       }
+      };
+      window.quartoDecorateExternalLinks(window.document);
+    // Esc closes the popup (WCAG 1.4.13) and focus leaving both trigger and
+    // popup closes it (WCAG 2.4.11); tippy handles neither for interactive popups.
+    const hideOnEscAndFocusOut = {
+      name: 'hideOnEscAndFocusOut',
+      defaultValue: true,
+      fn(instance) {
+        const dismiss = () => {
+          // A show scheduled by the trigger delay would otherwise reopen it
+          instance.clearDelayTimeouts();
+          instance.hide();
+        };
+        const onKeyDown = (event) => {
+          if (event.key !== 'Escape') {
+            return;
+          }
+          // Keep Esc from also reaching page handlers (e.g. reveal.js overview),
+          // except an open reveal.js slide menu, which Esc should close too.
+          // The menu handles keys only when its keyboard option is on.
+          const menuHandlesEsc = window.Reveal?.getPlugin?.('menu')?.isOpen() &&
+            window.Reveal.getConfig().menu?.keyboard !== false;
+          if (!menuHandlesEsc) {
+            event.stopPropagation();
+          }
+          if (instance.popper.contains(window.document.activeElement)) {
+            // Disabled while refocusing so the focus trigger does not reopen it
+            instance.disable();
+            instance.reference.focus();
+            instance.enable();
+          }
+          dismiss();
+        };
+        const onFocusOut = (event) => {
+          const target = event.relatedTarget;
+          if (target && !instance.reference.contains(target) &&
+              !instance.popper.contains(target)) {
+            dismiss();
+          }
+        };
+        // On the trigger too: a click trigger (code-annotations: select) has no
+        // blur handling. Attached for the instance's lifetime so leaving the
+        // trigger also cancels a show still pending on the trigger delay.
+        instance.reference.addEventListener('focusout', onFocusOut);
+        return {
+          onShow() {
+            window.document.addEventListener('keydown', onKeyDown, true);
+            instance.popper.addEventListener('focusout', onFocusOut);
+          },
+          onHide() {
+            window.document.removeEventListener('keydown', onKeyDown, true);
+            instance.popper.removeEventListener('focusout', onFocusOut);
+          },
+          onDestroy() {
+            instance.reference.removeEventListener('focusout', onFocusOut);
+          },
+        };
+      },
+    };
     function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
       const config = {
         allowHTML: true,
@@ -1327,6 +1378,7 @@ Vehtari, A., Gelman, A., Simpson, D., Carpenter, B., &amp; Bürkner, P.-C. (2021
         interactiveBorder: 10,
         theme: 'quarto',
         placement: 'bottom-start',
+        plugins: [hideOnEscAndFocusOut],
       };
       if (contentFn) {
         config.content = contentFn;
@@ -1489,44 +1541,54 @@ Vehtari, A., Gelman, A., Simpson, D., Carpenter, B., &amp; Bürkner, P.-C. (2021
           const lineIds = lines.map((line) => {
             return targetCell + "-" + line;
           })
-          let top = null;
-          let height = null;
-          let parent = null;
+          // Each band is positioned against its own containing block, which is
+          // not the offsetParent of the lines, so place it from client rects.
+          const placeBand = (band, firstEl, lastEl, codeBlock) => {
+            const container = band.offsetParent;
+            if (container === null) {
+              return;
+            }
+            const containerRect = container.getBoundingClientRect();
+            // Reveal.js scales slides with a transform, so convert client
+            // pixels back to the CSS pixels of the container.
+            const scale = containerRect.height / container.offsetHeight || 1;
+            const firstRect = firstEl.getBoundingClientRect();
+            const lastRect = lastEl.getBoundingClientRect();
+            const top = (firstRect.top - containerRect.top) / scale - container.clientTop + container.scrollTop;
+            const height = (lastRect.bottom - firstRect.top) / scale;
+            band.style.top = top - 2 + "px";
+            band.style.height = height + 4 + "px";
+            if (codeBlock) {
+              // Without the copy button wrapper, the containing block is wider
+              // than the code block, so span the code block explicitly.
+              const blockRect = codeBlock.getBoundingClientRect();
+              band.style.left = (blockRect.left - containerRect.left) / scale - container.clientLeft + container.scrollLeft + "px";
+              band.style.width = blockRect.width / scale + "px";
+            }
+          };
           if (lineIds.length > 0) {
-              //compute the position of the single el (top and bottom and make a div)
-              const el = window.document.getElementById(lineIds[0]);
-              top = el.offsetTop;
-              height = el.offsetHeight;
-              parent = el.parentElement.parentElement;
-            if (lineIds.length > 1) {
-              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
-              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
-              height = bottom - top;
+            const el = window.document.getElementById(lineIds[0]);
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const parent = el.parentElement.parentElement;
+            // cook up a div (if necessary) and position it
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
             }
-            if (top !== null && height !== null && parent !== null) {
-              // cook up a div (if necessary) and position it 
-              let div = window.document.getElementById("code-annotation-line-highlight");
-              if (div === null) {
-                div = window.document.createElement("div");
-                div.setAttribute("id", "code-annotation-line-highlight");
-                div.style.position = 'absolute';
-                parent.appendChild(div);
-              }
-              div.style.top = top - 2 + "px";
-              div.style.height = height + 4 + "px";
-              div.style.left = 0;
-              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
-              if (gutterDiv === null) {
-                gutterDiv = window.document.createElement("div");
-                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
-                gutterDiv.style.position = 'absolute';
-                const codeCell = window.document.getElementById(targetCell);
-                const gutter = codeCell.querySelector('.code-annotation-gutter');
-                gutter.appendChild(gutterDiv);
-              }
-              gutterDiv.style.top = top - 2 + "px";
-              gutterDiv.style.height = height + 4 + "px";
+            placeBand(div, el, lastEl, parent.closest("div.sourceCode") || parent);
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
             }
+            placeBand(gutterDiv, el, lastEl);
             selectedAnnoteEl = annoteEl;
           }
         };
@@ -1625,7 +1687,10 @@ Vehtari, A., Gelman, A., Simpson, D., Carpenter, B., &amp; Bürkner, P.-C. (2021
     }
   });
   </script>
-<nav class="page-navigation">
+  <script type="application/javascript">
+  window.quartoScrollableRegionsLabels = {"code":"Scrollable code","output":"Scrollable output"};
+  </script>
+<nav class="page-navigation" aria-label="Page">
   <div class="nav-page nav-page-previous">
       <a href="../chapters/03-markov-chains.html" class="pagination-link" aria-label="Markov Chains">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Markov Chains</span></span>
