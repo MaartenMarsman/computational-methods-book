@@ -3,9 +3,14 @@
   "root": "/computational-methods-book/",
   "versions": [
     {
-      "version": "0.1",
+      "version": "0.1.1",
       "kind": "release",
       "path": "/computational-methods-book/"
+    },
+    {
+      "version": "0.1",
+      "kind": "release",
+      "path": "/computational-methods-book/v0.1/"
     },
     {
       "version": "development",

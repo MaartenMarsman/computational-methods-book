@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.10.20">
+<meta name="generator" content="quarto-1.11.9">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -60,14 +60,15 @@ div.csl-indent {
 <link href="./chapters/01-probability-and-simulation.html" rel="next">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/scrollable-regions/scrollable-regions.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-3f446edc70b0757b4dde2b060815ebc9.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-85f7a32731ed2b609fa7be27e34d4366.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-2fcf8a0ee316d604ebc18c0691cf69d6.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-0b2b94c5a528e4e5a70806ea6f8266d3.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -100,18 +101,18 @@ div.csl-indent {
 <link rel="stylesheet" href="style/bayesrules.css">
 </head>
 
-<body class="nav-sidebar floating quarto-light">
+<body class="nav-sidebar floating quarto-light"><a id="quarto-skip-link" class="visually-hidden-focusable" href="#quarto-document-content">Skip to main content</a>
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
-  <nav class="quarto-secondary-nav">
+  <nav class="quarto-secondary-nav" aria-label="Toolbar">
     <div class="container-fluid d-flex">
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">Welcome</a></li></ol></nav>
-        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-        </a>
+        <a class="flex-grow-1 no-decor" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+          <h1 class="quarto-secondary-nav-title">Stochastic Simulation for Bayesian Modeling in Psychology</h1>
+        </a>     
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
       </button>
@@ -121,14 +122,10 @@ div.csl-indent {
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto" aria-label="Site">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="./">Stochastic Simulation for Bayesian Modeling in Psychology</a> 
-        <div class="sidebar-tools-main">
-    <a href="https://github.com/MaartenMarsman/computational-methods-book" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
-    <a href="./Stochastic-Simulation-for-Bayesian-Modeling.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
-</div>
     </div>
       </div>
         <div class="mt-2 flex-shrink-0 align-items-center">
@@ -146,13 +143,10 @@ div.csl-indent {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
- <span class="menu-text">Foundations</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
+            <button type="button" class="sidebar-item-text sidebar-item-toggle sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-controls="quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text" id="quarto-sidebar-section-1-label">Foundations</span><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
       </div>
-      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+      <ul id="quarto-sidebar-section-1" aria-labelledby="quarto-sidebar-section-1-label" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./chapters/01-probability-and-simulation.html" class="sidebar-item-text sidebar-link">
@@ -169,13 +163,10 @@ div.csl-indent {
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
- <span class="menu-text">Markov Chains</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
+            <button type="button" class="sidebar-item-text sidebar-item-toggle sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-controls="quarto-sidebar-section-2" aria-expanded="true">
+ <span class="menu-text" id="quarto-sidebar-section-2-label">Markov Chains</span><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
       </div>
-      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+      <ul id="quarto-sidebar-section-2" aria-labelledby="quarto-sidebar-section-2-label" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./chapters/03-markov-chains.html" class="sidebar-item-text sidebar-link">
@@ -192,13 +183,10 @@ div.csl-indent {
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
- <span class="menu-text">Sampling Algorithms</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
+            <button type="button" class="sidebar-item-text sidebar-item-toggle sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-controls="quarto-sidebar-section-3" aria-expanded="true">
+ <span class="menu-text" id="quarto-sidebar-section-3-label">Sampling Algorithms</span><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
       </div>
-      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+      <ul id="quarto-sidebar-section-3" aria-labelledby="quarto-sidebar-section-3-label" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./chapters/05-metropolis.html" class="sidebar-item-text sidebar-link">
@@ -221,13 +209,10 @@ div.csl-indent {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
- <span class="menu-text">Appendices</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
+            <button type="button" class="sidebar-item-text sidebar-item-toggle sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-controls="quarto-sidebar-section-4" aria-expanded="true">
+ <span class="menu-text" id="quarto-sidebar-section-4-label">Appendices</span><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
       </div>
-      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+      <ul id="quarto-sidebar-section-4" aria-labelledby="quarto-sidebar-section-4-label" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./appendices/A-software-setup.html" class="sidebar-item-text sidebar-link">
@@ -256,14 +241,10 @@ div.csl-indent {
   </li>
     </ul>
     </div>
-</nav>
-<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
-<!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
+    <nav id="TOC" role="doc-toc" aria-labelledby="toc-title" class="toc-active">
     <h2 id="toc-title">Table of contents</h2>
    
-  <ul>
+  <ul class="collapse">
   <li><a href="#welcome" id="toc-welcome" class="nav-link active" data-scroll-target="#welcome">Welcome</a>
   <ul class="collapse">
   <li><a href="#why-we-wrote-this-book" id="toc-why-we-wrote-this-book" class="nav-link" data-scroll-target="#why-we-wrote-this-book">Why we wrote this book</a></li>
@@ -276,14 +257,18 @@ div.csl-indent {
   <li><a href="#about-this-website" id="toc-about-this-website" class="nav-link" data-scroll-target="#about-this-website">About this website</a></li>
   </ul></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/MaartenMarsman/computational-methods-book/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
+</nav>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
+<main class="content" id="quarto-document-content" tabindex="-1">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Stochastic Simulation for Bayesian Modeling in Psychology</h1>
+<h1 class="title d-none d-lg-block">Stochastic Simulation for Bayesian Modeling in Psychology</h1>
 <p class="subtitle lead">An Introduction to Computational Methods</p>
 </div>
 
@@ -309,18 +294,8 @@ div.csl-indent {
 
 <section id="welcome" class="level1 unnumbered">
 <h1 class="unnumbered">Welcome</h1>
-<div class="callout callout-style-simple callout-note">
-<div class="callout-body d-flex">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-body-container">
-<p><strong>Work in progress.</strong> This website holds the chapters of the book that are ready for readers. Online now: <a href="./chapters/01-probability-and-simulation.html">Chapter 1</a> (Probability and Simulation), <a href="./chapters/02-bayesian-inference-recap.html">Chapter 2</a> (Bayesian Inference, Revisited), <a href="./chapters/03-markov-chains.html">Chapter 3</a> (Markov Chains), <a href="./chapters/04-diagnosing-markov-chains.html">Chapter 4</a> (Diagnosing Markov Chains) and <a href="./chapters/05-metropolis.html">Chapter 5</a> (The Metropolis Algorithm). Further chapters are added as they are completed, and the chapters already online may still change.</p>
-<p><a href="Stochastic-Simulation-for-Bayesian-Modeling.pdf">Download the PDF</a> of the chapters that are online.</p>
-</div>
-</div>
-</div>
-<p>Stochastic simulation provides a way to study Bayesian models when the quantities of interest are difficult to calculate directly. By generating draws from a probability distribution, we can estimate posterior means, probabilities, and predictions. This book develops the methods behind those calculations and shows how to implement them in R.</p>
+<p>This website holds the released chapters of the book. You can also <a href="Stochastic-Simulation-for-Bayesian-Modeling.pdf">download it as a PDF</a>.</p>
+<p>Stochastic simulation provides a way to study Bayesian models when the quantities of interest are difficult to calculate directly. By generating draws from a probability distribution, we can estimate posterior means, probabilities, and predictions. This book develops the methods behind those calculations and shows how to implement them in R. Implementing the algorithms helps reveal how they work, why they sometimes perform poorly, and how to assess the results produced by statistical software.</p>
 <section id="why-we-wrote-this-book" class="level2 unnumbered">
 <h2 class="unnumbered anchored" data-anchor-id="why-we-wrote-this-book">Why we wrote this book</h2>
 <p>We previously taught two separate courses in the Research Master’s Psychology program at the University of Amsterdam. One used <em>Bayes Rules!</em> <span class="citation" data-cites="johnson2022bayes">(<a href="references.html#ref-johnson2022bayes" role="doc-biblioref">Johnson et al., 2022</a>)</span>, and the other used <em>MCMC from Scratch</em> <span class="citation" data-cites="hanada2022mcmc">(<a href="references.html#ref-hanada2022mcmc" role="doc-biblioref">Hanada &amp; Matsuura, 2022</a>)</span>. Both are excellent books, but they differ in the topics they cover, the depth of their treatment, and the technical background they expect. <em>Bayes Rules!</em> introduces Bayesian modeling through applications, while <em>MCMC from Scratch</em> develops the principles and implementation of Monte Carlo methods.</p>
@@ -328,7 +303,7 @@ div.csl-indent {
 </section>
 <section id="who-this-book-is-for" class="level2 unnumbered">
 <h2 class="unnumbered anchored" data-anchor-id="who-this-book-is-for">Who this book is for</h2>
-<p>This book is intended for research master’s students in psychology who want to understand how stochastic simulation supports Bayesian analysis. You should be familiar with elementary probability and statistics, including means, variances, and probability distributions, and be comfortable writing basic R code using vectors, functions, and loops. Familiarity with Bayesian inference is helpful; the opening chapters introduce the probability and Bayesian concepts used throughout the book.</p>
+<p>This book is for students and researchers who want to understand how stochastic simulation supports Bayesian analysis. The examples draw primarily on psychology, but the methods apply across disciplines. You should be familiar with elementary probability and statistics, including means, variances, and probability distributions, and be comfortable writing basic R code using vectors, functions, and loops. Familiarity with Bayesian inference is helpful; the opening chapters introduce the probability and Bayesian concepts used throughout the book.</p>
 <p>By working through the text and code, you will learn to</p>
 <ul>
 <li>explain how Monte Carlo simulation approximates posterior quantities and how its numerical accuracy is assessed;</li>
@@ -351,6 +326,7 @@ div.csl-indent {
 <section id="how-to-read-this-book" class="level2 unnumbered">
 <h2 class="unnumbered anchored" data-anchor-id="how-to-read-this-book">How to read this book</h2>
 <p>Each chapter introduces a problem and its learning goals, develops the methods through worked examples, and closes with a summary and exercises. Read the explanations alongside the code, run the examples, and examine how the results change when you alter the inputs or simulation settings.</p>
+<p>The appendices provide software guidance, a reference for notation, and detailed mathematical derivations that supplement the main explanations.</p>
 <p>The exercises take three forms. <em>Conceptual</em> exercises ask you to explain or derive an idea. <em>Practical</em> exercises develop your ability to implement and assess a method. <em>Applied</em> exercises use the methods to answer questions about data.</p>
 <div class="bookbox bookgraybox">
 <div class="title">
@@ -385,7 +361,7 @@ div.csl-indent {
 
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" data-line-spacing="2" role="list" style="display: none">
 <div id="ref-hanada2022mcmc" class="csl-entry" role="listitem">
-Hanada, M., &amp; Matsuura, S. (2022). <em><span>MCMC</span> from scratch: A practical introduction to markov chain monte carlo</em>. Springer.
+Hanada, M., &amp; Matsuura, S. (2022). <em><span>MCMC</span> from scratch: A practical introduction to <span>Markov</span> chain <span>Monte Carlo</span></em>. Springer.
 </div>
 <div id="ref-johnson2022bayes" class="csl-entry" role="listitem">
 Johnson, A. A., Ott, M. Q., &amp; Dogucu, M. (2022). <em>Bayes rules! <span>A</span>n introduction to applied <span>B</span>ayesian modeling</em>. CRC Press.
@@ -421,6 +397,18 @@ Johnson, A. A., Ott, M. Q., &amp; Dogucu, M. (2022). <em>Bayes rules! <span>A</s
 .book-version li a.active { font-weight: bold; }
 .book-version .book-version-kind { color: #777; font-size: 0.8em; }
 </style>
+<script>
+  // Move the chapter's table of contents from the bottom of the sidebar to
+  // right under the chapter's own entry, as on the Bayes Rules! site.
+  document.addEventListener("DOMContentLoaded", function () {
+    const toc = document.querySelector("#quarto-sidebar #TOC");
+    const current = document.querySelector("#quarto-sidebar .sidebar-item a.active");
+    if (toc && current) {
+      const item = current.closest(".sidebar-item");
+      if (item) item.append(toc);
+    }
+  });
+</script>
 <script>
 (function () {
   const header = document.querySelector("#quarto-sidebar .sidebar-header");
@@ -599,7 +587,8 @@ Johnson, A. A., Ott, M. Q., &amp; Dogucu, M. (2022). <em>Bayes rules! <span>A</s
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }
       // Inspect non-navigation links and adorn them if external
-     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      window.quartoDecorateExternalLinks = function (root) {
+     var links = (root || window.document).querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
       for (var i=0; i<links.length; i++) {
         const link = links[i];
         if (!isInternal(link.href)) {
@@ -608,8 +597,69 @@ Johnson, A. A., Ott, M. Q., &amp; Dogucu, M. (2022). <em>Bayes rules! <span>A</s
           if (link.dataset.originalHref !== undefined) {
             link.href = link.dataset.originalHref;
           }
+          if (!link.classList.contains('no-external-icon')) {
+          }
         }
       }
+      };
+      window.quartoDecorateExternalLinks(window.document);
+    // Esc closes the popup (WCAG 1.4.13) and focus leaving both trigger and
+    // popup closes it (WCAG 2.4.11); tippy handles neither for interactive popups.
+    const hideOnEscAndFocusOut = {
+      name: 'hideOnEscAndFocusOut',
+      defaultValue: true,
+      fn(instance) {
+        const dismiss = () => {
+          // A show scheduled by the trigger delay would otherwise reopen it
+          instance.clearDelayTimeouts();
+          instance.hide();
+        };
+        const onKeyDown = (event) => {
+          if (event.key !== 'Escape') {
+            return;
+          }
+          // Keep Esc from also reaching page handlers (e.g. reveal.js overview),
+          // except an open reveal.js slide menu, which Esc should close too.
+          // The menu handles keys only when its keyboard option is on.
+          const menuHandlesEsc = window.Reveal?.getPlugin?.('menu')?.isOpen() &&
+            window.Reveal.getConfig().menu?.keyboard !== false;
+          if (!menuHandlesEsc) {
+            event.stopPropagation();
+          }
+          if (instance.popper.contains(window.document.activeElement)) {
+            // Disabled while refocusing so the focus trigger does not reopen it
+            instance.disable();
+            instance.reference.focus();
+            instance.enable();
+          }
+          dismiss();
+        };
+        const onFocusOut = (event) => {
+          const target = event.relatedTarget;
+          if (target && !instance.reference.contains(target) &&
+              !instance.popper.contains(target)) {
+            dismiss();
+          }
+        };
+        // On the trigger too: a click trigger (code-annotations: select) has no
+        // blur handling. Attached for the instance's lifetime so leaving the
+        // trigger also cancels a show still pending on the trigger delay.
+        instance.reference.addEventListener('focusout', onFocusOut);
+        return {
+          onShow() {
+            window.document.addEventListener('keydown', onKeyDown, true);
+            instance.popper.addEventListener('focusout', onFocusOut);
+          },
+          onHide() {
+            window.document.removeEventListener('keydown', onKeyDown, true);
+            instance.popper.removeEventListener('focusout', onFocusOut);
+          },
+          onDestroy() {
+            instance.reference.removeEventListener('focusout', onFocusOut);
+          },
+        };
+      },
+    };
     function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
       const config = {
         allowHTML: true,
@@ -623,6 +673,7 @@ Johnson, A. A., Ott, M. Q., &amp; Dogucu, M. (2022). <em>Bayes rules! <span>A</s
         interactiveBorder: 10,
         theme: 'quarto',
         placement: 'bottom-start',
+        plugins: [hideOnEscAndFocusOut],
       };
       if (contentFn) {
         config.content = contentFn;
@@ -785,44 +836,54 @@ Johnson, A. A., Ott, M. Q., &amp; Dogucu, M. (2022). <em>Bayes rules! <span>A</s
           const lineIds = lines.map((line) => {
             return targetCell + "-" + line;
           })
-          let top = null;
-          let height = null;
-          let parent = null;
+          // Each band is positioned against its own containing block, which is
+          // not the offsetParent of the lines, so place it from client rects.
+          const placeBand = (band, firstEl, lastEl, codeBlock) => {
+            const container = band.offsetParent;
+            if (container === null) {
+              return;
+            }
+            const containerRect = container.getBoundingClientRect();
+            // Reveal.js scales slides with a transform, so convert client
+            // pixels back to the CSS pixels of the container.
+            const scale = containerRect.height / container.offsetHeight || 1;
+            const firstRect = firstEl.getBoundingClientRect();
+            const lastRect = lastEl.getBoundingClientRect();
+            const top = (firstRect.top - containerRect.top) / scale - container.clientTop + container.scrollTop;
+            const height = (lastRect.bottom - firstRect.top) / scale;
+            band.style.top = top - 2 + "px";
+            band.style.height = height + 4 + "px";
+            if (codeBlock) {
+              // Without the copy button wrapper, the containing block is wider
+              // than the code block, so span the code block explicitly.
+              const blockRect = codeBlock.getBoundingClientRect();
+              band.style.left = (blockRect.left - containerRect.left) / scale - container.clientLeft + container.scrollLeft + "px";
+              band.style.width = blockRect.width / scale + "px";
+            }
+          };
           if (lineIds.length > 0) {
-              //compute the position of the single el (top and bottom and make a div)
-              const el = window.document.getElementById(lineIds[0]);
-              top = el.offsetTop;
-              height = el.offsetHeight;
-              parent = el.parentElement.parentElement;
-            if (lineIds.length > 1) {
-              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
-              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
-              height = bottom - top;
+            const el = window.document.getElementById(lineIds[0]);
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const parent = el.parentElement.parentElement;
+            // cook up a div (if necessary) and position it
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
             }
-            if (top !== null && height !== null && parent !== null) {
-              // cook up a div (if necessary) and position it 
-              let div = window.document.getElementById("code-annotation-line-highlight");
-              if (div === null) {
-                div = window.document.createElement("div");
-                div.setAttribute("id", "code-annotation-line-highlight");
-                div.style.position = 'absolute';
-                parent.appendChild(div);
-              }
-              div.style.top = top - 2 + "px";
-              div.style.height = height + 4 + "px";
-              div.style.left = 0;
-              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
-              if (gutterDiv === null) {
-                gutterDiv = window.document.createElement("div");
-                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
-                gutterDiv.style.position = 'absolute';
-                const codeCell = window.document.getElementById(targetCell);
-                const gutter = codeCell.querySelector('.code-annotation-gutter');
-                gutter.appendChild(gutterDiv);
-              }
-              gutterDiv.style.top = top - 2 + "px";
-              gutterDiv.style.height = height + 4 + "px";
+            placeBand(div, el, lastEl, parent.closest("div.sourceCode") || parent);
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
             }
+            placeBand(gutterDiv, el, lastEl);
             selectedAnnoteEl = annoteEl;
           }
         };
@@ -921,7 +982,10 @@ Johnson, A. A., Ott, M. Q., &amp; Dogucu, M. (2022). <em>Bayes rules! <span>A</s
     }
   });
   </script>
-<nav class="page-navigation">
+  <script type="application/javascript">
+  window.quartoScrollableRegionsLabels = {"code":"Scrollable code","output":"Scrollable output"};
+  </script>
+<nav class="page-navigation" aria-label="Page">
   <div class="nav-page nav-page-previous">
   </div>
   <div class="nav-page nav-page-next">
@@ -938,7 +1002,7 @@ Johnson, A. A., Ott, M. Q., &amp; Dogucu, M. (2022). <em>Bayes rules! <span>A</s
 </div>   
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/MaartenMarsman/computational-methods-book/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></div>
+    </div>
     <div class="nav-footer-right">
 <p>Published with <a href="https://quarto.org">Quarto</a>.</p>
 </div>

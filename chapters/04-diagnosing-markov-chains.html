@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.10.20">
+<meta name="generator" content="quarto-1.11.9">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -95,14 +95,15 @@ div.csl-indent {
 <link href="../chapters/03-markov-chains.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/scrollable-regions/scrollable-regions.js" type="module"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-3f446edc70b0757b4dde2b060815ebc9.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-85f7a32731ed2b609fa7be27e34d4366.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-2fcf8a0ee316d604ebc18c0691cf69d6.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-0b2b94c5a528e4e5a70806ea6f8266d3.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -164,18 +165,18 @@ window.Quarto = {
 <link rel="stylesheet" href="../style/bayesrules.css">
 </head>
 
-<body class="nav-sidebar floating quarto-light">
+<body class="nav-sidebar floating quarto-light"><a id="quarto-skip-link" class="visually-hidden-focusable" href="#quarto-document-content">Skip to main content</a>
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
-  <nav class="quarto-secondary-nav">
+  <nav class="quarto-secondary-nav" aria-label="Toolbar">
     <div class="container-fluid d-flex">
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/03-markov-chains.html">Markov Chains</a></li><li class="breadcrumb-item"><a href="../chapters/04-diagnosing-markov-chains.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Diagnosing Markov Chains</span></a></li></ol></nav>
-        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-        </a>
+        <a class="flex-grow-1 no-decor" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+          <h1 class="quarto-secondary-nav-title"><span id="sec-diagnostics" class="quarto-section-identifier"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Diagnosing Markov Chains</span></span></h1>
+        </a>     
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
       </button>
@@ -185,14 +186,10 @@ window.Quarto = {
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto" aria-label="Site">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="../">Stochastic Simulation for Bayesian Modeling in Psychology</a> 
-        <div class="sidebar-tools-main">
-    <a href="https://github.com/MaartenMarsman/computational-methods-book" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
-    <a href="../Stochastic-Simulation-for-Bayesian-Modeling.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
-</div>
     </div>
       </div>
         <div class="mt-2 flex-shrink-0 align-items-center">
@@ -210,13 +207,10 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
- <span class="menu-text">Foundations</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
+            <button type="button" class="sidebar-item-text sidebar-item-toggle sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-controls="quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text" id="quarto-sidebar-section-1-label">Foundations</span><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
       </div>
-      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+      <ul id="quarto-sidebar-section-1" aria-labelledby="quarto-sidebar-section-1-label" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/01-probability-and-simulation.html" class="sidebar-item-text sidebar-link">
@@ -233,13 +227,10 @@ window.Quarto = {
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
- <span class="menu-text">Markov Chains</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
+            <button type="button" class="sidebar-item-text sidebar-item-toggle sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-controls="quarto-sidebar-section-2" aria-expanded="true">
+ <span class="menu-text" id="quarto-sidebar-section-2-label">Markov Chains</span><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
       </div>
-      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+      <ul id="quarto-sidebar-section-2" aria-labelledby="quarto-sidebar-section-2-label" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/03-markov-chains.html" class="sidebar-item-text sidebar-link">
@@ -256,13 +247,10 @@ window.Quarto = {
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
- <span class="menu-text">Sampling Algorithms</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
+            <button type="button" class="sidebar-item-text sidebar-item-toggle sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-controls="quarto-sidebar-section-3" aria-expanded="true">
+ <span class="menu-text" id="quarto-sidebar-section-3-label">Sampling Algorithms</span><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
       </div>
-      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+      <ul id="quarto-sidebar-section-3" aria-labelledby="quarto-sidebar-section-3-label" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/05-metropolis.html" class="sidebar-item-text sidebar-link">
@@ -285,13 +273,10 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
- <span class="menu-text">Appendices</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
+            <button type="button" class="sidebar-item-text sidebar-item-toggle sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-controls="quarto-sidebar-section-4" aria-expanded="true">
+ <span class="menu-text" id="quarto-sidebar-section-4-label">Appendices</span><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
       </div>
-      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+      <ul id="quarto-sidebar-section-4" aria-labelledby="quarto-sidebar-section-4-label" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../appendices/A-software-setup.html" class="sidebar-item-text sidebar-link">
@@ -320,62 +305,32 @@ window.Quarto = {
   </li>
     </ul>
     </div>
-</nav>
-<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
-<!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
+    <nav id="TOC" role="doc-toc" aria-labelledby="toc-title" class="toc-active">
     <h2 id="toc-title">Table of contents</h2>
    
-  <ul>
-  <li><a href="#inspecting-a-run" id="toc-inspecting-a-run" class="nav-link active" data-scroll-target="#inspecting-a-run"><span class="header-section-number">4.1</span> Inspecting a run</a>
   <ul class="collapse">
-  <li><a href="#the-starting-point" id="toc-the-starting-point" class="nav-link" data-scroll-target="#the-starting-point"><span class="header-section-number">4.1.1</span> The starting point</a></li>
-  <li><a href="#warning-patterns" id="toc-warning-patterns" class="nav-link" data-scroll-target="#warning-patterns"><span class="header-section-number">4.1.2</span> Warning patterns</a></li>
-  </ul></li>
-  <li><a href="#dependence-and-the-accuracy-of-an-average" id="toc-dependence-and-the-accuracy-of-an-average" class="nav-link" data-scroll-target="#dependence-and-the-accuracy-of-an-average"><span class="header-section-number">4.2</span> Dependence and the accuracy of an average</a>
-  <ul class="collapse">
-  <li><a href="#how-far-does-the-dependence-persist" id="toc-how-far-does-the-dependence-persist" class="nav-link" data-scroll-target="#how-far-does-the-dependence-persist"><span class="header-section-number">4.2.1</span> How far does the dependence persist?</a></li>
-  <li><a href="#repeating-the-simulation" id="toc-repeating-the-simulation" class="nav-link" data-scroll-target="#repeating-the-simulation"><span class="header-section-number">4.2.2</span> Repeating the simulation</a></li>
-  </ul></li>
-  <li><a href="#effective-sample-size-and-monte-carlo-standard-error" id="toc-effective-sample-size-and-monte-carlo-standard-error" class="nav-link" data-scroll-target="#effective-sample-size-and-monte-carlo-standard-error"><span class="header-section-number">4.3</span> Effective sample size and Monte Carlo standard error</a>
-  <ul class="collapse">
-  <li><a href="#expressing-precision-in-the-units-of-the-estimate" id="toc-expressing-precision-in-the-units-of-the-estimate" class="nav-link" data-scroll-target="#expressing-precision-in-the-units-of-the-estimate"><span class="header-section-number">4.3.1</span> Expressing precision in the units of the estimate</a></li>
-  <li><a href="#would-thinning-help" id="toc-would-thinning-help" class="nav-link" data-scroll-target="#would-thinning-help"><span class="header-section-number">4.3.2</span> Would thinning help?</a></li>
-  <li><a href="#bias-and-variation-are-different-problems" id="toc-bias-and-variation-are-different-problems" class="nav-link" data-scroll-target="#bias-and-variation-are-different-problems"><span class="header-section-number">4.3.3</span> Bias and variation are different problems</a></li>
-  </ul></li>
-  <li><a href="#comparing-several-chains" id="toc-comparing-several-chains" class="nav-link" data-scroll-target="#comparing-several-chains"><span class="header-section-number">4.4</span> Comparing several chains</a>
-  <ul class="collapse">
-  <li><a href="#the-idea-behind-r-hat" id="toc-the-idea-behind-r-hat" class="nav-link" data-scroll-target="#the-idea-behind-r-hat"><span class="header-section-number">4.4.1</span> The idea behind R-hat</a></li>
-  <li><a href="#comparing-earlier-and-later-values" id="toc-comparing-earlier-and-later-values" class="nav-link" data-scroll-target="#comparing-earlier-and-later-values"><span class="header-section-number">4.4.2</span> Comparing earlier and later values</a></li>
-  </ul></li>
-  <li><a href="#a-worked-analysis-dutch-language-radio" id="toc-a-worked-analysis-dutch-language-radio" class="nav-link" data-scroll-target="#a-worked-analysis-dutch-language-radio"><span class="header-section-number">4.5</span> A worked analysis: Dutch-language radio</a>
-  <ul class="collapse">
-  <li><a href="#generating-the-chains-with-stan" id="toc-generating-the-chains-with-stan" class="nav-link" data-scroll-target="#generating-the-chains-with-stan"><span class="header-section-number">4.5.1</span> Generating the chains with Stan</a></li>
-  <li><a href="#do-the-chains-explore-similar-values" id="toc-do-the-chains-explore-similar-values" class="nav-link" data-scroll-target="#do-the-chains-explore-similar-values"><span class="header-section-number">4.5.2</span> Do the chains explore similar values?</a></li>
-  <li><a href="#is-the-mean-precise-enough" id="toc-is-the-mean-precise-enough" class="nav-link" data-scroll-target="#is-the-mean-precise-enough"><span class="header-section-number">4.5.3</span> Is the mean precise enough?</a></li>
-  <li><a href="#are-the-interval-endpoints-precise-enough" id="toc-are-the-interval-endpoints-precise-enough" class="nav-link" data-scroll-target="#are-the-interval-endpoints-precise-enough"><span class="header-section-number">4.5.4</span> Are the interval endpoints precise enough?</a></li>
-  <li><a href="#reading-bulk-and-tail-ess-in-a-summary" id="toc-reading-bulk-and-tail-ess-in-a-summary" class="nav-link" data-scroll-target="#reading-bulk-and-tail-ess-in-a-summary"><span class="header-section-number">4.5.5</span> Reading bulk and tail ESS in a summary</a></li>
-  <li><a href="#what-would-we-report" id="toc-what-would-we-report" class="nav-link" data-scroll-target="#what-would-we-report"><span class="header-section-number">4.5.6</span> What would we report?</a></li>
-  </ul></li>
+  <li><a href="#sec-ar1" id="toc-sec-ar1" class="nav-link active" data-scroll-target="#sec-ar1"><span class="header-section-number">4.1</span> Inspecting a run</a></li>
+  <li><a href="#dependence-and-the-accuracy-of-an-average" id="toc-dependence-and-the-accuracy-of-an-average" class="nav-link" data-scroll-target="#dependence-and-the-accuracy-of-an-average"><span class="header-section-number">4.2</span> Dependence and the accuracy of an average</a></li>
+  <li><a href="#effective-sample-size-and-monte-carlo-standard-error" id="toc-effective-sample-size-and-monte-carlo-standard-error" class="nav-link" data-scroll-target="#effective-sample-size-and-monte-carlo-standard-error"><span class="header-section-number">4.3</span> Effective sample size and Monte Carlo standard error</a></li>
+  <li><a href="#comparing-several-chains" id="toc-comparing-several-chains" class="nav-link" data-scroll-target="#comparing-several-chains"><span class="header-section-number">4.4</span> Comparing several chains</a></li>
+  <li><a href="#a-worked-analysis-dutch-language-radio" id="toc-a-worked-analysis-dutch-language-radio" class="nav-link" data-scroll-target="#a-worked-analysis-dutch-language-radio"><span class="header-section-number">4.5</span> A worked analysis: Dutch-language radio</a></li>
   <li><a href="#what-a-reassuring-run-can-miss" id="toc-what-a-reassuring-run-can-miss" class="nav-link" data-scroll-target="#what-a-reassuring-run-can-miss"><span class="header-section-number">4.6</span> What a reassuring run can miss</a></li>
   <li><a href="#chapter-summary" id="toc-chapter-summary" class="nav-link" data-scroll-target="#chapter-summary"><span class="header-section-number">4.7</span> Chapter summary</a></li>
   <li><a href="#quiz-answers" id="toc-quiz-answers" class="nav-link" data-scroll-target="#quiz-answers"><span class="header-section-number">4.8</span> Quiz answers</a></li>
-  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises"><span class="header-section-number">4.9</span> Exercises</a>
-  <ul class="collapse">
-  <li><a href="#conceptual-exercises" id="toc-conceptual-exercises" class="nav-link" data-scroll-target="#conceptual-exercises"><span class="header-section-number">4.9.1</span> Conceptual exercises</a></li>
-  <li><a href="#practical-exercises" id="toc-practical-exercises" class="nav-link" data-scroll-target="#practical-exercises"><span class="header-section-number">4.9.2</span> Practical exercises</a></li>
-  <li><a href="#applied-exercises" id="toc-applied-exercises" class="nav-link" data-scroll-target="#applied-exercises"><span class="header-section-number">4.9.3</span> Applied exercises</a></li>
-  </ul></li>
+  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises"><span class="header-section-number">4.9</span> Exercises</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/MaartenMarsman/computational-methods-book/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
+</nav>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
+<main class="content" id="quarto-document-content" tabindex="-1">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/03-markov-chains.html">Markov Chains</a></li><li class="breadcrumb-item"><a href="../chapters/04-diagnosing-markov-chains.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Diagnosing Markov Chains</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span id="sec-diagnostics" class="quarto-section-identifier"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Diagnosing Markov Chains</span></span></h1>
+<h1 class="title d-none d-lg-block"><span id="sec-diagnostics" class="quarto-section-identifier"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Diagnosing Markov Chains</span></span></h1>
 </div>
 
 
@@ -419,12 +374,12 @@ window.Quarto = {
 <li>Evaluate a Stan fit and justify whether its posterior summaries are precise enough for a stated purpose.</li>
 </ul>
 </div>
-<section id="inspecting-a-run" class="level2" data-number="4.1">
-<h2 data-number="4.1" class="anchored" data-anchor-id="inspecting-a-run"><span class="header-section-number">4.1</span> Inspecting a run</h2>
-<p>We begin with the Normal transition rule from <a href="03-markov-chains.html" class="quarto-xref"><span>Chapter 3</span></a>. At each step, combine part of the current value with a new random draw: <span class="math display">\[
+<section id="sec-ar1" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="sec-ar1"><span class="header-section-number">4.1</span> Inspecting a run</h2>
+<p>We begin with the Normal transition rule from <a href="03-markov-chains.html" class="quarto-xref"><span>Chapter 3</span></a>. At each step, combine part of the current value with a new random draw: <span id="eq-ar1"><span class="math display">\[
 \theta^{(t+1)}=\phi\theta^{(t)}+\sqrt{1-\phi^2}\,\varepsilon_t,
 \qquad \varepsilon_t\sim\text{N}(0,1).
-\]</span> Each new <span class="math inline">\(\varepsilon_t\)</span> is drawn independently. The parameter <span class="math inline">\(\phi\)</span>, with <span class="math inline">\(-1&lt;\phi&lt;1\)</span>, controls how much of the current value carries over to the next. With <span class="math inline">\(\phi=0\)</span>, the next value is a fresh standard Normal draw. With <span class="math inline">\(\phi\)</span> close to one, successive values tend to stay close together. This rule is called a <strong>first-order autoregressive process</strong>, or <strong>AR(1) process</strong>.</p>
+\tag{4.1}\]</span></span> Each new <span class="math inline">\(\varepsilon_t\)</span> is drawn independently. The parameter <span class="math inline">\(\phi\)</span>, with <span class="math inline">\(-1&lt;\phi&lt;1\)</span>, controls how much of the current value carries over to the next. With <span class="math inline">\(\phi=0\)</span>, the next value is a fresh standard Normal draw. With <span class="math inline">\(\phi\)</span> close to one, successive values tend to stay close together. This rule is called a <strong>first-order autoregressive process</strong>, or <strong>AR(1) process</strong>.</p>
 <p>These choices of <span class="math inline">\(\phi\)</span> preserve the same standard Normal target. To check this, suppose the current state is standard Normal. A weighted sum of independent Normal variables is also Normal, as we saw in <a href="03-markov-chains.html" class="quarto-xref"><span>Chapter 3</span></a>. The next state has mean zero and variance <span class="math display">\[
 \phi^2\times1+(1-\phi^2)\times1=1.
 \]</span> It is therefore standard Normal too. Changing <span class="math inline">\(\phi\)</span> changes how the chain moves, while keeping its stationary distribution fixed.</p>
@@ -582,7 +537,7 @@ Figure&nbsp;4.5: Estimated means from 200 independent runs for each value of phi
 <p>For a stationary chain, the corresponding large-<span class="math inline">\(N\)</span> approximation is <span id="eq-ess"><span class="math display">\[
 \operatorname{Var}(\bar\theta)\approx\frac{\sigma^2}{N}
 \left(1+2\sum_{k=1}^{\infty}\rho_k\right).
-\tag{4.1}\]</span></span> This assumes a finite target variance and autocorrelations that die away fast enough for their sum to be finite. The factor in parentheses describes the effect of dependence. For independent draws, all the <span class="math inline">\(\rho_k\)</span> are zero and the factor is one. Positive autocorrelations make it larger.</p>
+\tag{4.2}\]</span></span> This assumes a finite target variance and autocorrelations that die away fast enough for their sum to be finite. The factor in parentheses describes the effect of dependence. For independent draws, all the <span class="math inline">\(\rho_k\)</span> are zero and the factor is one. Positive autocorrelations make it larger.</p>
 <p>We can express this loss of precision as an <strong>effective sample size</strong> (ESS): the number of independent draws that would give approximately the same spread of estimated means across repeated runs. Writing <span class="math inline">\(\operatorname{Var}(\bar\theta)\approx\sigma^2/N_{\mathrm{eff}}\)</span> gives <span class="math display">\[
 N_{\mathrm{eff}}=\frac{N}{1+2\sum_{k=1}^{\infty}\rho_k}.
 \]</span> For the AR(1) chain, <span class="math inline">\(\rho_k=\phi^k\)</span>. Summing the geometric series gives <span class="math display">\[
@@ -608,7 +563,7 @@ N_{\mathrm{eff}}
 <h3 data-number="4.3.1" class="anchored" data-anchor-id="expressing-precision-in-the-units-of-the-estimate"><span class="header-section-number">4.3.1</span> Expressing precision in the units of the estimate</h3>
 <p>ESS tells us how much precision we have relative to independent sampling. To express that precision in the units of the mean, take the square root of its variance: <span id="eq-mcse-mean"><span class="math display">\[
 \operatorname{MCSE}(\bar\theta)\approx\frac{\sigma}{\sqrt{N_{\mathrm{eff}}}}.
-\tag{4.2}\]</span></span> This is the <strong>Monte Carlo standard error</strong> (MCSE). It estimates the standard deviation of the averages we would obtain across repeated runs, as illustrated in <a href="#fig-repeated-means" class="quarto-xref">Figure&nbsp;<span>4.5</span></a>.</p>
+\tag{4.3}\]</span></span> This is the <strong>Monte Carlo standard error</strong> (MCSE). It estimates the standard deviation of the averages we would obtain across repeated runs, as illustrated in <a href="#fig-repeated-means" class="quarto-xref">Figure&nbsp;<span>4.5</span></a>.</p>
 <p>For the standard Normal target, <span class="math inline">\(\sigma=1\)</span>. The three 20,000-state runs therefore have approximate MCSEs of <span class="math inline">\(1/\sqrt{20{,}000}=0.007\)</span> when <span class="math inline">\(\phi=0\)</span>, <span class="math inline">\(1/\sqrt{6{,}667}=0.012\)</span> when <span class="math inline">\(\phi=0.5\)</span>, and <span class="math inline">\(1/\sqrt{513}=0.044\)</span> when <span class="math inline">\(\phi=0.95\)</span>.</p>
 <p>An estimated mean of 0.04 is thus less than one MCSE from zero for the slowest chain, but more than five MCSEs away for independent draws. An error of 0.04 would thus be quite ordinary for the slowest chain and unusual for independent draws. <code>mcse_mean()</code> estimates the MCSE from the draws:</p>
 <div class="cell" data-layout-align="center">
@@ -1008,7 +963,7 @@ Figure&nbsp;4.11: Four records representing exploration of only the left mode of
 <div class="exercise bookgraybox">
 <p><strong>Exercise 4.2 (Thinning by the numbers)</strong> A chain of <span class="math inline">\(N = 20{,}000\)</span> draws has autocorrelations <span class="math inline">\(\rho_k = 0.9^k\)</span>.</p>
 <ol type="a">
-<li>Compute its effective sample size.</li>
+<li>Approximate its effective sample size using the long-run formula.</li>
 <li>The chain is thinned by keeping every fifth draw. What are the autocorrelations of the thinned chain, and what is its effective sample size?</li>
 <li>A colleague argues that the thinned chain is better because its draws are “almost independent.” Explain what they have confused.</li>
 </ol>
@@ -1075,8 +1030,8 @@ Figure&nbsp;4.13: Density overlays for Exercise 4.5.
 <div class="exercise bookgraybox">
 <p><strong>Exercise 4.7 (<span class="math inline">\(\widehat{R}\)</span> by hand; optional)</strong> Optional extension: Use <code>rhat_by_hand()</code> and <code>split_halves()</code> from <a href="../appendices/C-mcmc-diagnostics.html#sec-rhat-calculations" class="quarto-xref"><span>Section C.2</span></a>.</p>
 <ol type="a">
-<li>Simulate four records of <span class="math inline">\(N=1{,}000\)</span> stored states from <code>ar1_chain()</code> with <span class="math inline">\(\phi=0.95\)</span>, each started at <code>init=0</code>. Compute unsplit and split basic R-hat by hand. Compare them with <code>rhat_basic(split=FALSE)</code> and <code>rhat_basic(split=TRUE)</code>, and also report <code>posterior::rhat()</code>. Are these fixed-start records stationary at time zero?</li>
-<li>Now start the four chains at <span class="math inline">\(-10, -5, 5\)</span>, and <span class="math inline">\(10\)</span>. Repeat the same comparisons. Then discard the first 200 iterations of each chain and compute them again. Explain what changed.</li>
+<li>Simulate four records of <span class="math inline">\(N=1{,}000\)</span> stored states from <code>ar1_chain()</code> with <span class="math inline">\(\phi=0.95\)</span>, each started at <code>init=0</code>. Compute unsplit and split basic R-hat by hand. Compare them with <code>rhat_basic(split=FALSE)</code> and <code>rhat_basic(split=TRUE)</code>, and also report <code>posterior::rhat()</code>. Are these fixed-start records stationary at time zero? Repeat with each initial state drawn independently from N<span class="math inline">\((0,1)\)</span>. Does starting in stationarity ensure that R-hat is below 1.01 in a run of this length? Explain the role of dependence.</li>
+<li>To examine a more persistent effect of initialization, use <span class="math inline">\(\phi=0.99\)</span> and <span class="math inline">\(N=2{,}000\)</span> stored states, starting the four chains at <span class="math inline">\(-50, -25, 25\)</span>, and <span class="math inline">\(50\)</span>. Plot the traces and repeat the R-hat comparisons. Discard the first 500 states of each chain, then plot and compute again. What changes, and why might R-hat still exceed 1.01 after the early movement toward the target region has disappeared?</li>
 <li>Construct four chains that have the same mean but where two chains have three times the spread of the other two, as in <a href="../appendices/C-mcmc-diagnostics.html#sec-rank-folding" class="quarto-xref"><span>Section C.3</span></a>. Compare <code>rhat_basic()</code> and <code>posterior::rhat()</code> and identify any difference in the values relative to 1.01, and explain which of the two ingredients of the rank-normalized <span class="math inline">\(\widehat{R}\)</span>, rank normalization or folding, is responsible.</li>
 </ol>
 </div>
@@ -1147,6 +1102,18 @@ Vehtari, A., Gelman, A., Simpson, D., Carpenter, B., &amp; Bürkner, P.-C. (2021
 .book-version li a.active { font-weight: bold; }
 .book-version .book-version-kind { color: #777; font-size: 0.8em; }
 </style>
+<script>
+  // Move the chapter's table of contents from the bottom of the sidebar to
+  // right under the chapter's own entry, as on the Bayes Rules! site.
+  document.addEventListener("DOMContentLoaded", function () {
+    const toc = document.querySelector("#quarto-sidebar #TOC");
+    const current = document.querySelector("#quarto-sidebar .sidebar-item a.active");
+    if (toc && current) {
+      const item = current.closest(".sidebar-item");
+      if (item) item.append(toc);
+    }
+  });
+</script>
 <script>
 (function () {
   const header = document.querySelector("#quarto-sidebar .sidebar-header");
@@ -1325,7 +1292,8 @@ Vehtari, A., Gelman, A., Simpson, D., Carpenter, B., &amp; Bürkner, P.-C. (2021
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }
       // Inspect non-navigation links and adorn them if external
-     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      window.quartoDecorateExternalLinks = function (root) {
+     var links = (root || window.document).querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
       for (var i=0; i<links.length; i++) {
         const link = links[i];
         if (!isInternal(link.href)) {
@@ -1334,8 +1302,69 @@ Vehtari, A., Gelman, A., Simpson, D., Carpenter, B., &amp; Bürkner, P.-C. (2021
           if (link.dataset.originalHref !== undefined) {
             link.href = link.dataset.originalHref;
           }
+          if (!link.classList.contains('no-external-icon')) {
+          }
         }
       }
+      };
+      window.quartoDecorateExternalLinks(window.document);
+    // Esc closes the popup (WCAG 1.4.13) and focus leaving both trigger and
+    // popup closes it (WCAG 2.4.11); tippy handles neither for interactive popups.
+    const hideOnEscAndFocusOut = {
+      name: 'hideOnEscAndFocusOut',
+      defaultValue: true,
+      fn(instance) {
+        const dismiss = () => {
+          // A show scheduled by the trigger delay would otherwise reopen it
+          instance.clearDelayTimeouts();
+          instance.hide();
+        };
+        const onKeyDown = (event) => {
+          if (event.key !== 'Escape') {
+            return;
+          }
+          // Keep Esc from also reaching page handlers (e.g. reveal.js overview),
+          // except an open reveal.js slide menu, which Esc should close too.
+          // The menu handles keys only when its keyboard option is on.
+          const menuHandlesEsc = window.Reveal?.getPlugin?.('menu')?.isOpen() &&
+            window.Reveal.getConfig().menu?.keyboard !== false;
+          if (!menuHandlesEsc) {
+            event.stopPropagation();
+          }
+          if (instance.popper.contains(window.document.activeElement)) {
+            // Disabled while refocusing so the focus trigger does not reopen it
+            instance.disable();
+            instance.reference.focus();
+            instance.enable();
+          }
+          dismiss();
+        };
+        const onFocusOut = (event) => {
+          const target = event.relatedTarget;
+          if (target && !instance.reference.contains(target) &&
+              !instance.popper.contains(target)) {
+            dismiss();
+          }
+        };
+        // On the trigger too: a click trigger (code-annotations: select) has no
+        // blur handling. Attached for the instance's lifetime so leaving the
+        // trigger also cancels a show still pending on the trigger delay.
+        instance.reference.addEventListener('focusout', onFocusOut);
+        return {
+          onShow() {
+            window.document.addEventListener('keydown', onKeyDown, true);
+            instance.popper.addEventListener('focusout', onFocusOut);
+          },
+          onHide() {
+            window.document.removeEventListener('keydown', onKeyDown, true);
+            instance.popper.removeEventListener('focusout', onFocusOut);
+          },
+          onDestroy() {
+            instance.reference.removeEventListener('focusout', onFocusOut);
+          },
+        };
+      },
+    };
     function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
       const config = {
         allowHTML: true,
@@ -1349,6 +1378,7 @@ Vehtari, A., Gelman, A., Simpson, D., Carpenter, B., &amp; Bürkner, P.-C. (2021
         interactiveBorder: 10,
         theme: 'quarto',
         placement: 'bottom-start',
+        plugins: [hideOnEscAndFocusOut],
       };
       if (contentFn) {
         config.content = contentFn;
@@ -1511,44 +1541,54 @@ Vehtari, A., Gelman, A., Simpson, D., Carpenter, B., &amp; Bürkner, P.-C. (2021
           const lineIds = lines.map((line) => {
             return targetCell + "-" + line;
           })
-          let top = null;
-          let height = null;
-          let parent = null;
+          // Each band is positioned against its own containing block, which is
+          // not the offsetParent of the lines, so place it from client rects.
+          const placeBand = (band, firstEl, lastEl, codeBlock) => {
+            const container = band.offsetParent;
+            if (container === null) {
+              return;
+            }
+            const containerRect = container.getBoundingClientRect();
+            // Reveal.js scales slides with a transform, so convert client
+            // pixels back to the CSS pixels of the container.
+            const scale = containerRect.height / container.offsetHeight || 1;
+            const firstRect = firstEl.getBoundingClientRect();
+            const lastRect = lastEl.getBoundingClientRect();
+            const top = (firstRect.top - containerRect.top) / scale - container.clientTop + container.scrollTop;
+            const height = (lastRect.bottom - firstRect.top) / scale;
+            band.style.top = top - 2 + "px";
+            band.style.height = height + 4 + "px";
+            if (codeBlock) {
+              // Without the copy button wrapper, the containing block is wider
+              // than the code block, so span the code block explicitly.
+              const blockRect = codeBlock.getBoundingClientRect();
+              band.style.left = (blockRect.left - containerRect.left) / scale - container.clientLeft + container.scrollLeft + "px";
+              band.style.width = blockRect.width / scale + "px";
+            }
+          };
           if (lineIds.length > 0) {
-              //compute the position of the single el (top and bottom and make a div)
-              const el = window.document.getElementById(lineIds[0]);
-              top = el.offsetTop;
-              height = el.offsetHeight;
-              parent = el.parentElement.parentElement;
-            if (lineIds.length > 1) {
-              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
-              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
-              height = bottom - top;
+            const el = window.document.getElementById(lineIds[0]);
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const parent = el.parentElement.parentElement;
+            // cook up a div (if necessary) and position it
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
             }
-            if (top !== null && height !== null && parent !== null) {
-              // cook up a div (if necessary) and position it 
-              let div = window.document.getElementById("code-annotation-line-highlight");
-              if (div === null) {
-                div = window.document.createElement("div");
-                div.setAttribute("id", "code-annotation-line-highlight");
-                div.style.position = 'absolute';
-                parent.appendChild(div);
-              }
-              div.style.top = top - 2 + "px";
-              div.style.height = height + 4 + "px";
-              div.style.left = 0;
-              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
-              if (gutterDiv === null) {
-                gutterDiv = window.document.createElement("div");
-                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
-                gutterDiv.style.position = 'absolute';
-                const codeCell = window.document.getElementById(targetCell);
-                const gutter = codeCell.querySelector('.code-annotation-gutter');
-                gutter.appendChild(gutterDiv);
-              }
-              gutterDiv.style.top = top - 2 + "px";
-              gutterDiv.style.height = height + 4 + "px";
+            placeBand(div, el, lastEl, parent.closest("div.sourceCode") || parent);
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
             }
+            placeBand(gutterDiv, el, lastEl);
             selectedAnnoteEl = annoteEl;
           }
         };
@@ -1647,7 +1687,10 @@ Vehtari, A., Gelman, A., Simpson, D., Carpenter, B., &amp; Bürkner, P.-C. (2021
     }
   });
   </script>
-<nav class="page-navigation">
+  <script type="application/javascript">
+  window.quartoScrollableRegionsLabels = {"code":"Scrollable code","output":"Scrollable output"};
+  </script>
+<nav class="page-navigation" aria-label="Page">
   <div class="nav-page nav-page-previous">
       <a href="../chapters/03-markov-chains.html" class="pagination-link" aria-label="Markov Chains">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Markov Chains</span></span>
@@ -1667,7 +1710,7 @@ Vehtari, A., Gelman, A., Simpson, D., Carpenter, B., &amp; Bürkner, P.-C. (2021
 </div>   
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/MaartenMarsman/computational-methods-book/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></div>
+    </div>
     <div class="nav-footer-right">
 <p>Published with <a href="https://quarto.org">Quarto</a>.</p>
 </div>
