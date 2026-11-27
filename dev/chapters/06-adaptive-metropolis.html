@@ -1,0 +1,1841 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.11.9">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>6&nbsp; Adaptive Metropolis – Stochastic Simulation for Bayesian Modeling in Psychology</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../chapters/07-metropolis-hastings.html" rel="next">
+<link href="../chapters/05-metropolis.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/scrollable-regions/scrollable-regions.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-85f7a32731ed2b609fa7be27e34d4366.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-0b2b94c5a528e4e5a70806ea6f8266d3.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../style/bayesrules.css">
+</head>
+
+<body class="nav-sidebar floating quarto-light"><a id="quarto-skip-link" class="visually-hidden-focusable" href="#quarto-document-content">Skip to main content</a>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav" aria-label="Toolbar">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <a class="flex-grow-1 no-decor" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+          <h1 class="quarto-secondary-nav-title"><span id="sec-adaptive-metropolis" class="quarto-section-identifier"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Adaptive Metropolis</span></span></h1>
+        </a>     
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto" aria-label="Site">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">Stochastic Simulation for Bayesian Modeling in Psychology</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/MaartenMarsman/computational-methods-book" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+    <a href="../Stochastic-Simulation-for-Bayesian-Modeling.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Welcome</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <button type="button" class="sidebar-item-text sidebar-item-toggle sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-controls="quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text" id="quarto-sidebar-section-1-label">Foundations</span><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
+      </div>
+      <ul id="quarto-sidebar-section-1" aria-labelledby="quarto-sidebar-section-1-label" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/01-probability-and-simulation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Probability and Simulation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/02-bayesian-inference-recap.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Bayesian Inference, Revisited</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <button type="button" class="sidebar-item-text sidebar-item-toggle sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-controls="quarto-sidebar-section-2" aria-expanded="true">
+ <span class="menu-text" id="quarto-sidebar-section-2-label">Markov Chains</span><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
+      </div>
+      <ul id="quarto-sidebar-section-2" aria-labelledby="quarto-sidebar-section-2-label" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/03-markov-chains.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Markov Chains</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/04-diagnosing-markov-chains.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Diagnosing Markov Chains</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <button type="button" class="sidebar-item-text sidebar-item-toggle sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-controls="quarto-sidebar-section-3" aria-expanded="true">
+ <span class="menu-text" id="quarto-sidebar-section-3-label">Sampling Algorithms</span><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
+      </div>
+      <ul id="quarto-sidebar-section-3" aria-labelledby="quarto-sidebar-section-3-label" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/05-metropolis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">The Metropolis Algorithm</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/06-adaptive-metropolis.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Adaptive Metropolis</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/07-metropolis-hastings.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">The Metropolis–Hastings algorithm</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../news.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">News</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <button type="button" class="sidebar-item-text sidebar-item-toggle sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-controls="quarto-sidebar-section-4" aria-expanded="true">
+ <span class="menu-text" id="quarto-sidebar-section-4-label">Appendices</span><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
+      </div>
+      <ul id="quarto-sidebar-section-4" aria-labelledby="quarto-sidebar-section-4-label" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendices/A-software-setup.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Software Setup</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendices/B-notation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Notation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendices/C-mcmc-diagnostics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Technical Notes on MCMC</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendices/D-conjugate-posteriors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Deriving Conjugate Posteriors</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+    <nav id="TOC" role="doc-toc" aria-labelledby="toc-title" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul class="collapse">
+  <li><a href="#adapting-the-step-size" id="toc-adapting-the-step-size" class="nav-link active" data-scroll-target="#adapting-the-step-size"><span class="header-section-number">6.1</span> Adapting the step size</a></li>
+  <li><a href="#the-robbinsmonro-procedure" id="toc-the-robbinsmonro-procedure" class="nav-link" data-scroll-target="#the-robbinsmonro-procedure"><span class="header-section-number">6.2</span> The Robbins–Monro procedure</a></li>
+  <li><a href="#checking-on-earlier-examples" id="toc-checking-on-earlier-examples" class="nav-link" data-scroll-target="#checking-on-earlier-examples"><span class="header-section-number">6.3</span> Checking on earlier examples</a></li>
+  <li><a href="#sec-adapt-or-stop" id="toc-sec-adapt-or-stop" class="nav-link" data-scroll-target="#sec-adapt-or-stop"><span class="header-section-number">6.4</span> Keep adapting, or adapt and freeze?</a></li>
+  <li><a href="#chapter-summary" id="toc-chapter-summary" class="nav-link" data-scroll-target="#chapter-summary"><span class="header-section-number">6.5</span> Chapter summary</a></li>
+  <li><a href="#quiz-answers" id="toc-quiz-answers" class="nav-link" data-scroll-target="#quiz-answers"><span class="header-section-number">6.6</span> Quiz answers</a></li>
+  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises"><span class="header-section-number">6.7</span> Exercises</a></li>
+  </ul>
+<div class="toc-actions"><ul class="collapse"><li><a href="https://github.com/MaartenMarsman/computational-methods-book/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content" tabindex="-1">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title d-none d-lg-block"><span id="sec-adaptive-metropolis" class="quarto-section-identifier"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Adaptive Metropolis</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<!-- SOURCES: the authors' "Adaptive Metropolis" chapter from Computational Methods 2 (Robbins–Monro, learning-rate decay, adapt-then-freeze versus keep adapting), ported and reworked; Robbins & Monro (1951) for the stochastic approximation procedure; Treutwein (1995) for the staircase procedures of psychophysics; Roberts & Rosenthal (2007), Rosenthal (2011), Andrieu & Thoms (2008) for the ergodicity of adaptive chains; Roberts, Gelman & Gilks (1997) and Gelman, Roberts & Gilks (1996) for the target acceptance rates. Reworked on 25 November 2026: the transformations material was taken out (archived in changes and add-ons/) and the adaptation story was rebuilt around acceptance probability, the log-scale update, constant versus diminishing learning rates, Robbins–Monro, and adapt-and-freeze. -->
+<p>In <a href="05-metropolis.html" class="quarto-xref"><span>Chapter 5</span></a>, we introduced the Metropolis algorithm with a Normal proposal distribution centered at the current state of the Markov chain and with standard deviation, or step size, <span class="math inline">\(c\)</span>. The step size determines how efficiently the Markov chain generated by the Metropolis algorithm explores the target distribution. If it is too small, the Markov chain moves slowly and successive draws are highly correlated. If it is too large, proposals often land in regions where the target density is low and are rejected. We also learned that there is an optimal step size. For a one-dimensional Normal target, the optimal step size corresponds to an acceptance rate of approximately <span class="math inline">\(44\)</span>%. Although this rate need not be optimal for other target distributions, it is a useful heuristic that often gives close-to-optimal efficiency. We will therefore use <span class="math inline">\(44\)</span>% as our target acceptance rate for one-dimensional problems. However, we generally do not know which step size will produce this rate and must tune it for each application, which can be time-consuming.</p>
+<p>In this chapter, you will learn about a stochastic optimization procedure known as Robbins–Monro, which we will use to adapt the step size <span class="math inline">\(c\)</span> during sampling. The procedure adjusts the step size after every iteration, based on the acceptance probability of that iteration, and finds a suitable step size for the problem at hand on its own. We call the result the <strong>adaptive Metropolis algorithm</strong>. Its main advantage is that we no longer need to tune the step size by hand, and it applies, in principle, to any target distribution.</p>
+<p>In this chapter, we will make use of the following packages:</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(posterior)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mvtnorm)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="bookbox bookgraybox">
+<div class="title">
+<p>Goals</p>
+</div>
+<ul>
+<li>Explain why a larger step size lowers the acceptance rate of a random-walk Metropolis chain, and show that the acceptance rate is the long-run average of the acceptance probabilities <span class="math inline">\(\alpha_t\)</span> the sampler computes at every iteration.</li>
+<li>Write the step-size update on the log scale, carry out a few updates by hand, and explain what the learning rate does.</li>
+<li>Explain why a constant learning rate leaves the step size fluctuating, and why a diminishing learning rate reduces these fluctuations.</li>
+<li>Describe the Robbins–Monro procedure, state its two conditions on the learning rate, and relate both to step-size adaptation.</li>
+<li>Implement an adaptive Metropolis sampler in R, check it on the examples of <a href="05-metropolis.html" class="quarto-xref"><span>Chapter 5</span></a>, and explain what the acceptance rate does and does not tell us about the chain.</li>
+<li>Compare continuous adaptation with adapting during warm-up and then freezing the step size, and explain why we use the latter approach in this book.</li>
+</ul>
+</div>
+<section id="adapting-the-step-size" class="level2" data-number="6.1">
+<h2 data-number="6.1" class="anchored" data-anchor-id="adapting-the-step-size"><span class="header-section-number">6.1</span> Adapting the step size</h2>
+<section id="step-size-and-acceptance-rate" class="level3" data-number="6.1.1">
+<h3 data-number="6.1.1" class="anchored" data-anchor-id="step-size-and-acceptance-rate"><span class="header-section-number">6.1.1</span> Step size and acceptance rate</h3>
+<p>Let’s return to the sleep survey from <a href="05-metropolis.html" class="quarto-xref"><span>Chapter 5</span></a>, where we modeled the hours of sleep of twenty first-year students using a <span class="math inline">\(\text{N}(\mu, 1^2)\)</span> model and a <span class="math inline">\(\text{N}(7, 0.5^2)\)</span> prior distribution for <span class="math inline">\(\mu\)</span>. The posterior is Normal with mean <span class="math inline">\(\mu_n \approx 6.69\)</span> and standard deviation <span class="math inline">\(\tau_n \approx 0.20\)</span> hours. We also found in <a href="05-metropolis.html#fig-ess-curve" class="quarto-xref">Figure&nbsp;<span>5.10</span></a> that a step size of about <span class="math inline">\(0.5\)</span> gives an acceptance rate of <span class="math inline">\(0.44\)</span> and approximately maximizes the effective sample size. We recompute the posterior parameters and define the log posterior density here because we will use them throughout the chapter.</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>sleep_hours <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">6.5</span>, <span class="fl">7.2</span>, <span class="fl">5.8</span>, <span class="fl">6.9</span>, <span class="fl">7.5</span>, <span class="fl">6.1</span>, <span class="fl">5.5</span>, <span class="fl">7.0</span>, <span class="fl">6.4</span>, <span class="fl">8.1</span>,</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>                 <span class="fl">6.7</span>, <span class="fl">5.9</span>, <span class="fl">7.3</span>, <span class="fl">6.2</span>, <span class="fl">6.8</span>, <span class="fl">7.7</span>, <span class="fl">5.6</span>, <span class="fl">6.3</span>, <span class="fl">7.1</span>, <span class="fl">6.0</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">length</span>(sleep_hours)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>tau2_n <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">/</span> <span class="fl">0.5</span><span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> n <span class="sc">/</span> <span class="dv">1</span><span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>mu_n <span class="ot">&lt;-</span> tau2_n <span class="sc">*</span> (<span class="dv">7</span> <span class="sc">/</span> <span class="fl">0.5</span><span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> <span class="fu">sum</span>(sleep_hours) <span class="sc">/</span> <span class="dv">1</span><span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>log_posterior <span class="ot">&lt;-</span> <span class="cf">function</span>(mu, <span class="at">y =</span> sleep_hours) {</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sum</span>(<span class="fu">dnorm</span>(y, <span class="at">mean =</span> mu, <span class="at">sd =</span> <span class="dv">1</span>, <span class="at">log =</span> <span class="cn">TRUE</span>)) <span class="sc">+</span>   <span class="co"># log likelihood</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">dnorm</span>(mu, <span class="at">mean =</span> <span class="dv">7</span>, <span class="at">sd =</span> <span class="fl">0.5</span>, <span class="at">log =</span> <span class="cn">TRUE</span>)       <span class="co"># log prior</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>In each iteration, the Metropolis algorithm either accepts or rejects the proposed value. We can record these decisions as <span class="math inline">\(1\)</span> for acceptance and <span class="math inline">\(0\)</span> for rejection. The <strong>acceptance rate</strong> is the average of these decisions. The algorithm never calculates this rate. Each decision is based on the probability of accepting the current proposal.</p>
+<p>Suppose the chain is at <span class="math inline">\(\mu^{(t)}\)</span> and proposes <span class="math inline">\(\mu^\star\)</span>. The Metropolis acceptance probability is <span class="math display">\[
+\alpha_t = \min\{1\text{, } r_t\}, \qquad r_t = \frac{f(\mu^\star \mid y)}{f(\mu^{(t)} \mid y)}.
+\]</span> We call <span class="math inline">\(\alpha_t\)</span> the <strong>acceptance probability</strong> of iteration <span class="math inline">\(t\)</span>. Because the proposed value is random, its acceptance probability <span class="math inline">\(\alpha_t\)</span> is also random. The distribution of these acceptance probabilities depends on the target distribution and the proposal distribution, particularly its step size.</p>
+<p>It is difficult to determine the distribution of the acceptance probabilities analytically, but we can investigate it by recording their values during Metropolis sampling. The resulting sequence <span class="math inline">\(\alpha_1, \alpha_2, \ldots\)</span> is a stochastic process, just like the Markov chain itself, and we can examine its trace plot. The <code>metropolis()</code> function from <a href="05-metropolis.html" class="quarto-xref"><span>Chapter 5</span></a> already computes the log density ratio needed to calculate <span class="math inline">\(\alpha_t\)</span>, but does not store the acceptance probability. The version below adds two lines, marked <code>new</code>, to calculate and record these probabilities. These values are included in the output, and the rest of the algorithm remains unchanged. We will use this version of <code>metropolis()</code> only in this section.</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>metropolis_alpha <span class="ot">&lt;-</span> <span class="cf">function</span>(log_target, init, n_iter, step_size, ...) {</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  d <span class="ot">&lt;-</span> <span class="fu">length</span>(init)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  draws <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="cn">NA_real_</span>, <span class="at">nrow =</span> n_iter, <span class="at">ncol =</span> d)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  alpha <span class="ot">&lt;-</span> <span class="fu">numeric</span>(n_iter)                                <span class="co"># new</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  current <span class="ot">&lt;-</span> init</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  current_lp <span class="ot">&lt;-</span> <span class="fu">log_target</span>(current, ...)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">is.finite</span>(current_lp)) <span class="fu">stop</span>(<span class="st">"log_target() is not finite at init"</span>)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  n_accept <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (t <span class="cf">in</span> <span class="fu">seq_len</span>(n_iter)) {</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    proposal <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(d, <span class="at">mean =</span> current, <span class="at">sd =</span> step_size)</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    proposal_lp <span class="ot">&lt;-</span> <span class="fu">log_target</span>(proposal, ...)</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">is.nan</span>(proposal_lp)) <span class="fu">stop</span>(<span class="st">"log_target() returned NaN"</span>)</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    alpha[t] <span class="ot">&lt;-</span> <span class="fu">exp</span>(<span class="fu">min</span>(<span class="dv">0</span>, proposal_lp <span class="sc">-</span> current_lp))     <span class="co"># new</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">log</span>(<span class="fu">runif</span>(<span class="dv">1</span>)) <span class="sc">&lt;</span> proposal_lp <span class="sc">-</span> current_lp) {</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>      current <span class="ot">&lt;-</span> proposal</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>      current_lp <span class="ot">&lt;-</span> proposal_lp</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>      n_accept <span class="ot">&lt;-</span> n_accept <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>    draws[t, ] <span class="ot">&lt;-</span> current</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">colnames</span>(draws) <span class="ot">&lt;-</span> <span class="cf">if</span> (d <span class="sc">==</span> <span class="dv">1</span>) <span class="st">"theta"</span> <span class="cf">else</span> <span class="fu">paste0</span>(<span class="st">"theta_"</span>, <span class="fu">seq_len</span>(d))</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">draws =</span> <span class="fu">as_tibble</span>(draws) <span class="sc">|&gt;</span></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>      <span class="fu">mutate</span>(<span class="at">iteration =</span> <span class="fu">seq_len</span>(n_iter), <span class="at">alpha =</span> alpha, <span class="at">.before =</span> <span class="dv">1</span>),</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">accept_rate =</span> n_accept <span class="sc">/</span> n_iter</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Let’s examine the acceptance probabilities generated by <code>metropolis_alpha</code> for three step sizes: <span class="math inline">\(c = 0.1\)</span>, <span class="math inline">\(0.5\)</span>, and <span class="math inline">\(2\)</span>. For each step size, we start the chain at the posterior mean and examine the first 300 values of <span class="math inline">\(\alpha_t\)</span>.</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">84735</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>fits <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="fu">c</span>(<span class="fl">0.1</span>, <span class="fl">0.5</span>, <span class="dv">2</span>), \(c) {</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">metropolis_alpha</span>(log_posterior, <span class="at">init =</span> mu_n, <span class="at">n_iter =</span> <span class="dv">5000</span>, <span class="at">step_size =</span> c)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-alpha-trace" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-alpha-trace-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="06-adaptive-metropolis_files/figure-html/fig-alpha-trace-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-alpha-trace-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6.1: Acceptance probabilities <span class="math inline">\(\alpha_t\)</span> (purple) over the first 300 iterations of the Metropolis algorithm for the sleep posterior, with their running mean (dark gray), for three step sizes. Individual acceptance probabilities fluctuate, but their running mean settles at a level that depends on the step size.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p><a href="#fig-alpha-trace" class="quarto-xref">Figure&nbsp;<span>6.1</span></a> shows the three traces. With <span class="math inline">\(c = 0.1\)</span>, the acceptance probability is close to one most of the time, with occasional dips when a proposal has a lower target density than the current state. With <span class="math inline">\(c = 2\)</span>, acceptance probabilities are often close to zero, but occasionally reach much higher values. With <span class="math inline">\(c = 0.5\)</span>, they range across nearly the entire interval between zero and one. In all three panels, individual values of <span class="math inline">\(\alpha_t\)</span> fluctuate considerably, but their running means become more stable as the number of iterations increases. Over the full run, the average acceptance probabilities are approximately 0.85, 0.44, and 0.13, respectively.</p>
+<p>The running average of <span class="math inline">\(\alpha_t\)</span> approaches the acceptance rate of the chain. Given a proposal, the decision to accept it is like a coin flip with probability <span class="math inline">\(\alpha_t\)</span>, so the fraction of accepted proposals and the average of <span class="math inline">\(\alpha_t\)</span> estimate the same quantity. The average of <span class="math inline">\(\alpha_t\)</span> is less noisy because it averages the acceptance probabilities rather than the outcomes of the coin flips. Let’s compare the two across a range of step sizes.</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">84735</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>step_grid <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">0.05</span>, <span class="fl">0.1</span>, <span class="fl">0.2</span>, <span class="fl">0.5</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">5</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>runs <span class="ot">&lt;-</span> <span class="fu">map</span>(step_grid, \(c) {</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">metropolis_alpha</span>(log_posterior, <span class="at">init =</span> mu_n, <span class="at">n_iter =</span> <span class="dv">5000</span>, <span class="at">step_size =</span> c)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="fu">tibble</span>(<span class="at">step_size =</span> step_grid,</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">mean_alpha =</span> <span class="fu">map_dbl</span>(runs, \(fit) <span class="fu">mean</span>(fit<span class="sc">$</span>draws<span class="sc">$</span>alpha)),</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">accept_rate =</span> <span class="fu">map_dbl</span>(runs, \(fit) fit<span class="sc">$</span>accept_rate))</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 7 × 3</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   step_size mean_alpha accept_rate</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;       &lt;dbl&gt;      &lt;dbl&gt;       &lt;dbl&gt;</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1      0.05     0.927        0.930</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2      0.1      0.847        0.846</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3      0.2      0.712        0.718</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4      0.5      0.441        0.442</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5      1        0.236        0.247</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6      2        0.127        0.129</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 7      5        0.0527       0.052</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>The two columns agree to within about a percentage point, and both decrease as the step size increases, from above <span class="math inline">\(0.9\)</span> for the smallest step to about <span class="math inline">\(0.05\)</span> for the largest. This agrees with the acceptance-rate curve in <a href="05-metropolis.html#fig-ess-curve" class="quarto-xref">Figure&nbsp;<span>5.10</span></a>. We can therefore adjust the step size to achieve a desired acceptance rate, such as our target acceptance rate of <span class="math inline">\(0.44\)</span> for one-dimensional target distributions.</p>
+<p>Adaptation uses this relationship. Think of the step size as a dial and the acceptance rate as a gauge. If the acceptance rate is too high, increase the step size; if it is too low, decrease it. In <a href="05-metropolis.html" class="quarto-xref"><span>Chapter 5</span></a>, we adjusted the step size by hand. In this chapter, we learn to let the sampler make these adjustments automatically.</p>
+<div class="quiz bookgraybox">
+<div class="title">
+<p>Quiz yourself!</p>
+</div>
+<p>A Metropolis chain for the sleep posterior accepts <span class="math inline">\(80\)</span>% of its proposals with step size <span class="math inline">\(c = 0.2\)</span>. Should we increase or decrease the step size to reach an acceptance rate of <span class="math inline">\(0.44\)</span>? What if the chain accepts only <span class="math inline">\(10\)</span>% of its proposals?</p>
+</div>
+</section>
+<section id="turning-the-dial" class="level3" data-number="6.1.2">
+<h3 data-number="6.1.2" class="anchored" data-anchor-id="turning-the-dial"><span class="header-section-number">6.1.2</span> Turning the dial</h3>
+<p>After each iteration, the sampler has computed the acceptance probability <span class="math inline">\(\alpha_t\)</span>. We compare it with a <strong>target acceptance rate</strong> <span class="math inline">\(\alpha^\star\)</span>, which we set to <span class="math inline">\(0.44\)</span> for now. If <span class="math inline">\(\alpha_t &gt; \alpha^\star\)</span>, we increase the step size because the proposal was more likely to be accepted than desired, which means our steps are too timid. If <span class="math inline">\(\alpha_t &lt; \alpha^\star\)</span>, we decrease the step size because the proposal was less likely to be accepted than desired, which means our steps are too bold.</p>
+<p>A simple rule is to adjust the step size by a weighted difference between the acceptance probability and the target acceptance rate: <span class="math display">\[
+c_{t+1} = c_t + \gamma \, (\alpha_t - \alpha^\star),
+\]</span> where <span class="math inline">\(\gamma &gt; 0\)</span> controls the size of the adjustment. This rule has two problems. First, it can produce a negative step size. For example, starting at <span class="math inline">\(c_t = 0.1\)</span>, a proposal with <span class="math inline">\(\alpha_t = 0\)</span> and <span class="math inline">\(\gamma = 1\)</span> gives <span class="math inline">\(c_{t+1} = 0.1 - 0.44 &lt; 0\)</span>. Second, the same additive change has a different relative effect depending on the current step size. Increasing <span class="math inline">\(c\)</span> from <span class="math inline">\(0.1\)</span> to <span class="math inline">\(0.2\)</span> doubles it, whereas increasing it from <span class="math inline">\(10\)</span> to <span class="math inline">\(10.1\)</span> changes it by only one percent. We therefore want changes that are proportional to the current step size, so that doubling has the same meaning whether we move from <span class="math inline">\(0.1\)</span> to <span class="math inline">\(0.2\)</span> or from <span class="math inline">\(1\)</span> to <span class="math inline">\(2\)</span>.</p>
+<p>Both problems disappear when we update the <strong>logarithm</strong> of the step size instead: <span id="eq-dial"><span class="math display">\[
+\log c_{t+1} = \log c_t + \gamma \, (\alpha_t - \alpha^\star).
+\tag{6.1}\]</span></span> Since <span class="math inline">\(e^{a + b} = e^a e^b\)</span>, adding <span class="math inline">\(\gamma(\alpha_t - \alpha^\star)\)</span> on the log scale is equivalent to multiplying the step size by <span class="math inline">\(e^{\gamma(\alpha_t - \alpha^\star)}\)</span>: <span class="math display">\[
+c_{t+1} = c_t \, e^{\gamma (\alpha_t - \alpha^\star)}.
+\]</span> This factor is always positive, so the step size remains positive. It ranges from <span class="math inline">\(e^{-\gamma \alpha^\star}\)</span> when <span class="math inline">\(\alpha_t = 0\)</span> to <span class="math inline">\(e^{\gamma (1 - \alpha^\star)}\)</span> when <span class="math inline">\(\alpha_t = 1\)</span>. With <span class="math inline">\(\gamma = 1\)</span> and <span class="math inline">\(\alpha^\star = 0.44\)</span>, these factors are approximately <span class="math inline">\(0.64\)</span> and <span class="math inline">\(1.75\)</span>, respectively. The adjustment is proportional to the current step size. For example, <span class="math inline">\(\alpha_t = 0\)</span> reduces a step size of <span class="math inline">\(10\)</span> to <span class="math inline">\(6.4\)</span>, but a step size of <span class="math inline">\(0.1\)</span> to <span class="math inline">\(0.064\)</span>. The parameter <span class="math inline">\(\gamma\)</span> is called the <strong>learning rate</strong> and determines how strongly each acceptance probability influences the next step size.</p>
+</section>
+<section id="four-updates-of-step-size-by-hand" class="level3" data-number="6.1.3">
+<h3 data-number="6.1.3" class="anchored" data-anchor-id="four-updates-of-step-size-by-hand"><span class="header-section-number">6.1.3</span> Four updates of step size by hand</h3>
+<p>Let’s carry out a few updates by hand to see the rule at work. We return to the sleep posterior and start with a step size of <span class="math inline">\(c_1 = 5\)</span>, which is ten times larger than the value we found earlier. We aim for <span class="math inline">\(\alpha^\star = 0.44\)</span> and use <span class="math inline">\(\gamma = 1\)</span>. Suppose the chain is somewhere in the posterior region and the first four proposals have the acceptance probabilities listed in <a href="#tbl-dial" class="quarto-xref">Table&nbsp;<span>6.1</span></a>.</p>
+<div id="tbl-dial" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-dial-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;6.1: Four updates of the step size by <a href="#eq-dial" class="quarto-xref">Equation&nbsp;<span>6.1</span></a> with a constant learning rate <span class="math inline">\(\gamma = 1\)</span>, starting from <span class="math inline">\(c_1 = 5\)</span> with <span class="math inline">\(\alpha^\star = 0.44\)</span>.
+</figcaption>
+<div aria-describedby="tbl-dial-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: right;">Iteration <span class="math inline">\(t\)</span></th>
+<th style="text-align: right;">Step size <span class="math inline">\(c_t\)</span></th>
+<th style="text-align: right;"><span class="math inline">\(\log c_t\)</span></th>
+<th style="text-align: right;">Acceptance probability <span class="math inline">\(\alpha_t\)</span></th>
+<th style="text-align: right;">Change <span class="math inline">\(\gamma(\alpha_t - 0.44)\)</span></th>
+<th style="text-align: right;"><span class="math inline">\(\log c_{t+1}\)</span></th>
+<th style="text-align: right;">New step size <span class="math inline">\(c_{t+1}\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">5.00</td>
+<td style="text-align: right;">1.609</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;"><span class="math inline">\(-0.440\)</span></td>
+<td style="text-align: right;">1.169</td>
+<td style="text-align: right;">3.22</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">3.22</td>
+<td style="text-align: right;">1.169</td>
+<td style="text-align: right;">0.02</td>
+<td style="text-align: right;"><span class="math inline">\(-0.420\)</span></td>
+<td style="text-align: right;">0.749</td>
+<td style="text-align: right;">2.12</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">2.12</td>
+<td style="text-align: right;">0.749</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;"><span class="math inline">\(-0.440\)</span></td>
+<td style="text-align: right;">0.309</td>
+<td style="text-align: right;">1.36</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">1.36</td>
+<td style="text-align: right;">0.309</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: right;"><span class="math inline">\(+0.560\)</span></td>
+<td style="text-align: right;">0.869</td>
+<td style="text-align: right;">2.39</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<p>In the first iteration, the acceptance probability is <span class="math inline">\(0.00\)</span>, giving a discrepancy of <span class="math inline">\(-0.44\)</span>. The log step size decreases from <span class="math inline">\(\log 5 = 1.609\)</span> to <span class="math inline">\(1.169\)</span>, so the step size becomes <span class="math inline">\(e^{1.169} = 3.22\)</span>. The second and third proposals also have low acceptance probabilities, reducing the step size further to <span class="math inline">\(1.36\)</span>. In the fourth iteration, the proposal has acceptance probability <span class="math inline">\(1\)</span>, increasing the step size by a factor of <span class="math inline">\(e^{0.56} = 1.75\)</span> to <span class="math inline">\(2.39\)</span>.</p>
+<p>Over these four iterations, the step size decreases from <span class="math inline">\(5\)</span> to <span class="math inline">\(2.39\)</span>, but not every adjustment moves it in the right direction. Each <span class="math inline">\(\alpha_t\)</span> is a noisy observation of the acceptance rate at the current step size. Rather than waiting for these observations to average out, the algorithm adjusts the step size after every iteration. We therefore need many iterations for the adjustments to settle around a suitable value.</p>
+</section>
+<section id="step-size-adaptation-with-a-fixed-learning-rate" class="level3" data-number="6.1.4">
+<h3 data-number="6.1.4" class="anchored" data-anchor-id="step-size-adaptation-with-a-fixed-learning-rate"><span class="header-section-number">6.1.4</span> Step-size adaptation with a fixed learning rate</h3>
+<p>We have seen how to adjust the step size after a single iteration. But what happens when we apply this rule repeatedly? Does the step size approach a suitable value, and how much does it continue to fluctuate? To investigate these questions, we add the update rule to the <code>metropolis()</code> function from <a href="05-metropolis.html" class="quarto-xref"><span>Chapter 5</span></a>.</p>
+<p>The modified function stores the log step size as <code>log_c</code>, so the Normal proposal uses <code>exp(log_c)</code>. After each iteration, Step 4 applies <a href="#eq-dial" class="quarto-xref">Equation&nbsp;<span>6.1</span></a> to update the step size. The acceptance probability <span class="math inline">\(\alpha_t = \min\{1, r_t\}\)</span> is calculated from the log density ratio as <span class="math inline">\(\exp(\min\{0, \log r_t\})\)</span>. This calculation is made regardless of whether the proposal was accepted or rejected.</p>
+<p>The function also records the step size after each iteration so that we can examine how it changes. The learning rate can be supplied as a vector with one value per iteration or as a single value, which is then used throughout the run. In this section, we use a constant learning rate. We call the function <code>adaptive_metropolis_experiment()</code>, because it is a tool for studying learning-rate schedules rather than the finished algorithm. The finished <code>adaptive_metropolis()</code> comes once the experiments have settled the learning rate.</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>adaptive_metropolis_experiment <span class="ot">&lt;-</span> <span class="cf">function</span>(log_target, init, n_iter, <span class="at">step_size =</span> <span class="dv">1</span>,</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>                                           <span class="at">target_accept =</span> <span class="fl">0.44</span>, <span class="at">learning_rate =</span> <span class="fl">0.1</span>, ...) {</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  d <span class="ot">&lt;-</span> <span class="fu">length</span>(init)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  gamma <span class="ot">&lt;-</span> <span class="fu">rep_len</span>(learning_rate, n_iter)                   <span class="co"># one learning rate per iteration</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  draws <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="cn">NA_real_</span>, <span class="at">nrow =</span> n_iter, <span class="at">ncol =</span> d)</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  step_sizes <span class="ot">&lt;-</span> <span class="fu">numeric</span>(n_iter)</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  n_accept <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  current <span class="ot">&lt;-</span> init</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  current_lp <span class="ot">&lt;-</span> <span class="fu">log_target</span>(current, ...)</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  log_c <span class="ot">&lt;-</span> <span class="fu">log</span>(step_size)</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (t <span class="cf">in</span> <span class="fu">seq_len</span>(n_iter)) {</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    proposal <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(d, <span class="at">mean =</span> current, <span class="at">sd =</span> <span class="fu">exp</span>(log_c))   <span class="co"># 1. propose</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>    proposal_lp <span class="ot">&lt;-</span> <span class="fu">log_target</span>(proposal, ...)</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>    log_r <span class="ot">&lt;-</span> proposal_lp <span class="sc">-</span> current_lp                        <span class="co"># 2. compare</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">log</span>(<span class="fu">runif</span>(<span class="dv">1</span>)) <span class="sc">&lt;</span> log_r) {                             <span class="co"># 3. accept ...</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>      current <span class="ot">&lt;-</span> proposal</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>      current_lp <span class="ot">&lt;-</span> proposal_lp</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>      n_accept <span class="ot">&lt;-</span> n_accept <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>    draws[t, ] <span class="ot">&lt;-</span> current                                    <span class="co"># ... or stay and record</span></span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>    alpha_t <span class="ot">&lt;-</span> <span class="fu">exp</span>(<span class="fu">min</span>(<span class="dv">0</span>, log_r))                            <span class="co"># 4. alpha_t = min(1, r), and</span></span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>    log_c <span class="ot">&lt;-</span> log_c <span class="sc">+</span> gamma[t] <span class="sc">*</span> (alpha_t <span class="sc">-</span> target_accept)    <span class="co">#    turn the dial</span></span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>    step_sizes[t] <span class="ot">&lt;-</span> <span class="fu">exp</span>(log_c)</span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">colnames</span>(draws) <span class="ot">&lt;-</span> <span class="cf">if</span> (d <span class="sc">==</span> <span class="dv">1</span>) <span class="st">"theta"</span> <span class="cf">else</span> <span class="fu">paste0</span>(<span class="st">"theta_"</span>, <span class="fu">seq_len</span>(d))</span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(</span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">draws =</span> <span class="fu">as_tibble</span>(draws) <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">iteration =</span> <span class="fu">seq_len</span>(n_iter), <span class="at">.before =</span> <span class="dv">1</span>),</span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">accept_rate =</span> n_accept <span class="sc">/</span> n_iter,</span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">step_sizes =</span> <span class="fu">tibble</span>(<span class="at">iteration =</span> <span class="fu">seq_len</span>(n_iter), <span class="at">step_size =</span> step_sizes)</span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Let’s see how well the adaptation works. We run the sampler on the sleep posterior from two deliberately poor step sizes: <span class="math inline">\(c = 5\)</span>, which is ten times larger than the value we found earlier, and <span class="math inline">\(c = 0.02\)</span>, which is twenty-five times smaller. For each starting value, we try three learning rates: <span class="math inline">\(\gamma = 1\)</span>, <span class="math inline">\(0.1\)</span>, and <span class="math inline">\(0.01\)</span>. All six chains start at the posterior mean, so differences in their behavior are not caused by different initial states.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-constant-gamma" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-constant-gamma-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="06-adaptive-metropolis_files/figure-html/fig-constant-gamma-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-constant-gamma-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6.2: Step-size trajectories on the sleep posterior with a constant learning rate, from <span class="math inline">\(c = 5\)</span> (purple) and <span class="math inline">\(c = 0.02\)</span> (gray), for three learning rates. The first 2,000 iterations are shown, with a logarithmic vertical axis; the dashed line is the step size that gives an acceptance rate of 0.44. A large learning rate arrives fast and never settles; a small one settles and arrives slowly.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p><a href="#fig-constant-gamma" class="quarto-xref">Figure&nbsp;<span>6.2</span></a> shows the six step-size trajectories. All move toward the dashed line at <span class="math inline">\(c = 0.49\)</span>, which corresponds to an acceptance rate of <span class="math inline">\(0.44\)</span>. None of the runs needed to know the posterior standard deviation in advance. However, the learning rate makes a substantial difference. With <span class="math inline">\(\gamma = 1\)</span>, the step size approaches the target quickly but continues to fluctuate considerably. With <span class="math inline">\(\gamma = 0.01\)</span>, the adjustments are much smaller, and the chain starting at <span class="math inline">\(0.02\)</span> needs almost a thousand iterations to approach the target. The intermediate learning rate <span class="math inline">\(\gamma = 0.1\)</span> provides a compromise between speed and stability.</p>
+<p>But which learning rate should we choose? That depends partly on how far the initial step size is from its target, which we do not know in advance. We set out to remove the step size from the list of numbers that must be tuned by hand, only to replace it with the learning rate.</p>
+<div class="quiz bookgraybox">
+<div class="title">
+<p>Quiz yourself!</p>
+</div>
+<p>An adaptive Metropolis chain uses a constant learning rate <span class="math inline">\(\gamma = 1\)</span> and a target acceptance rate <span class="math inline">\(\alpha^\star = 0.44\)</span>. At iteration <span class="math inline">\(100\)</span>, its step size is <span class="math inline">\(c_{100} = 0.5\)</span>. What are the largest and smallest possible values of <span class="math inline">\(c_{101}\)</span>?</p>
+</div>
+</section>
+<section id="diminishing-adaptation" class="level3" data-number="6.1.5">
+<h3 data-number="6.1.5" class="anchored" data-anchor-id="diminishing-adaptation"><span class="header-section-number">6.1.5</span> Diminishing adaptation</h3>
+<p>We want the learning rate to be large when the step size is still far from its target, so that each adjustment is substantial. As the step size approaches its target, however, we want smaller adjustments so that individual acceptance probabilities no longer cause large fluctuations. We therefore need a learning rate <span class="math inline">\(\gamma_t\)</span> that <strong>decreases with the iteration number</strong>.</p>
+<p>A familiar example is the running mean. Suppose we estimate the mean of a sequence of observations <span class="math inline">\(x_1, x_2, \ldots\)</span>, updating our estimate after each one. The running mean <span class="math inline">\(m_t\)</span> of the first <span class="math inline">\(t\)</span> observations can be computed from the previous mean by <span class="math display">\[
+m_t = m_{t-1} + \frac{1}{t} (x_t - m_{t-1}),
+\]</span> which has the same form as <a href="#eq-dial" class="quarto-xref">Equation&nbsp;<span>6.1</span></a>. The estimate moves toward the latest observation by a fraction <span class="math inline">\(1/t\)</span> of the difference. The first observation receives full weight, the hundredth receives a weight of <span class="math inline">\(1/100\)</span>, and the adjustments become smaller as more observations accumulate.</p>
+<p>We can use the same idea for our adaptive step-size updates. Instead of keeping the learning rate fixed, we let it decrease with the iteration number: <span class="math display">\[
+\gamma_t = t^{-\eta}, \qquad \eta &gt; 0,
+\]</span> where <span class="math inline">\(\eta = 1\)</span> gives the weights of the running mean, while smaller values of <span class="math inline">\(\eta\)</span> make the learning rate decrease more slowly. Our update rule becomes <span id="eq-robbins-monro"><span class="math display">\[
+\log c_{t+1} = \log c_t + \gamma_t \, (\alpha_t - \alpha^\star), \qquad \gamma_t = t^{-\eta}.
+\tag{6.2}\]</span></span> This is called <strong>diminishing adaptation</strong>. The sampler continues to adjust the step size, but the adjustments become smaller over time.</p>
+<p>Our <code>adaptive_metropolis_experiment()</code> function already accepts a vector of learning rates, so we can implement this rule by passing <code>(1:n_iter)^(-eta)</code> without changing the function. Let’s compare <span class="math inline">\(\eta = 1\)</span> with the more slowly decreasing learning rate <span class="math inline">\(\eta = 0.7\)</span>, starting from the same two step sizes as before.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-decaying-gamma" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-decaying-gamma-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="06-adaptive-metropolis_files/figure-html/fig-decaying-gamma-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-decaying-gamma-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6.3: Step-size trajectories with a diminishing learning rate <span class="math inline">\(\gamma_t = t^{-\eta}\)</span>, starting from <span class="math inline">\(c = 5\)</span> (purple) and <span class="math inline">\(c = 0.02\)</span> (gray). With <span class="math inline">\(\eta = 1\)</span>, the step sizes stabilize before reaching the dashed line; with <span class="math inline">\(\eta = 0.7\)</span>, they approach the target more quickly while their fluctuations decrease.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p><a href="#fig-decaying-gamma" class="quarto-xref">Figure&nbsp;<span>6.3</span></a> shows that both learning rates produce much smaller fluctuations than the constant learning rates we investigated earlier. However, they differ in how quickly the step sizes approach their target. With <span class="math inline">\(\eta = 0.7\)</span>, both chains reach the dashed line within about a hundred iterations and remain close to it. With <span class="math inline">\(\eta = 1\)</span>, the learning rate decreases so quickly that neither chain reaches the target within the <span class="math inline">\(5{,}000\)</span> iterations. The step sizes appear to settle, but at values that are still too large or too small.</p>
+<p>Diminishing adaptation therefore addresses the problem of persistent fluctuations. But we also learned that the choice of <span class="math inline">\(\eta\)</span> matters. If the learning rate decreases too quickly, the step size may take a very long time to reach its target. If it decreases too slowly, the fluctuations may persist.</p>
+</section>
+</section>
+<section id="the-robbinsmonro-procedure" class="level2" data-number="6.2">
+<h2 data-number="6.2" class="anchored" data-anchor-id="the-robbinsmonro-procedure"><span class="header-section-number">6.2</span> The Robbins–Monro procedure</h2>
+<p>Robbins and Monro studied how to make adjustments based on noisy observations and established two conditions on the learning rate that can ensure convergence <span class="citation" data-cites="robbins1951stochastic">(<a href="../references.html#ref-robbins1951stochastic" role="doc-biblioref">Robbins &amp; Monro, 1951</a>)</span>. Our step-size adaptation follows the same principle. We want to find the step size <span class="math inline">\(c\)</span> that produces an average acceptance probability of <span class="math inline">\(0.44\)</span>, but each observed acceptance probability <span class="math inline">\(\alpha_t\)</span> is a noisy indication of whether the current step size is too large or too small. By adjusting the step size based on these observations, we can approach the desired acceptance rate.</p>
+<div class="bookbox bookgraybox">
+<div class="title">
+<p>The Robbins–Monro conditions</p>
+</div>
+<p>For our step-size adaptation, the update rule is <span class="math display">\[
+\log c_{t+1} = \log c_t + \gamma_t \, (\alpha_t - \alpha^\star).
+\]</span> The average acceptance probability decreases as the step size increases, and the individual acceptance probabilities lie between zero and one, so their variance is bounded. Robbins and Monro established two conditions on the learning rates that can ensure convergence when the observations satisfy the assumptions of their procedure: <span class="math display">\[
+\sum_{t=1}^\infty \gamma_t = \infty
+\qquad \text{and} \qquad
+\sum_{t=1}^\infty \gamma_t^2 &lt; \infty.
+\]</span></p>
+</div>
+<p>The two conditions address different problems. The first, <span class="math inline">\(\sum_t \gamma_t = \infty\)</span>, requires the learning rates to decrease slowly enough that their sum remains unbounded. Otherwise, the adjustments may become too small before the step size reaches its target. For example, with <span class="math inline">\(\gamma_t = 1/t^2\)</span>, the sum converges to <span class="math inline">\(\pi^2/6 \approx 1.64\)</span>. Because <span class="math inline">\(|\alpha_t-\alpha^\star|\leq 1\)</span>, the total possible adjustment to the log step size is bounded by this sum. If the initial log step size is sufficiently far from its target, the algorithm cannot reach it.</p>
+<p>The second condition, <span class="math inline">\(\sum_t \gamma_t^2 &lt; \infty\)</span>, requires the learning rates to decrease sufficiently quickly to control the accumulated effect of noise. With a constant learning rate, every acceptance probability continues to produce an adjustment of the same magnitude, explaining the persistent fluctuations we observed in <a href="#fig-constant-gamma" class="quarto-xref">Figure&nbsp;<span>6.2</span></a>. Together, the conditions require the learning rate to decrease, but neither too quickly nor too slowly.</p>
+<p>For our choice <span class="math inline">\(\gamma_t = t^{-\eta}\)</span>, both conditions hold when <span class="math inline">\(0.5 &lt; \eta \leq 1\)</span>. The first sum diverges when <span class="math inline">\(\eta \leq 1\)</span>, while the second sum, <span class="math inline">\(\sum_t t^{-2\eta}\)</span>, converges when <span class="math inline">\(\eta &gt; 0.5\)</span>. <a href="#fig-learning-rates" class="quarto-xref">Figure&nbsp;<span>6.4</span></a> illustrates how different choices of <span class="math inline">\(\eta\)</span> affect the learning rates and the accumulated squared learning rates.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-learning-rates" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-learning-rates-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="06-adaptive-metropolis_files/figure-html/fig-learning-rates-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-learning-rates-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6.4: Left: the learning rate <span class="math inline">\(\gamma_t = t^{-\eta}\)</span> for four values of <span class="math inline">\(\eta\)</span>. Right: the running total of the squared learning rates, with a logarithmic axis for <span class="math inline">\(t\)</span>. For <span class="math inline">\(\eta = 0.4\)</span> and <span class="math inline">\(\eta = 0.5\)</span> the total keeps growing, so the noise never settles; for <span class="math inline">\(\eta = 0.6\)</span> and <span class="math inline">\(\eta = 0.8\)</span> it levels off.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Unlike the step size <span class="math inline">\(c\)</span>, which depends on the posterior distribution, the permissible range of <span class="math inline">\(\eta\)</span> does not depend on the problem at hand. We can therefore choose a default exponent within this range rather than tuning it separately for every analysis. The choice still affects how quickly the step size approaches its target, as we saw in <a href="#fig-decaying-gamma" class="quarto-xref">Figure&nbsp;<span>6.3</span></a>.</p>
+<section id="what-the-theory-promises-and-what-it-does-not" class="level3" data-number="6.2.1">
+<h3 data-number="6.2.1" class="anchored" data-anchor-id="what-the-theory-promises-and-what-it-does-not"><span class="header-section-number">6.2.1</span> What the theory promises, and what it does not</h3>
+<p>The Robbins–Monro conditions tell us which learning rates are suitable for convergence, but not how quickly convergence occurs. We saw this in <a href="#fig-decaying-gamma" class="quarto-xref">Figure&nbsp;<span>6.3</span></a>, where <span class="math inline">\(\eta = 1\)</span> produced very slow adjustments. The problem becomes more pronounced when the initial step size is far from its target. To illustrate this, we repeat the experiment with starting values <span class="math inline">\(c = 500\)</span> and <span class="math inline">\(c = 0.0005\)</span>, approximately a thousand times too large and too small. We compare <span class="math inline">\(\eta = 0.7\)</span> and <span class="math inline">\(\eta = 1\)</span>, which satisfy both Robbins–Monro conditions, with the boundary value <span class="math inline">\(\eta = 0.5\)</span>, which does not satisfy the second condition.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-far-start" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-far-start-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="06-adaptive-metropolis_files/figure-html/fig-far-start-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-far-start-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6.5: Step-size trajectories from <span class="math inline">\(c = 500\)</span> (purple) and <span class="math inline">\(c = 0.0005\)</span> (gray) for three learning-rate exponents, over 10,000 iterations with a logarithmic vertical axis. Both <span class="math inline">\(\eta = 0.7\)</span> and <span class="math inline">\(\eta = 1\)</span> satisfy the Robbins–Monro conditions; <span class="math inline">\(\eta = 0.5\)</span> does not satisfy the second condition. With <span class="math inline">\(\eta = 1\)</span>, the step sizes remain far from their target after 10,000 iterations. Smaller exponents produce faster adjustments but more persistent fluctuations.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p><a href="#fig-far-start" class="quarto-xref">Figure&nbsp;<span>6.5</span></a> shows the practical consequences of the learning-rate choice. With <span class="math inline">\(\eta = 1\)</span>, the step sizes remain far from their target after <span class="math inline">\(10{,}000\)</span> iterations. Although <span class="math inline">\(\sum_t 1/t\)</span> diverges, it grows only logarithmically, so the adjustments become very slow. With <span class="math inline">\(\eta = 0.5\)</span>, the step sizes approach their target much faster, but continue to fluctuate. The intermediate exponent <span class="math inline">\(\eta = 0.7\)</span> approaches the target relatively quickly and produces smaller fluctuations. We therefore use <span class="math inline">\(\eta = 0.7\)</span> as the default in our adaptive Metropolis function.</p>
+</section>
+<section id="the-adaptive-metropolis-function" class="level3" data-number="6.2.2">
+<h3 data-number="6.2.2" class="anchored" data-anchor-id="the-adaptive-metropolis-function"><span class="header-section-number">6.2.2</span> The adaptive Metropolis function</h3>
+<p>The experiments have shown why the learning rate should decrease over time. The Robbins–Monro conditions are satisfied by <span class="math inline">\(\gamma_t = t^{-\eta}\)</span> when <span class="math inline">\(0.5 &lt; \eta \leq 1\)</span>, and <span class="math inline">\(\eta = 0.7\)</span> provided a good compromise between speed and stability in our experiments. We can therefore build this schedule into the sampler. The function below replaces the vector of learning rates in <code>adaptive_metropolis_experiment()</code> with an exponent <code>eta</code>, which defaults to <span class="math inline">\(0.7\)</span>. It also restricts the step size to the range specified by <code>step_range</code>, by default <span class="math inline">\(10^{-6}\)</span> to <span class="math inline">\(10^{6}\)</span>. Everything else, including the output, remains unchanged.</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>adaptive_metropolis <span class="ot">&lt;-</span> <span class="cf">function</span>(log_target, init, n_iter, <span class="at">step_size =</span> <span class="dv">1</span>,</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>                                <span class="at">target_accept =</span> <span class="fl">0.44</span>, <span class="at">eta =</span> <span class="fl">0.7</span>,</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>                                <span class="at">step_range =</span> <span class="fu">c</span>(<span class="fl">1e-6</span>, <span class="fl">1e6</span>), ...) {</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  d <span class="ot">&lt;-</span> <span class="fu">length</span>(init)</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  gamma <span class="ot">&lt;-</span> <span class="fu">seq_len</span>(n_iter)<span class="sc">^</span>(<span class="sc">-</span>eta)                           <span class="co"># diminishing learning rate</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  draws <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="cn">NA_real_</span>, <span class="at">nrow =</span> n_iter, <span class="at">ncol =</span> d)</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  step_sizes <span class="ot">&lt;-</span> <span class="fu">numeric</span>(n_iter)</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  n_accept <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  current <span class="ot">&lt;-</span> init</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  current_lp <span class="ot">&lt;-</span> <span class="fu">log_target</span>(current, ...)</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>  log_c <span class="ot">&lt;-</span> <span class="fu">log</span>(step_size)</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (t <span class="cf">in</span> <span class="fu">seq_len</span>(n_iter)) {</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>    proposal <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(d, <span class="at">mean =</span> current, <span class="at">sd =</span> <span class="fu">exp</span>(log_c))   <span class="co"># 1. propose</span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>    proposal_lp <span class="ot">&lt;-</span> <span class="fu">log_target</span>(proposal, ...)</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>    log_r <span class="ot">&lt;-</span> proposal_lp <span class="sc">-</span> current_lp                        <span class="co"># 2. compare</span></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">log</span>(<span class="fu">runif</span>(<span class="dv">1</span>)) <span class="sc">&lt;</span> log_r) {                             <span class="co"># 3. accept ...</span></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>      current <span class="ot">&lt;-</span> proposal</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>      current_lp <span class="ot">&lt;-</span> proposal_lp</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>      n_accept <span class="ot">&lt;-</span> n_accept <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>    draws[t, ] <span class="ot">&lt;-</span> current                                    <span class="co"># ... or stay and record</span></span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>    alpha_t <span class="ot">&lt;-</span> <span class="fu">exp</span>(<span class="fu">min</span>(<span class="dv">0</span>, log_r))                            <span class="co"># 4. alpha_t = min(1, r), and</span></span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>    log_c <span class="ot">&lt;-</span> log_c <span class="sc">+</span> gamma[t] <span class="sc">*</span> (alpha_t <span class="sc">-</span> target_accept)    <span class="co">#    turn the dial</span></span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>    log_c <span class="ot">&lt;-</span> <span class="fu">min</span>(<span class="fu">max</span>(log_c, <span class="fu">log</span>(step_range[<span class="dv">1</span>])), <span class="fu">log</span>(step_range[<span class="dv">2</span>]))  <span class="co"># 5. keep c in range</span></span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>    step_sizes[t] <span class="ot">&lt;-</span> <span class="fu">exp</span>(log_c)</span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">colnames</span>(draws) <span class="ot">&lt;-</span> <span class="cf">if</span> (d <span class="sc">==</span> <span class="dv">1</span>) <span class="st">"theta"</span> <span class="cf">else</span> <span class="fu">paste0</span>(<span class="st">"theta_"</span>, <span class="fu">seq_len</span>(d))</span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(</span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">draws =</span> <span class="fu">as_tibble</span>(draws) <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">iteration =</span> <span class="fu">seq_len</span>(n_iter), <span class="at">.before =</span> <span class="dv">1</span>),</span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>    <span class="at">accept_rate =</span> n_accept <span class="sc">/</span> n_iter,</span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>    <span class="at">step_sizes =</span> <span class="fu">tibble</span>(<span class="at">iteration =</span> <span class="fu">seq_len</span>(n_iter), <span class="at">step_size =</span> step_sizes)</span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>With the default learning-rate schedule, the function can now adapt the step size on the sleep posterior without requiring us to specify a learning rate.</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">84735</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>fit_default <span class="ot">&lt;-</span> <span class="fu">adaptive_metropolis</span>(log_posterior, <span class="at">init =</span> mu_n, <span class="at">n_iter =</span> <span class="dv">10000</span>, <span class="at">step_size =</span> <span class="dv">5</span>)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="at">final_step_size =</span> <span class="fu">tail</span>(fit_default<span class="sc">$</span>step_sizes<span class="sc">$</span>step_size, <span class="dv">1</span>),</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">accept_rate =</span> fit_default<span class="sc">$</span>accept_rate)</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; final_step_size     accept_rate </span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;       0.4913372       0.4399000</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>In the classical Robbins–Monro procedure, each observation fluctuates around an expected value determined by the current setting. In our sampler, the acceptance probability <span class="math inline">\(\alpha_t\)</span> also depends on the current state of the Markov chain, which in turn depends on its previous states. The classical theorem therefore does not apply directly, but the theory has been extended to account for this dependence <span class="citation" data-cites="andrieu2006ergodicity andrieu2008tutorial">(<a href="../references.html#ref-andrieu2006ergodicity" role="doc-biblioref">Andrieu &amp; Moulines, 2006</a>; <a href="../references.html#ref-andrieu2008tutorial" role="doc-biblioref">Andrieu &amp; Thoms, 2008</a>)</span>. The resulting convergence conditions concern the behavior of the Metropolis chain, the relation between the step size and the acceptance rate, and the learning-rate schedule. In particular, the step size must remain within a bounded range, which the function enforces through <code>step_range</code>. The default bounds are deliberately wide, and reaching either one suggests that the adaptation needs closer inspection.</p>
+<p>As with any Markov chain Monte Carlo method, theoretical convergence does not tell us whether a particular run is sufficiently long. The step-size trajectory is a useful diagnostic. Running the adaptation from different initial step sizes shows whether the results depend on their starting values. Similar trajectories are reassuring, but do not establish convergence. We return to the properties of the resulting draws in <a href="#sec-adapt-or-stop" class="quarto-xref"><span>Section 6.4</span></a>.</p>
+</section>
+</section>
+<section id="checking-on-earlier-examples" class="level2" data-number="6.3">
+<h2 data-number="6.3" class="anchored" data-anchor-id="checking-on-earlier-examples"><span class="header-section-number">6.3</span> Checking on earlier examples</h2>
+<p>In <a href="05-metropolis.html" class="quarto-xref"><span>Chapter 5</span></a>, we investigated several target distributions beyond the Normal sleep posterior: a posterior under a Cauchy prior, a bimodal mixture, and a bivariate Normal with a correlation of <span class="math inline">\(0.9\)</span>. We used hand-picked step sizes for these examples. We now revisit them with the adaptive sampler, using the default <span class="math inline">\(\eta = 0.7\)</span> and ten thousand iterations, and compare the second half of each run with our earlier results.</p>
+<section id="the-cauchy-posterior" class="level3" data-number="6.3.1">
+<h3 data-number="6.3.1" class="anchored" data-anchor-id="the-cauchy-posterior"><span class="header-section-number">6.3.1</span> The Cauchy posterior</h3>
+<p>The posterior under the Cauchy prior is nearly Normal, as <a href="05-metropolis.html#fig-cauchy-posterior" class="quarto-xref">Figure&nbsp;<span>5.6</span></a> showed, so we expect a step size similar to that for the Normal prior.</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>log_posterior_cauchy <span class="ot">&lt;-</span> <span class="cf">function</span>(mu, <span class="at">y =</span> sleep_hours) {</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sum</span>(<span class="fu">dnorm</span>(y, <span class="at">mean =</span> mu, <span class="at">sd =</span> <span class="dv">1</span>, <span class="at">log =</span> <span class="cn">TRUE</span>)) <span class="sc">+</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">dcauchy</span>(mu, <span class="at">location =</span> <span class="dv">7</span>, <span class="at">scale =</span> <span class="fl">0.5</span>, <span class="at">log =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">84735</span>)</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>fit_cauchy <span class="ot">&lt;-</span> <span class="fu">adaptive_metropolis</span>(log_posterior_cauchy, <span class="at">init =</span> <span class="fl">6.7</span>, <span class="at">n_iter =</span> <span class="dv">10000</span>,</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">step_size =</span> <span class="dv">5</span>)</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="at">final_step_size =</span> <span class="fu">tail</span>(fit_cauchy<span class="sc">$</span>step_sizes<span class="sc">$</span>step_size, <span class="dv">1</span>),</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">accept_rate =</span> fit_cauchy<span class="sc">$</span>accept_rate,</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">ess_second_half =</span> <span class="fu">ess_basic</span>(fit_cauchy<span class="sc">$</span>draws<span class="sc">$</span>theta[<span class="dv">5001</span><span class="sc">:</span><span class="dv">10000</span>]))</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; final_step_size     accept_rate ess_second_half </span></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;       0.4963285       0.4379000    1230.5715839</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-cauchy-adapt" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-cauchy-adapt-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="06-adaptive-metropolis_files/figure-html/fig-cauchy-adapt-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-cauchy-adapt-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6.6: The adaptive sampler on the sleep posterior under the Cauchy prior, started at <span class="math inline">\(\mu = 6.7\)</span> with step size 5. Left: the trace of the chain. Right: the step-size trajectory, with the dashed line at the step size that gives an acceptance rate of 0.44 for the Normal prior.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p><a href="#fig-cauchy-adapt" class="quarto-xref">Figure&nbsp;<span>6.6</span></a> shows that the adapted step size approaches <span class="math inline">\(0.5\)</span>, close to what we found for the Normal posterior. The acceptance rate is also close to its target. The sampler found this step size without knowing the posterior’s width.</p>
+</section>
+<section id="the-bimodal-mixture" class="level3" data-number="6.3.2">
+<h3 data-number="6.3.2" class="anchored" data-anchor-id="the-bimodal-mixture"><span class="header-section-number">6.3.2</span> The bimodal mixture</h3>
+<p>The bimodal mixture presents a more difficult case. Each mode has a standard deviation of one, so the results of <a href="05-metropolis.html" class="quarto-xref"><span>Chapter 5</span></a> suggest a step size of about <span class="math inline">\(2.4\)</span> for a chain exploring only one mode. We start in the left mode, as before.</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>log_bimodal <span class="ot">&lt;-</span> <span class="cf">function</span>(theta) {</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">log</span>(<span class="fl">0.5</span> <span class="sc">*</span> <span class="fu">dnorm</span>(theta, <span class="sc">-</span><span class="dv">5</span>, <span class="dv">1</span>) <span class="sc">+</span> <span class="fl">0.5</span> <span class="sc">*</span> <span class="fu">dnorm</span>(theta, <span class="dv">5</span>, <span class="dv">1</span>))</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">84735</span>)</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>fit_bimodal <span class="ot">&lt;-</span> <span class="fu">adaptive_metropolis</span>(log_bimodal, <span class="at">init =</span> <span class="sc">-</span><span class="dv">5</span>, <span class="at">n_iter =</span> <span class="dv">10000</span>, <span class="at">step_size =</span> <span class="fl">0.5</span>)</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>fit_bimodal_large <span class="ot">&lt;-</span> <span class="fu">metropolis</span>(log_bimodal, <span class="at">init =</span> <span class="sc">-</span><span class="dv">5</span>, <span class="at">n_iter =</span> <span class="dv">5000</span>, <span class="at">step_size =</span> <span class="dv">5</span>)</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>second_half <span class="ot">&lt;-</span> fit_bimodal<span class="sc">$</span>draws<span class="sc">$</span>theta[<span class="dv">5001</span><span class="sc">:</span><span class="dv">10000</span>]</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="at">final_step_size =</span> <span class="fu">tail</span>(fit_bimodal<span class="sc">$</span>step_sizes<span class="sc">$</span>step_size, <span class="dv">1</span>),</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">accept_rate =</span> fit_bimodal<span class="sc">$</span>accept_rate,</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">mode_switches =</span> <span class="fu">sum</span>(<span class="fu">diff</span>(<span class="fu">sign</span>(second_half)) <span class="sc">!=</span> <span class="dv">0</span>),</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">mode_switches_step_5 =</span> <span class="fu">sum</span>(<span class="fu">diff</span>(<span class="fu">sign</span>(fit_bimodal_large<span class="sc">$</span>draws<span class="sc">$</span>theta)) <span class="sc">!=</span> <span class="dv">0</span>))</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      final_step_size          accept_rate        mode_switches </span></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;             2.402886             0.441200             5.000000 </span></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; mode_switches_step_5 </span></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;           189.000000</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-bimodal-adapt" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-bimodal-adapt-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="06-adaptive-metropolis_files/figure-html/fig-bimodal-adapt-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-bimodal-adapt-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6.7: The adaptive sampler on the bimodal mixture of Chapter 5, started in the left mode. Left: the trace of the chain. Right: the step-size trajectory, with the dashed line at approximately 2.4, the step size suggested by the width of a single mode. The acceptance rate approaches its target, but the chain rarely moves between modes.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>The adaptation found a step size close to <span class="math inline">\(2.4\)</span> and an acceptance rate close to <span class="math inline">\(0.44\)</span>, but the chain explores the posterior poorly. In <a href="#fig-bimodal-adapt" class="quarto-xref">Figure&nbsp;<span>6.7</span></a>, it moves between modes only 5 times in the second half of the run, compared with 189 times for the hand-picked step size of <span class="math inline">\(5\)</span> from <a href="05-metropolis.html" class="quarto-xref"><span>Chapter 5</span></a>. The fraction of draws in the right mode is 0.51, but this estimate depends on very few transitions and would be highly sensitive to the particular run. The adaptive sampler found a step size suited to exploring one mode because most acceptance probabilities reflected movements within that mode. An acceptance rate of <span class="math inline">\(0.44\)</span> is a useful target for a unimodal, Normal-like distribution, but not necessarily for a bimodal one.</p>
+</section>
+<section id="the-correlated-bivariate-normal" class="level3" data-number="6.3.3">
+<h3 data-number="6.3.3" class="anchored" data-anchor-id="the-correlated-bivariate-normal"><span class="header-section-number">6.3.3</span> The correlated bivariate Normal</h3>
+<p>The bivariate Normal with a correlation of <span class="math inline">\(0.9\)</span> illustrates a different limitation. Here we have two parameters, so we target an acceptance rate of <span class="math inline">\(0.234\)</span> and compare with the fixed step size of <span class="math inline">\(0.5\)</span> used in <a href="05-metropolis.html" class="quarto-xref"><span>Chapter 5</span></a>.</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>Sigma <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="fl">0.9</span>, <span class="fl">0.9</span>, <span class="dv">1</span>), <span class="dv">2</span>, <span class="dv">2</span>)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>log_bvn <span class="ot">&lt;-</span> <span class="cf">function</span>(theta) <span class="fu">dmvnorm</span>(theta, <span class="at">mean =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>), <span class="at">sigma =</span> Sigma, <span class="at">log =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">84735</span>)</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>fit_bvn <span class="ot">&lt;-</span> <span class="fu">adaptive_metropolis</span>(log_bvn, <span class="at">init =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>), <span class="at">n_iter =</span> <span class="dv">10000</span>, <span class="at">step_size =</span> <span class="fl">0.5</span>,</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>                               <span class="at">target_accept =</span> <span class="fl">0.234</span>)</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>fit_bvn_fixed <span class="ot">&lt;-</span> <span class="fu">metropolis</span>(log_bvn, <span class="at">init =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>), <span class="at">n_iter =</span> <span class="dv">5000</span>, <span class="at">step_size =</span> <span class="fl">0.5</span>)</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="fu">tibble</span>(<span class="at">sampler =</span> <span class="fu">c</span>(<span class="st">"adaptive, target 0.234"</span>, <span class="st">"fixed step size 0.5"</span>),</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">step_size =</span> <span class="fu">c</span>(<span class="fu">tail</span>(fit_bvn<span class="sc">$</span>step_sizes<span class="sc">$</span>step_size, <span class="dv">1</span>), <span class="fl">0.5</span>),</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">accept_rate =</span> <span class="fu">c</span>(fit_bvn<span class="sc">$</span>accept_rate, fit_bvn_fixed<span class="sc">$</span>accept_rate),</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>       <span class="at">ess_theta_1 =</span> <span class="fu">c</span>(<span class="fu">ess_basic</span>(fit_bvn<span class="sc">$</span>draws<span class="sc">$</span>theta_1[<span class="dv">5001</span><span class="sc">:</span><span class="dv">10000</span>]),</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>                       <span class="fu">ess_basic</span>(fit_bvn_fixed<span class="sc">$</span>draws<span class="sc">$</span>theta_1)))</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 2 × 4</span></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   sampler                step_size accept_rate ess_theta_1</span></span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;                      &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt;</span></span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 adaptive, target 0.234      1.32       0.238       173. </span></span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 fixed step size 0.5         0.5        0.538        82.9</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-bvn-adapt" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-bvn-adapt-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="06-adaptive-metropolis_files/figure-html/fig-bvn-adapt-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-bvn-adapt-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6.8: The adaptive sampler on the bivariate Normal with correlation 0.9, aiming for an acceptance rate of 0.234. Left: the trace of the first coordinate. Right: the step-size trajectory from <span class="math inline">\(c = 0.5\)</span>.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p><a href="#fig-bvn-adapt" class="quarto-xref">Figure&nbsp;<span>6.8</span></a> shows the step-size adaptation and the trace of the first parameter. The adaptive sampler settles on a step size of about <span class="math inline">\(1.3\)</span> and achieves a larger effective sample size than the fixed-step sampler, although both effective sample sizes remain low. The posterior is concentrated along a narrow diagonal ridge, whereas the proposal is a round cloud. Increasing the step size also increases movements away from the ridge, where proposals are unlikely to be accepted. Adapting a single step size cannot account for the different scales along and across the ridge. Chapter 8 (Gibbs Sampling and Metropolis-within-Gibbs) and Chapter 11 (Hamiltonian Monte Carlo) introduce proposals that can better accommodate this structure.</p>
+<p>Together, these examples show the value and limitations of step-size adaptation. For roughly Normal, unimodal targets, it can recover useful step sizes without manual tuning. But achieving the target acceptance rate does not guarantee efficient exploration, as the bimodal and correlated examples demonstrate. Adaptation replaces the manual choice of a step size, not the need to inspect trace plots, <span class="math inline">\(\widehat{R}\)</span>, and effective sample sizes, as discussed in <a href="04-diagnosing-markov-chains.html" class="quarto-xref"><span>Chapter 4</span></a>.</p>
+</section>
+</section>
+<section id="sec-adapt-or-stop" class="level2" data-number="6.4">
+<h2 data-number="6.4" class="anchored" data-anchor-id="sec-adapt-or-stop"><span class="header-section-number">6.4</span> Keep adapting, or adapt and freeze?</h2>
+<p>The Metropolis algorithm of <a href="05-metropolis.html" class="quarto-xref"><span>Chapter 5</span></a> uses a fixed proposal distribution, and we showed that its transition kernel preserves the posterior distribution. Our adaptive sampler changes the proposal step size based on the history of the chain, so that argument no longer applies directly. This does not mean that adaptive Metropolis is invalid, but it does mean that convergence requires additional justification.</p>
+<section id="two-approaches-to-adaptation" class="level3" data-number="6.4.1">
+<h3 data-number="6.4.1" class="anchored" data-anchor-id="two-approaches-to-adaptation"><span class="header-section-number">6.4.1</span> Two approaches to adaptation</h3>
+<p>One possibility is to <strong>keep adapting, but ever more gently</strong>, as we have done throughout this chapter. <span class="citation" data-cites="robertsrosenthal2007coupling">Roberts &amp; Rosenthal (<a href="../references.html#ref-robertsrosenthal2007coupling" role="doc-biblioref">2007</a>)</span> established convergence results for adaptive Markov chains under two conditions. The first is <strong>diminishing adaptation</strong>, which requires changes in the transition kernel to vanish over time. Our learning rate <span class="math inline">\(\gamma_t = t^{-\eta}\)</span> makes the step-size adjustments progressively smaller. The second is <strong>containment</strong>, which prevents the algorithm from spending increasingly long periods in configurations where the chain mixes poorly. This condition is more difficult to verify, but together the two conditions provide a theoretical basis for continued adaptation.</p>
+<p>An alternative is to <strong>adapt during warm-up, then freeze</strong>. We adapt for <span class="math inline">\(n_{\text{adapt}}\)</span> iterations, fix the resulting step size, discard the warm-up draws from posterior inference, and continue with ordinary Metropolis updates. Once the step size is frozen, the convergence theory of <a href="05-metropolis.html" class="quarto-xref"><span>Chapter 5</span></a> applies to the subsequent chain. This strategy is also used for step-size adaptation in software such as Stan <span class="citation" data-cites="carpenter2017stan">(<a href="../references.html#ref-carpenter2017stan" role="doc-biblioref">Carpenter et al., 2017</a>)</span>.</p>
+<p>The approaches differ in an important respect. Continued adaptation allows the sampler to keep correcting its step size, whereas freezing commits it to the value reached during warm-up. On the other hand, once the step size is frozen, the sampler no longer requires the additional convergence theory of adaptive Markov chains.</p>
+</section>
+<section id="comparing-the-two-approaches" class="level3" data-number="6.4.2">
+<h3 data-number="6.4.2" class="anchored" data-anchor-id="comparing-the-two-approaches"><span class="header-section-number">6.4.2</span> Comparing the two approaches</h3>
+<p>We can compare the two strategies using <code>adaptive_metropolis_experiment()</code>. Freezing the step size amounts to setting the learning rate to zero after warm-up, so both strategies can be implemented with the same function. We use <span class="math inline">\(\eta = 0.7\)</span>, ten thousand iterations, and a warm-up of five thousand for the frozen chain, starting both from <span class="math inline">\(c = 5\)</span>.</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">84735</span>)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>gamma_t <span class="ot">&lt;-</span> (<span class="dv">1</span><span class="sc">:</span><span class="dv">10000</span>)<span class="sc">^</span>(<span class="sc">-</span><span class="fl">0.7</span>)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>gamma_freeze <span class="ot">&lt;-</span> <span class="fu">c</span>((<span class="dv">1</span><span class="sc">:</span><span class="dv">5000</span>)<span class="sc">^</span>(<span class="sc">-</span><span class="fl">0.7</span>), <span class="fu">rep</span>(<span class="dv">0</span>, <span class="dv">5000</span>))</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>fit_frozen <span class="ot">&lt;-</span> <span class="fu">adaptive_metropolis_experiment</span>(log_posterior, <span class="at">init =</span> mu_n, <span class="at">n_iter =</span> <span class="dv">10000</span>,</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>                                             <span class="at">step_size =</span> <span class="dv">5</span>, <span class="at">learning_rate =</span> gamma_freeze)</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>fit_continued <span class="ot">&lt;-</span> <span class="fu">adaptive_metropolis_experiment</span>(log_posterior, <span class="at">init =</span> mu_n, <span class="at">n_iter =</span> <span class="dv">10000</span>,</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>                                                <span class="at">step_size =</span> <span class="dv">5</span>, <span class="at">learning_rate =</span> gamma_t)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-freeze" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-freeze-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="06-adaptive-metropolis_files/figure-html/fig-freeze-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-freeze-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6.9: Step-size trajectories of the two strategies on the sleep posterior, from <span class="math inline">\(c = 5\)</span>. Top: adapt for 5,000 iterations, then freeze; the step size to the right of the dashed line is constant. Bottom: keep adapting with <span class="math inline">\(\gamma_t = t^{-0.7}\)</span>; the step size keeps moving, by ever smaller amounts. The vertical scale is magnified to make the late movement visible.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p><a href="#fig-freeze" class="quarto-xref">Figure&nbsp;<span>6.9</span></a> shows the two trajectories after the first two hundred iterations. The frozen chain’s step size is constant after iteration <span class="math inline">\(5{,}000\)</span>. The continued chain’s step size keeps changing, but by iteration <span class="math inline">\(5{,}000\)</span> the learning rate is <span class="math inline">\(5000^{-0.7} \approx 0.003\)</span>, so even a rejection changes the step size by only about a tenth of a percent. The two trajectories are therefore difficult to distinguish on the scale of the posterior.</p>
+<p>We can compare the posterior mean, standard deviation, and effective sample size from the second half of each run with the known posterior distribution.</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>summarize_second_half <span class="ot">&lt;-</span> <span class="cf">function</span>(fit) {</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  kept <span class="ot">&lt;-</span> fit<span class="sc">$</span>draws<span class="sc">$</span>theta[<span class="dv">5001</span><span class="sc">:</span><span class="dv">10000</span>]</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tibble</span>(<span class="at">mean =</span> <span class="fu">mean</span>(kept), <span class="at">sd =</span> <span class="fu">sd</span>(kept), <span class="at">ess =</span> <span class="fu">ess_basic</span>(kept))</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="fu">bind_rows</span>(<span class="st">`</span><span class="at">adapt, then freeze</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">summarize_second_half</span>(fit_frozen),</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>          <span class="st">`</span><span class="at">keep adapting</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">summarize_second_half</span>(fit_continued),</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>          <span class="at">.id =</span> <span class="st">"strategy"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(<span class="fu">tibble</span>(<span class="at">strategy =</span> <span class="st">"exact"</span>, <span class="at">mean =</span> mu_n, <span class="at">sd =</span> <span class="fu">sqrt</span>(tau2_n), <span class="at">ess =</span> <span class="cn">NA</span>))</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 3 × 4</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   strategy            mean    sd   ess</span></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;              &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 adapt, then freeze  6.68 0.206 1287.</span></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 keep adapting       6.69 0.208 1121.</span></span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 exact               6.69 0.204   NA</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>One pair of runs could agree by chance, so we repeat the comparison fifty times with each strategy and examine the estimated posterior standard deviations and effective sample sizes.</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">84735</span>)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>replicates <span class="ot">&lt;-</span> <span class="fu">expand_grid</span>(<span class="at">replicate =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">50</span>, <span class="at">strategy =</span> <span class="fu">c</span>(<span class="st">"adapt, then freeze"</span>, <span class="st">"keep adapting"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">fit =</span> <span class="fu">map</span>(strategy, \(s) {</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">adaptive_metropolis_experiment</span>(log_posterior, <span class="at">init =</span> mu_n, <span class="at">n_iter =</span> <span class="dv">10000</span>, <span class="at">step_size =</span> <span class="dv">5</span>,</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">learning_rate =</span> <span class="cf">if</span> (s <span class="sc">==</span> <span class="st">"adapt, then freeze"</span>) gamma_freeze <span class="cf">else</span> gamma_t)</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  }),</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">summary =</span> <span class="fu">map</span>(fit, summarize_second_half)) <span class="sc">|&gt;</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>fit) <span class="sc">|&gt;</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest</span>(summary)</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>replicates <span class="sc">|&gt;</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(strategy) <span class="sc">|&gt;</span></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">mean_of_sd =</span> <span class="fu">mean</span>(sd), <span class="at">sd_of_sd =</span> <span class="fu">sd</span>(sd), <span class="at">mean_ess =</span> <span class="fu">mean</span>(ess))</span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 2 × 4</span></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   strategy           mean_of_sd sd_of_sd mean_ess</span></span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;                   &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;</span></span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 adapt, then freeze      0.205  0.00466    1134.</span></span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 keep adapting           0.205  0.00412    1146.</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-replicates" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-replicates-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="06-adaptive-metropolis_files/figure-html/fig-replicates-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-replicates-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6.10: Fifty replicate runs of each strategy on the sleep posterior. Left: the estimated posterior standard deviation from the kept draws, with the exact value as a dashed line. Right: the effective sample size of the 5,000 kept draws.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p><a href="#fig-replicates" class="quarto-xref">Figure&nbsp;<span>6.10</span></a> shows similar posterior standard deviation estimates and effective sample sizes for both strategies. On this posterior, continuing adaptation offers little apparent advantage over freezing after five thousand iterations. But what happens when adaptation has not yet found a useful step size?</p>
+</section>
+<section id="what-if-adaptation-goes-wrong" class="level3" data-number="6.4.3">
+<h3 data-number="6.4.3" class="anchored" data-anchor-id="what-if-adaptation-goes-wrong"><span class="header-section-number">6.4.3</span> What if adaptation goes wrong?</h3>
+<p>Freezing too early can leave the sampler with a poor step size. To illustrate this, we start from <span class="math inline">\(c = 500\)</span> and allow only twenty iterations of adaptation before fixing the step size.</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">84735</span>)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>fit_early <span class="ot">&lt;-</span> <span class="fu">adaptive_metropolis_experiment</span>(log_posterior, <span class="at">init =</span> mu_n, <span class="at">n_iter =</span> <span class="dv">10000</span>,</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>                                            <span class="at">step_size =</span> <span class="dv">500</span>,</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>                                            <span class="at">learning_rate =</span> <span class="fu">c</span>((<span class="dv">1</span><span class="sc">:</span><span class="dv">20</span>)<span class="sc">^</span>(<span class="sc">-</span><span class="fl">0.7</span>), <span class="fu">rep</span>(<span class="dv">0</span>, <span class="dv">9980</span>)))</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="at">frozen_step_size =</span> <span class="fu">tail</span>(fit_early<span class="sc">$</span>step_sizes<span class="sc">$</span>step_size, <span class="dv">1</span>),</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">accept_rate =</span> fit_early<span class="sc">$</span>accept_rate,</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">ess =</span> <span class="fu">ess_basic</span>(fit_early<span class="sc">$</span>draws<span class="sc">$</span>theta[<span class="dv">21</span><span class="sc">:</span><span class="dv">10000</span>]))</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; frozen_step_size      accept_rate              ess </span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;         45.03470          0.00700         50.90944</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>The step size freezes at about <span class="math inline">\(45\)</span>, roughly a hundred times too large. The chain accepts fewer than one proposal in a hundred, and almost ten thousand iterations provide the information of only about fifty independent draws. The adaptation has clearly failed to find a useful step size.</p>
+<p>But there is an important distinction between a poorly tuned sampler and an incorrect one. Once the step size is frozen, the algorithm is ordinary Metropolis. A step size that is too small produces highly correlated draws, while one that is too large produces many rejections. Neither changes the stationary distribution of the fixed-step sampler. Even when adaptation fails to find a good step size, freezing it leaves an algorithm that targets the correct posterior distribution, although it may sample very inefficiently.</p>
+<p>Continued adaptation avoids committing permanently to the step size reached after twenty iterations. It can keep correcting the step size, but its validity depends on the additional convergence conditions discussed earlier. Thus, the two approaches differ not only in how they respond to poor adaptation, but also in what is needed to establish their correctness.</p>
+</section>
+<section id="the-final-adaptive-metropolis-function" class="level3" data-number="6.4.4">
+<h3 data-number="6.4.4" class="anchored" data-anchor-id="the-final-adaptive-metropolis-function"><span class="header-section-number">6.4.4</span> The final adaptive Metropolis function</h3>
+<p>For the rest of this book, we use the adapt-then-freeze strategy. Its main advantage is that the sampling phase uses an ordinary Metropolis algorithm, whose properties we already understand. The disadvantage is that freezing too early can leave us with an inefficient sampler. The step-size trajectory helps us judge whether adaptation had settled before it was stopped, and the diagnostics of <a href="04-diagnosing-markov-chains.html" class="quarto-xref"><span>Chapter 4</span></a> remain necessary to assess the resulting draws.</p>
+<p>We therefore extend our <code>adaptive_metropolis()</code> function with an argument <code>n_adapt</code>. It adapts for the first <code>n_adapt</code> iterations, by default half the run, and then freezes the step size. Its default target acceptance rate is <span class="math inline">\(0.44\)</span> for one parameter and <span class="math inline">\(0.234\)</span> for more. The function retains the full trajectory, including warm-up, but calculates the reported acceptance rate from the iterations after adaptation stops. Only those later draws should be used for posterior inference.</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>adaptive_metropolis <span class="ot">&lt;-</span> <span class="cf">function</span>(log_target, init, n_iter, <span class="at">step_size =</span> <span class="dv">1</span>,</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>                                <span class="at">target_accept =</span> <span class="cn">NULL</span>, <span class="at">eta =</span> <span class="fl">0.7</span>,</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>                                <span class="at">n_adapt =</span> <span class="fu">floor</span>(n_iter <span class="sc">/</span> <span class="dv">2</span>),</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>                                <span class="at">step_range =</span> <span class="fu">c</span>(<span class="fl">1e-6</span>, <span class="fl">1e6</span>), ...) {</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  d <span class="ot">&lt;-</span> <span class="fu">length</span>(init)</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">is.null</span>(target_accept)) target_accept <span class="ot">&lt;-</span> <span class="cf">if</span> (d <span class="sc">==</span> <span class="dv">1</span>) <span class="fl">0.44</span> <span class="cf">else</span> <span class="fl">0.234</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>  draws <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="cn">NA_real_</span>, <span class="at">nrow =</span> n_iter, <span class="at">ncol =</span> d)</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>  step_sizes <span class="ot">&lt;-</span> <span class="fu">numeric</span>(n_iter)</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>  accepted <span class="ot">&lt;-</span> <span class="fu">logical</span>(n_iter)</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>  current <span class="ot">&lt;-</span> init</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>  current_lp <span class="ot">&lt;-</span> <span class="fu">log_target</span>(current, ...)</span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>  log_c <span class="ot">&lt;-</span> <span class="fu">log</span>(step_size)</span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (t <span class="cf">in</span> <span class="fu">seq_len</span>(n_iter)) {</span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>    proposal <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(d, <span class="at">mean =</span> current, <span class="at">sd =</span> <span class="fu">exp</span>(log_c))   <span class="co"># 1. propose</span></span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>    proposal_lp <span class="ot">&lt;-</span> <span class="fu">log_target</span>(proposal, ...)</span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>    log_r <span class="ot">&lt;-</span> proposal_lp <span class="sc">-</span> current_lp                        <span class="co"># 2. compare</span></span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">log</span>(<span class="fu">runif</span>(<span class="dv">1</span>)) <span class="sc">&lt;</span> log_r) {                             <span class="co"># 3. accept ...</span></span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>      current <span class="ot">&lt;-</span> proposal</span>
+<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a>      current_lp <span class="ot">&lt;-</span> proposal_lp</span>
+<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a>      accepted[t] <span class="ot">&lt;-</span> <span class="cn">TRUE</span></span>
+<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a>    draws[t, ] <span class="ot">&lt;-</span> current                                    <span class="co"># ... or stay and record</span></span>
+<span id="cb16-24"><a href="#cb16-24" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (t <span class="sc">&lt;=</span> n_adapt) {                                      <span class="co"># 4. Robbins-Monro update</span></span>
+<span id="cb16-25"><a href="#cb16-25" aria-hidden="true" tabindex="-1"></a>      alpha_t <span class="ot">&lt;-</span> <span class="fu">exp</span>(<span class="fu">min</span>(<span class="dv">0</span>, log_r))                          <span class="co">#    alpha_t = min(1, r)</span></span>
+<span id="cb16-26"><a href="#cb16-26" aria-hidden="true" tabindex="-1"></a>      log_c <span class="ot">&lt;-</span> log_c <span class="sc">+</span> t<span class="sc">^</span>(<span class="sc">-</span>eta) <span class="sc">*</span> (alpha_t <span class="sc">-</span> target_accept)</span>
+<span id="cb16-27"><a href="#cb16-27" aria-hidden="true" tabindex="-1"></a>      log_c <span class="ot">&lt;-</span> <span class="fu">min</span>(<span class="fu">max</span>(log_c, <span class="fu">log</span>(step_range[<span class="dv">1</span>])), <span class="fu">log</span>(step_range[<span class="dv">2</span>]))  <span class="co"># keep c in range</span></span>
+<span id="cb16-28"><a href="#cb16-28" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb16-29"><a href="#cb16-29" aria-hidden="true" tabindex="-1"></a>    step_sizes[t] <span class="ot">&lt;-</span> <span class="fu">exp</span>(log_c)</span>
+<span id="cb16-30"><a href="#cb16-30" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb16-31"><a href="#cb16-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-32"><a href="#cb16-32" aria-hidden="true" tabindex="-1"></a>  keep <span class="ot">&lt;-</span> <span class="cf">if</span> (n_adapt <span class="sc">&lt;</span> n_iter) (n_adapt <span class="sc">+</span> <span class="dv">1</span>)<span class="sc">:</span>n_iter <span class="cf">else</span> <span class="fu">seq_len</span>(n_iter)</span>
+<span id="cb16-33"><a href="#cb16-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">colnames</span>(draws) <span class="ot">&lt;-</span> <span class="cf">if</span> (d <span class="sc">==</span> <span class="dv">1</span>) <span class="st">"theta"</span> <span class="cf">else</span> <span class="fu">paste0</span>(<span class="st">"theta_"</span>, <span class="fu">seq_len</span>(d))</span>
+<span id="cb16-34"><a href="#cb16-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(</span>
+<span id="cb16-35"><a href="#cb16-35" aria-hidden="true" tabindex="-1"></a>    <span class="at">draws =</span> <span class="fu">as_tibble</span>(draws) <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">iteration =</span> <span class="fu">seq_len</span>(n_iter), <span class="at">.before =</span> <span class="dv">1</span>),</span>
+<span id="cb16-36"><a href="#cb16-36" aria-hidden="true" tabindex="-1"></a>    <span class="at">accept_rate =</span> <span class="fu">mean</span>(accepted[keep]),</span>
+<span id="cb16-37"><a href="#cb16-37" aria-hidden="true" tabindex="-1"></a>    <span class="at">step_sizes =</span> <span class="fu">tibble</span>(<span class="at">iteration =</span> <span class="fu">seq_len</span>(n_iter), <span class="at">step_size =</span> step_sizes)</span>
+<span id="cb16-38"><a href="#cb16-38" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb16-39"><a href="#cb16-39" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>One call, with a starting value and the number of iterations, now replaces the manual step-size tuning of <a href="05-metropolis.html" class="quarto-xref"><span>Chapter 5</span></a>.</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">84735</span>)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>fit_sleep <span class="ot">&lt;-</span> <span class="fu">adaptive_metropolis</span>(log_posterior, <span class="at">init =</span> <span class="dv">5</span>, <span class="at">n_iter =</span> <span class="dv">10000</span>)</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="at">accept_rate =</span> fit_sleep<span class="sc">$</span>accept_rate,</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">frozen_step_size =</span> <span class="fu">tail</span>(fit_sleep<span class="sc">$</span>step_sizes<span class="sc">$</span>step_size, <span class="dv">1</span>),</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">ess =</span> <span class="fu">ess_basic</span>(fit_sleep<span class="sc">$</span>draws<span class="sc">$</span>theta[<span class="dv">5001</span><span class="sc">:</span><span class="dv">10000</span>]))</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      accept_rate frozen_step_size              ess </span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;        0.4330000        0.5152966     1268.9684308</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>The sampler started at <span class="math inline">\(\mu = 5\)</span>, well outside the posterior region, with the default step size of <span class="math inline">\(1\)</span>. It arrived at a frozen step size of 0.52 and an acceptance rate of 0.43, without any information about the posterior beyond its log density. The effective sample size of the retained draws can be compared with the hand-tuned results of <a href="05-metropolis.html" class="quarto-xref"><span>Chapter 5</span></a>.</p>
+<div class="bookbox bookgraybox">
+<div class="title">
+<p>Checking the adaptive Metropolis sampler</p>
+</div>
+<p>After adaptation, assess the retained draws using the usual MCMC diagnostics from <a href="04-diagnosing-markov-chains.html" class="quarto-xref"><span>Chapter 4</span></a>, including trace plots, <span class="math inline">\(\widehat{R}\)</span> across multiple chains, and effective sample sizes.</p>
+<p>If the diagnostics indicate poor mixing or insufficient precision, investigate the step-size adaptation. Warning signs include acceptance rates far from their targets or substantially different final step sizes across chains. The step-size trajectories can then help determine whether adaptation was stopped too early.</p>
+<p>A well-adapted step size does not guarantee efficient sampling, as the bimodal and correlated examples have shown. If the step size has settled but the chain still mixes poorly, longer adaptation alone is unlikely to solve the problem.</p>
+</div>
+<div class="quiz bookgraybox">
+<div class="title">
+<p>Quiz yourself!</p>
+</div>
+<p>A student runs <code>adaptive_metropolis()</code> with <code>n_adapt = n_iter</code> and <code>eta = 0</code>, so that the step size keeps adapting with a constant learning rate. The student then reports posterior summaries from all iterations. What are the two problems with this approach, and can the diagnostics of <a href="04-diagnosing-markov-chains.html" class="quarto-xref"><span>Chapter 4</span></a> reliably detect them?</p>
+</div>
+</section>
+</section>
+<section id="chapter-summary" class="level2" data-number="6.5">
+<h2 data-number="6.5" class="anchored" data-anchor-id="chapter-summary"><span class="header-section-number">6.5</span> Chapter summary</h2>
+<p>This chapter extended the Metropolis algorithm of <a href="05-metropolis.html" class="quarto-xref"><span>Chapter 5</span></a> with automatic step-size adaptation.</p>
+<ul>
+<li>The <strong>acceptance probability</strong> <span class="math inline">\(\alpha_t = \min\{1, r_t\}\)</span> of a single iteration is a noisy indication of the acceptance rate. For our random-walk Metropolis sampler, the acceptance rate decreases as the step size increases. A larger step gives a lower acceptance rate and a smaller step a higher one, so the step size can be adjusted toward a target acceptance rate.</li>
+<li><strong>Turning the dial</strong> means adjusting the log step size according to the discrepancy between <span class="math inline">\(\alpha_t\)</span> and the target <span class="math inline">\(\alpha^\star\)</span>, using <span class="math inline">\(\log c_{t+1} = \log c_t + \gamma_t(\alpha_t - \alpha^\star)\)</span>. The log scale keeps the step size positive and makes equal adjustments correspond to equal multiplicative changes. A constant learning rate creates a trade-off between rapid adaptation and persistent fluctuations.</li>
+<li><strong>Diminishing adaptation</strong> uses a learning rate <span class="math inline">\(\gamma_t = t^{-\eta}\)</span> that decreases with the iteration number, like the weights of a running mean. The adjustments become smaller over time, so the step size settles while corrections remain possible.</li>
+<li>The update follows the principle of <strong>Robbins–Monro</strong> stochastic approximation. Its learning-rate conditions, <span class="math inline">\(\sum_t \gamma_t = \infty\)</span> and <span class="math inline">\(\sum_t \gamma_t^2 &lt; \infty\)</span>, hold for <span class="math inline">\(\gamma_t = t^{-\eta}\)</span> exactly when <span class="math inline">\(0.5 &lt; \eta \leq 1\)</span>. We used <span class="math inline">\(\eta = 0.7\)</span> as a practical compromise between the speed and stability of adaptation.</li>
+<li><strong>A suitable acceptance rate does not guarantee efficient sampling.</strong> Adaptation worked well on the roughly Normal posterior but did not resolve poor exploration of the bimodal mixture or the strongly correlated bivariate Normal. Adaptation replaces manual step-size tuning, not the need for MCMC diagnostics.</li>
+<li><strong>Continuous adaptation and adapting then freezing</strong> are two ways to use the step-size updates. Continuous adaptation can be valid under additional convergence conditions. Freezing the step size after warm-up returns the sampler to ordinary Metropolis, where a poorly chosen step size affects efficiency rather than the stationary distribution. We use this approach for posterior sampling in the rest of the book.</li>
+</ul>
+</section>
+<section id="quiz-answers" class="level2" data-number="6.6">
+<h2 data-number="6.6" class="anchored" data-anchor-id="quiz-answers"><span class="header-section-number">6.6</span> Quiz answers</h2>
+<p><strong>Quiz 1.</strong> An acceptance rate of <span class="math inline">\(0.80\)</span> is above the target, so proposals are accepted more often than desired. The steps are too small, and the step size should be increased. An acceptance rate of <span class="math inline">\(0.10\)</span> is below the target, so the steps are too large and the step size should be decreased. The acceptance rate responds to changes in the step size in a known direction, which makes adaptation possible.</p>
+<p><strong>Quiz 2.</strong> The log step size changes by <span class="math inline">\(\gamma(\alpha_{100} - 0.44)\)</span> with <span class="math inline">\(\gamma = 1\)</span>. The largest change is <span class="math inline">\(+0.56\)</span>, when the proposal is certain to be accepted, and the smallest is <span class="math inline">\(-0.44\)</span>, when it is certain to be rejected. The step size at iteration <span class="math inline">\(101\)</span> therefore lies between <span class="math inline">\(0.5 \, e^{-0.44} \approx 0.32\)</span> and <span class="math inline">\(0.5 \, e^{0.56} \approx 0.88\)</span>. A constant learning rate of <span class="math inline">\(1\)</span> lets a single observation change the step size by a factor of up to <span class="math inline">\(1.75\)</span>, however close it already is to its target.</p>
+<p><strong>Quiz 3.</strong> First, with a constant learning rate, adaptation never diminishes, so the usual convergence guarantees for adaptive Metropolis do not apply. There is no guarantee that the draws follow the posterior distribution. Second, the summaries include the early iterations, when the step size may still be poorly tuned and the chain may not yet have reached the posterior region. Trace plots and <span class="math inline">\(\widehat{R}\)</span> across multiple chains may reveal this problem, but they cannot reliably establish that the sampler targets the correct distribution. A chain sampling from the wrong distribution can still appear to mix well. These problems are addressed by using a diminishing learning rate and, in our implementation, freezing the step size before collecting posterior draws.</p>
+</section>
+<section id="exercises" class="level2" data-number="6.7">
+<h2 data-number="6.7" class="anchored" data-anchor-id="exercises"><span class="header-section-number">6.7</span> Exercises</h2>
+<section id="conceptual-exercises" class="level3" data-number="6.7.1">
+<h3 data-number="6.7.1" class="anchored" data-anchor-id="conceptual-exercises"><span class="header-section-number">6.7.1</span> Conceptual exercises</h3>
+<div class="exercise bookgraybox">
+<p><strong>Exercise 6.1 (Turning the dial)</strong> An adaptive sampler starts with step size <span class="math inline">\(c_1 = 0.1\)</span> and aims for <span class="math inline">\(\alpha^\star = 0.44\)</span>. The first four proposals have acceptance probabilities <span class="math inline">\(1.00\)</span>, <span class="math inline">\(0.95\)</span>, <span class="math inline">\(1.00\)</span>, and <span class="math inline">\(0.70\)</span>.</p>
+<ol type="a">
+<li>Carry out the four updates of <a href="#eq-dial" class="quarto-xref">Equation&nbsp;<span>6.1</span></a> by hand with a constant learning rate <span class="math inline">\(\gamma = 1\)</span>, in the layout of <a href="#tbl-dial" class="quarto-xref">Table&nbsp;<span>6.1</span></a>, and report <span class="math inline">\(c_5\)</span>.</li>
+<li>Repeat part a with the diminishing learning rate <span class="math inline">\(\gamma_t = t^{-0.7}\)</span>. Which version moves the step size further, and why?</li>
+<li>In which direction does the step size move in both cases, and why does that make sense given the acceptance probabilities?</li>
+<li>Repeat part a with <span class="math inline">\(\alpha^\star = 0.234\)</span>. Which target produces the larger step size after four updates, and will that remain true in the long run?</li>
+</ol>
+</div>
+<div class="exercise bookgraybox">
+<p><strong>Exercise 6.2 (Learning rates)</strong> For each learning-rate sequence, state whether it satisfies <span class="math inline">\(\sum_t \gamma_t = \infty\)</span>, whether it satisfies <span class="math inline">\(\sum_t \gamma_t^2 &lt; \infty\)</span>, and what would happen to the adaptive step size in the long run if it were used.</p>
+<ol type="a">
+<li><span class="math inline">\(\gamma_t = 0.1\)</span> for all <span class="math inline">\(t\)</span>.</li>
+<li><span class="math inline">\(\gamma_t = 1/t\)</span>.</li>
+<li><span class="math inline">\(\gamma_t = 1/t^2\)</span>.</li>
+<li><span class="math inline">\(\gamma_t = 1/\sqrt{t}\)</span>.</li>
+</ol>
+</div>
+<div class="exercise bookgraybox">
+<p><strong>Exercise 6.3 (Starting from the wrong end)</strong> The final <code>adaptive_metropolis()</code> keeps the step size within <code>step_range</code>, by default between <span class="math inline">\(10^{-6}\)</span> and <span class="math inline">\(10^{6}\)</span>.</p>
+<ol type="a">
+<li>A run starts with <code>step_size = 1e9</code> on the sleep posterior. What is the step size after the first update, whatever the first acceptance probability turns out to be, and why?</li>
+<li>From that point on, how many consecutive rejections does it take, with <span class="math inline">\(\gamma_t = t^{-0.7}\)</span>, to bring the step size below <span class="math inline">\(100\)</span>? Use <span class="math inline">\(\alpha^\star = 0.44\)</span> and the fact that the log step size moves by at most <span class="math inline">\(\gamma_t \alpha^\star\)</span> per rejection.</li>
+<li>Two chains on the same posterior are started at step sizes <span class="math inline">\(10^{-4}\)</span> and <span class="math inline">\(10^{4}\)</span> and adapted for <span class="math inline">\(5{,}000\)</span> iterations. Both report an acceptance rate of <span class="math inline">\(0.44\)</span> after the freeze, but their frozen step sizes differ by a factor of three. Give two possible explanations, say what you would look at to tell them apart, and say which one the acceptance rate alone could never reveal.</li>
+</ol>
+</div>
+<div class="exercise bookgraybox">
+<p><strong>Exercise 6.4 (Reading a step-size trajectory)</strong> A colleague shows you the step-size trajectory of an adaptive chain. It climbs steadily for the whole <span class="math inline">\(5{,}000\)</span>-iteration warm-up and has not leveled off when the step size is frozen; the acceptance rate after the freeze is <span class="math inline">\(0.05\)</span>.</p>
+<ol type="a">
+<li>Give two different explanations for a trajectory that keeps climbing, one about the starting step size and one about the target.</li>
+<li>For each explanation, say what you would look at to confirm it and what you would change.</li>
+<li>Why does an acceptance rate of <span class="math inline">\(0.05\)</span> after the freeze not contradict the fact that the sampler was aiming for <span class="math inline">\(0.44\)</span>?</li>
+</ol>
+</div>
+</section>
+<section id="practical-exercises" class="level3" data-number="6.7.2">
+<h3 data-number="6.7.2" class="anchored" data-anchor-id="practical-exercises"><span class="header-section-number">6.7.2</span> Practical exercises</h3>
+<div class="exercise bookgraybox">
+<p><strong>Exercise 6.5 (Gamma-Poisson without the tuning)</strong> Return to the model of Exercise 5.5, a Poisson rate <span class="math inline">\(\lambda\)</span> with a <span class="math inline">\(\text{Gamma}(3, 1)\)</span> prior and data <span class="math inline">\(y = (2, 0, 4, 1, 3, 2)\)</span>, whose posterior is <span class="math inline">\(\text{Gamma}(3 + \sum y_i, 1 + n)\)</span>. Use the log posterior from that exercise, which returns <span class="math inline">\(-\infty\)</span> for negative <span class="math inline">\(\lambda\)</span>.</p>
+<ol type="a">
+<li>Run <code>adaptive_metropolis_experiment()</code> with a constant learning rate of <span class="math inline">\(1\)</span> and of <span class="math inline">\(0.01\)</span>, for <span class="math inline">\(5{,}000\)</span> iterations from <span class="math inline">\(c = 50\)</span> and from <span class="math inline">\(c = 0.05\)</span>. Plot the four step-size trajectories on a logarithmic axis and report the standard deviation of the log step size over the last thousand iterations of each.</li>
+<li>Repeat with <span class="math inline">\(\gamma_t = t^{-0.7}\)</span>. Where do the trajectories settle, and how does the step size compare with the one you chose by hand in Exercise 5.5?</li>
+<li>Run the final <code>adaptive_metropolis()</code> for <span class="math inline">\(10{,}000\)</span> iterations with the default settings and compare the posterior mean, standard deviation, and the effective sample size of the kept draws with the exact Gamma posterior and with your hand-tuned chain of Exercise 5.5.</li>
+</ol>
+</div>
+<div class="exercise bookgraybox">
+<p><strong>Exercise 6.6 (How long to warm up?)</strong> Use the final <code>adaptive_metropolis()</code> on the sleep posterior, <span class="math inline">\(10{,}000\)</span> iterations, starting step size <span class="math inline">\(500\)</span>.</p>
+<ol type="a">
+<li>Run with <code>n_adapt</code> equal to <span class="math inline">\(50\)</span>, <span class="math inline">\(500\)</span>, and <span class="math inline">\(5{,}000\)</span>. For each, plot the step-size trajectory, and report the frozen step size, the acceptance rate, and the effective sample size of the draws after the freeze.</li>
+<li>Which of the three trajectories had leveled off when it was frozen? Could you have told from the acceptance rate alone?</li>
+<li>Run with <code>n_adapt = n_iter</code>, so that the chain keeps adapting. Compare its effective sample size over the second half of the run with the three frozen chains. What does the comparison say about the cost of a warm-up that is too short, and about the cost of one that is longer than necessary?</li>
+<li>Repeat part a from a starting step size of <span class="math inline">\(0.005\)</span>. For which values of <code>n_adapt</code> do the frozen step sizes agree with those of part a? What does a disagreement tell you that the acceptance rate does not?</li>
+</ol>
+</div>
+<div class="exercise bookgraybox">
+<p><strong>Exercise 6.7 (Two modes, one acceptance rate)</strong> Return to the bimodal target <code>log_bimodal()</code>.</p>
+<ol type="a">
+<li>Run <code>adaptive_metropolis()</code> for <span class="math inline">\(20{,}000\)</span> iterations from <span class="math inline">\(-5\)</span> with <code>target_accept</code> equal to <span class="math inline">\(0.44\)</span>, <span class="math inline">\(0.25\)</span>, and <span class="math inline">\(0.10\)</span>. Report the frozen step sizes, the number of times each chain crosses zero after the freeze, and the fraction of kept draws above zero.</li>
+<li>Which target gives the best exploration of the two modes, and why is it not <span class="math inline">\(0.44\)</span>?</li>
+<li>Run two chains with <code>target_accept = 0.44</code>, one from <span class="math inline">\(-5\)</span> and one from <span class="math inline">\(5\)</span>, and compute <span class="math inline">\(\widehat{R}\)</span> on the kept draws. Does it catch the problem? Repeat with the best target of part b.</li>
+</ol>
+</div>
+</section>
+<section id="applied-exercises" class="level3" data-number="6.7.3">
+<h3 data-number="6.7.3" class="anchored" data-anchor-id="applied-exercises"><span class="header-section-number">6.7.3</span> Applied exercises</h3>
+<div class="exercise bookgraybox">
+<p><strong>Exercise 6.8 (Ghosts and age, without the tuning)</strong> Return to the logistic regression of Exercise 5.9 for belief in ghosts as a function of centered and scaled age in the <code>pulse_of_the_nation</code> data, with independent <span class="math inline">\(\text{N}(0, 1)\)</span> priors on <span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta_1\)</span>.</p>
+<ol type="a">
+<li>Run <code>adaptive_metropolis()</code> for <span class="math inline">\(20{,}000\)</span> iterations from <code>c(0, 0)</code> with the default settings. Report the frozen step size, the acceptance rate, and the effective sample sizes of both coefficients. Compare with the step size you chose by hand in Exercise 5.9.</li>
+<li>Rerun with <code>target_accept = 0.44</code>. Which target gives the larger effective sample sizes for this two-parameter posterior, and what does the difference say about the flatness of the efficiency curve?</li>
+<li>Report a <span class="math inline">\(95\)</span>% posterior credible interval for <span class="math inline">\(\beta_1\)</span> and compare it with the one you obtained with <code>rstan</code> in Exercise 5.9.</li>
+</ol>
+</div>
+<div class="exercise bookgraybox">
+<p><strong>Exercise 6.9 (Two ADHD symptoms)</strong> The <code>ADHD</code> data in the <code>bgms</code> package contain binary symptom indicators for 355 children. Take <code>distract</code> as the outcome and <code>avoid</code> as the predictor, and fit the logistic regression <span class="math inline">\(\text{logit}\, P(\texttt{distract}_i = 1) = \beta_0 + \beta_1 \texttt{avoid}_i\)</span> with independent <span class="math inline">\(\text{N}(0, 2^2)\)</span> priors on both coefficients.</p>
+<ol type="a">
+<li>Write the log posterior for <span class="math inline">\(\boldsymbol{\beta} = (\beta_0, \beta_1)\)</span>.</li>
+<li>Sample with <code>adaptive_metropolis()</code> for <span class="math inline">\(20{,}000\)</span> iterations and report the posterior mean and a <span class="math inline">\(95\)</span>% credible interval for <span class="math inline">\(\beta_1\)</span>, and the effective sample size of each coefficient.</li>
+<li>Sample the same posterior with <code>metropolis()</code> using step sizes <span class="math inline">\(0.05\)</span>, <span class="math inline">\(0.2\)</span>, and <span class="math inline">\(1\)</span>. Compare the effective sample sizes with part b. How many hand-tuning runs did the adaptive sampler save you?</li>
+<li>The two coefficients are negatively correlated in the posterior. Center the predictor by replacing <code>avoid</code> with <code>avoid - mean(avoid)</code> and rerun part b. What happens to the correlation, the adapted step size, and the effective sample sizes?</li>
+</ol>
+</div>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" data-line-spacing="2" role="list" style="display: none">
+<div id="ref-andrieu2006ergodicity" class="csl-entry" role="listitem">
+Andrieu, C., &amp; Moulines, É. (2006). On the ergodicity properties of some adaptive <span>MCMC</span> algorithms. <em>The Annals of Applied Probability</em>, <em>16</em>(3), 1462–1505. <a href="https://doi.org/10.1214/105051606000000286">https://doi.org/10.1214/105051606000000286</a>
+</div>
+<div id="ref-andrieu2008tutorial" class="csl-entry" role="listitem">
+Andrieu, C., &amp; Thoms, J. (2008). A tutorial on adaptive <span>MCMC</span>. <em>Statistics and Computing</em>, <em>18</em>(4), 343–373.
+</div>
+<div id="ref-carpenter2017stan" class="csl-entry" role="listitem">
+Carpenter, B., Gelman, A., Hoffman, M. D., Lee, D., Goodrich, B., Betancourt, M., Brubaker, M., Guo, J., Li, P., &amp; Riddell, A. (2017). <span>Stan</span>: A probabilistic programming language. <em>Journal of Statistical Software</em>, <em>76</em>(1), 1–32.
+</div>
+<div id="ref-robbins1951stochastic" class="csl-entry" role="listitem">
+Robbins, H., &amp; Monro, S. (1951). A stochastic approximation method. <em>The Annals of Mathematical Statistics</em>, <em>22</em>(3), 400–407.
+</div>
+<div id="ref-robertsrosenthal2007coupling" class="csl-entry" role="listitem">
+Roberts, G. O., &amp; Rosenthal, J. S. (2007). Coupling and ergodicity of adaptive <span>Markov</span> chain <span>Monte Carlo</span> algorithms. <em>Journal of Applied Probability</em>, <em>44</em>(2), 458–475.
+</div>
+</div>
+</section>
+</section>
+
+</main> <!-- /main -->
+<!-- Version switcher: a dropdown in the sidebar header, built from versions.json
+     at the site root. Every published version of the book lives in its own
+     folder on the gh-pages branch (latest release at the root, the development
+     build under dev/, older releases under v<version>/). When the file is missing,
+     as in a local preview, no dropdown is shown. Adapted from the bgms site. -->
+<style>
+.book-version { margin: 0.4em 0 0 0; position: relative; font-size: 0.85rem; }
+.book-version > button {
+  background: none; border: 1px solid var(--bayespurple); border-radius: 4px;
+  color: var(--bayespurple); padding: 0.1em 0.6em; cursor: pointer; font: inherit;
+}
+.book-version > button::after { content: " \25BE"; }
+.book-version ul {
+  display: none; position: absolute; left: 0; z-index: 1000; min-width: 14em;
+  margin: 0.2em 0 0 0; padding: 0.3em 0; list-style: none; background: white;
+  border: 1px solid #ccc; border-radius: 4px; box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+.book-version.open ul { display: block; }
+.book-version li a {
+  display: flex; justify-content: space-between; gap: 1em; padding: 0.25em 0.8em;
+  color: #222; text-decoration: none;
+}
+.book-version li a:hover { background: var(--quizgray); }
+.book-version li a.active { font-weight: bold; }
+.book-version .book-version-kind { color: #777; font-size: 0.8em; }
+</style>
+<script>
+  // Move the chapter's table of contents from the bottom of the sidebar to
+  // right under the chapter's own entry, as on the Bayes Rules! site.
+  document.addEventListener("DOMContentLoaded", function () {
+    const toc = document.querySelector("#quarto-sidebar #TOC");
+    const current = document.querySelector("#quarto-sidebar .sidebar-item a.active");
+    if (toc && current) {
+      const item = current.closest(".sidebar-item");
+      if (item) item.append(toc);
+    }
+  });
+</script>
+<script>
+(function () {
+  const header = document.querySelector("#quarto-sidebar .sidebar-header");
+  if (!header) return;
+
+  // Where this build's own root is: /computational-methods-book/, .../dev/, .../v0.1/
+  const offset = document.querySelector('meta[name="quarto:offset"]');
+  let buildBase;
+  if (offset) {
+    buildBase = new URL(offset.content, window.location.href).pathname;
+  } else {
+    const lib = document.querySelector('link[href*="site_libs/"]');
+    if (!lib) return;
+    buildBase = new URL(lib.getAttribute("href").split("site_libs/")[0], window.location.href).pathname;
+  }
+  const parentOf = (path) => path.replace(/[^/]+\/$/, "");
+
+  const readJson = async (url) => {
+    try {
+      const response = await fetch(url, { cache: "no-cache" });
+      return response.ok ? await response.json() : null;
+    } catch (e) { return null; }
+  };
+  const exists = async (url) => {
+    try { return (await fetch(url, { method: "HEAD" })).ok; } catch (e) { return false; }
+  };
+
+  const label = (entry) => entry.kind === "release" ? "Version " + entry.version : "Development version";
+
+  const render = (siteRoot, entries, current) => {
+    const pagePath = window.location.pathname.slice(buildBase.length);
+    const box = document.createElement("div");
+    box.className = "book-version";
+    const button = document.createElement("button");
+    button.type = "button";
+    button.setAttribute("aria-haspopup", "true");
+    button.setAttribute("aria-expanded", "false");
+    button.title = "Switch to another version of the book";
+    button.textContent = label(current);
+    const menu = document.createElement("ul");
+    entries.forEach(entry => {
+      const li = document.createElement("li");
+      const link = document.createElement("a");
+      link.className = entry === current ? "active" : "";
+      link.href = siteRoot + entry.dir;
+      const name = document.createElement("span");
+      name.textContent = label(entry);
+      const kind = document.createElement("span");
+      kind.className = "book-version-kind";
+      kind.textContent = entry.kind === "release" ? "release" : "in preparation";
+      link.append(name, kind);
+      // Stay on the same page when that version has it; otherwise go to its welcome page.
+      link.addEventListener("click", async (event) => {
+        event.preventDefault();
+        const home = siteRoot + entry.dir;
+        if (!pagePath) { window.location.href = home; return; }
+        const target = home + pagePath;
+        window.location.href = (await exists(target)) ? target + window.location.hash : home;
+      });
+      li.appendChild(link);
+      menu.appendChild(li);
+    });
+    const close = () => { box.classList.remove("open"); button.setAttribute("aria-expanded", "false"); };
+    button.addEventListener("click", (event) => {
+      event.stopPropagation();
+      const open = box.classList.toggle("open");
+      button.setAttribute("aria-expanded", open ? "true" : "false");
+    });
+    document.addEventListener("click", (event) => { if (!box.contains(event.target)) close(); });
+    document.addEventListener("keydown", (event) => { if (event.key === "Escape") close(); });
+    box.append(button, menu);
+    header.appendChild(box);
+  };
+
+  (async function () {
+    // versions.json lives at the site root; a build one folder down finds it one level up.
+    let base = buildBase;
+    let index = await readJson(base + "versions.json");
+    if (!index) {
+      const up = parentOf(buildBase);
+      if (!up || up === buildBase) return;
+      base = up;
+      index = await readJson(base + "versions.json");
+    }
+    if (!index || typeof index.root !== "string" || !Array.isArray(index.versions)) return;
+    const siteRoot = index.root;
+    // Readers only see released versions; the development build (our staging
+    // area) lists itself only when you are already on it.
+    const onDevelopment = buildBase.slice(siteRoot.length) === "dev/";
+    const entries = index.versions
+      .filter(entry => typeof entry.path === "string" && entry.path.startsWith(siteRoot))
+      .filter(entry => entry.kind === "release" || onDevelopment)
+      .map(entry => ({ version: entry.version, kind: entry.kind, dir: entry.path.slice(siteRoot.length) }));
+    if (entries.length === 0) return;
+    const current = entries.find(entry => entry.dir === buildBase.slice(siteRoot.length));
+    if (!current) return;
+    render(siteRoot, entries, current);
+  })();
+})();
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/maartenmarsman\.github\.io\/computational-methods-book\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+      window.quartoDecorateExternalLinks = function (root) {
+     var links = (root || window.document).querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+          if (!link.classList.contains('no-external-icon')) {
+          }
+        }
+      }
+      };
+      window.quartoDecorateExternalLinks(window.document);
+    // Esc closes the popup (WCAG 1.4.13) and focus leaving both trigger and
+    // popup closes it (WCAG 2.4.11); tippy handles neither for interactive popups.
+    const hideOnEscAndFocusOut = {
+      name: 'hideOnEscAndFocusOut',
+      defaultValue: true,
+      fn(instance) {
+        const dismiss = () => {
+          // A show scheduled by the trigger delay would otherwise reopen it
+          instance.clearDelayTimeouts();
+          instance.hide();
+        };
+        const onKeyDown = (event) => {
+          if (event.key !== 'Escape') {
+            return;
+          }
+          // Keep Esc from also reaching page handlers (e.g. reveal.js overview),
+          // except an open reveal.js slide menu, which Esc should close too.
+          // The menu handles keys only when its keyboard option is on.
+          const menuHandlesEsc = window.Reveal?.getPlugin?.('menu')?.isOpen() &&
+            window.Reveal.getConfig().menu?.keyboard !== false;
+          if (!menuHandlesEsc) {
+            event.stopPropagation();
+          }
+          if (instance.popper.contains(window.document.activeElement)) {
+            // Disabled while refocusing so the focus trigger does not reopen it
+            instance.disable();
+            instance.reference.focus();
+            instance.enable();
+          }
+          dismiss();
+        };
+        const onFocusOut = (event) => {
+          const target = event.relatedTarget;
+          if (target && !instance.reference.contains(target) &&
+              !instance.popper.contains(target)) {
+            dismiss();
+          }
+        };
+        // On the trigger too: a click trigger (code-annotations: select) has no
+        // blur handling. Attached for the instance's lifetime so leaving the
+        // trigger also cancels a show still pending on the trigger delay.
+        instance.reference.addEventListener('focusout', onFocusOut);
+        return {
+          onShow() {
+            window.document.addEventListener('keydown', onKeyDown, true);
+            instance.popper.addEventListener('focusout', onFocusOut);
+          },
+          onHide() {
+            window.document.removeEventListener('keydown', onKeyDown, true);
+            instance.popper.removeEventListener('focusout', onFocusOut);
+          },
+          onDestroy() {
+            instance.reference.removeEventListener('focusout', onFocusOut);
+          },
+        };
+      },
+    };
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+        plugins: [hideOnEscAndFocusOut],
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          // Each band is positioned against its own containing block, which is
+          // not the offsetParent of the lines, so place it from client rects.
+          const placeBand = (band, firstEl, lastEl, codeBlock) => {
+            const container = band.offsetParent;
+            if (container === null) {
+              return;
+            }
+            const containerRect = container.getBoundingClientRect();
+            // Reveal.js scales slides with a transform, so convert client
+            // pixels back to the CSS pixels of the container.
+            const scale = containerRect.height / container.offsetHeight || 1;
+            const firstRect = firstEl.getBoundingClientRect();
+            const lastRect = lastEl.getBoundingClientRect();
+            const top = (firstRect.top - containerRect.top) / scale - container.clientTop + container.scrollTop;
+            const height = (lastRect.bottom - firstRect.top) / scale;
+            band.style.top = top - 2 + "px";
+            band.style.height = height + 4 + "px";
+            if (codeBlock) {
+              // Without the copy button wrapper, the containing block is wider
+              // than the code block, so span the code block explicitly.
+              const blockRect = codeBlock.getBoundingClientRect();
+              band.style.left = (blockRect.left - containerRect.left) / scale - container.clientLeft + container.scrollLeft + "px";
+              band.style.width = blockRect.width / scale + "px";
+            }
+          };
+          if (lineIds.length > 0) {
+            const el = window.document.getElementById(lineIds[0]);
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const parent = el.parentElement.parentElement;
+            // cook up a div (if necessary) and position it
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            placeBand(div, el, lastEl, parent.closest("div.sourceCode") || parent);
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            placeBand(gutterDiv, el, lastEl);
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+  <script type="application/javascript">
+  window.quartoScrollableRegionsLabels = {"code":"Scrollable code","output":"Scrollable output"};
+  </script>
+<nav class="page-navigation" aria-label="Page">
+  <div class="nav-page nav-page-previous">
+      <a href="../chapters/05-metropolis.html" class="pagination-link" aria-label="The Metropolis Algorithm">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">The Metropolis Algorithm</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../chapters/07-metropolis-hastings.html" class="pagination-link" aria-label="The Metropolis–Hastings algorithm">
+        <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">The Metropolis–Hastings algorithm</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>Stochastic Simulation for Bayesian Modeling in Psychology, Maarten Marsman and Lourens Waldorp.</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/MaartenMarsman/computational-methods-book/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></div>
+    <div class="nav-footer-right">
+<p>Published with <a href="https://quarto.org">Quarto</a>.</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

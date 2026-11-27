@@ -177,6 +177,18 @@ ul.task-list li input[type="checkbox"] {
  <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">The Metropolis Algorithm</span></span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapters/06-adaptive-metropolis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Adaptive Metropolis</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapters/07-metropolis-hastings.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">The Metropolis–Hastings algorithm</span></span></a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="sidebar-item">
@@ -230,6 +242,7 @@ ul.task-list li input[type="checkbox"] {
    
   <ul class="collapse">
   <li><a href="#in-preparation" id="toc-in-preparation" class="nav-link active" data-scroll-target="#in-preparation">In preparation</a></li>
+  <li><a href="#version-0.1.2-27-november-2026" id="toc-version-0.1.2-27-november-2026" class="nav-link" data-scroll-target="#version-0.1.2-27-november-2026">Version 0.1.2 (27 November 2026)</a></li>
   <li><a href="#version-0.1.1-20-november-2026" id="toc-version-0.1.1-20-november-2026" class="nav-link" data-scroll-target="#version-0.1.1-20-november-2026">Version 0.1.1 (20 November 2026)</a></li>
   <li><a href="#version-0.1-30-october-2026" id="toc-version-0.1-30-october-2026" class="nav-link" data-scroll-target="#version-0.1-30-october-2026">Version 0.1 (30 October 2026)</a></li>
   </ul>
@@ -273,12 +286,22 @@ tools/release.sh turns the block into the entry for the new version.
 <!-- dev-start -->
 <section id="in-preparation" class="level2 unnumbered">
 <h2 class="unnumbered anchored" data-anchor-id="in-preparation">In preparation</h2>
-<p>What the next release will contain: everything in version 0.1.1 plus the changes below.</p>
-<p>Changes since version 0.1.1:</p>
+<p>What the next release will contain: everything in version 0.1.2 plus the changes below.</p>
+<p>Changes since version 0.1.2:</p>
 <ul>
 <li>Nothing yet.</li>
 </ul>
 <!-- dev-end -->
+</section>
+<section id="version-0.1.2-27-november-2026" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="version-0.1.2-27-november-2026">Version 0.1.2 (27 November 2026)</h2>
+<p>Released 27 November 2026. Every changed line since version 0.1.1: <a href="https://github.com/MaartenMarsman/computational-methods-book/compare/v0.1.1...v0.1.2">compare on GitHub</a>.</p>
+<p>Changes since version 0.1.1:</p>
+<ul>
+<li>27 November 2026. Chapter 5, The Metropolis Algorithm, revised after student feedback. There is a new figure of the transition density of a continuous chain, the section on several parameters now starts from the sleep survey, and the bivariate Normal figure marks which of the first 80 proposals were accepted. A quiz answer that no longer had a quiz was removed.</li>
+<li>27 November 2026. The old Chapter 6 on Metropolis–Hastings and adaptive proposals is gone. In its place are two chapters, both online now. Chapter 6, Adaptive Metropolis, lets the sampler tune its own step size and explains the Robbins–Monro procedure behind that. Chapter 7, The Metropolis–Hastings Algorithm, drops the assumption of a symmetric proposal, with a log-Normal proposal for a standard deviation and the independence sampler as the two examples.</li>
+<li>27 November 2026. The split pushes the chapters still in preparation up by one: Gibbs sampling is now Chapter 8, variable selection 9, model averaging 10, and Hamiltonian Monte Carlo 11. Mentions of them in Chapters 2 to 5 and in the appendices were updated.</li>
+</ul>
 </section>
 <section id="version-0.1.1-20-november-2026" class="level2 unnumbered">
 <h2 class="unnumbered anchored" data-anchor-id="version-0.1.1-20-november-2026">Version 0.1.1 (20 November 2026)</h2>
