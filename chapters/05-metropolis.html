@@ -91,7 +91,7 @@ div.csl-indent {
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../references.html" rel="next">
+<link href="../chapters/06-adaptive-metropolis.html" rel="next">
 <link href="../chapters/04-diagnosing-markov-chains.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
@@ -103,7 +103,7 @@ div.csl-indent {
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-85f7a32731ed2b609fa7be27e34d4366.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-0b2b94c5a528e4e5a70806ea6f8266d3.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-3a98a03ac4b40154dca883bd300bb55e.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -259,6 +259,18 @@ window.Quarto = {
   <div class="sidebar-item-container"> 
   <a href="../chapters/05-metropolis.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">The Metropolis Algorithm</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/06-adaptive-metropolis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Adaptive Metropolis</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/07-metropolis-hastings.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">The Metropolis–Hastings algorithm</span></span></a>
   </div>
 </li>
       </ul>
@@ -433,7 +445,7 @@ Figure&nbsp;5.2: Two Metropolis comparisons for a standard Normal target distrib
 </div>
 <p>Given a target density <span class="math inline">\(f\)</span>, a starting value <span class="math inline">\(\theta^{(0)}\)</span>, and a symmetric proposal distribution <span class="math inline">\(q\)</span>:</p>
 <ol type="1">
-<li><strong>Propose.</strong> Draw <span class="math inline">\(\theta^\star \sim q(\cdot \mid \theta^{(t)})\)</span>.</li>
+<li><strong>Propose.</strong> Draw <span class="math inline">\(\theta^\star \sim q(\theta^\star \mid \theta^{(t)})\)</span>.</li>
 <li><strong>Compare.</strong> Compute <span class="math inline">\(r = f(\theta^\star) / f(\theta^{(t)})\)</span>.</li>
 <li><strong>Accept or reject.</strong> If <span class="math inline">\(r \geq 1\)</span>, set <span class="math inline">\(\theta^{(t+1)} = \theta^\star\)</span>. Otherwise draw <span class="math inline">\(u \sim \text{Unif}(0,1)\)</span> and set <span class="math inline">\(\theta^{(t+1)} = \theta^\star\)</span> if <span class="math inline">\(u &lt; r\)</span>, and <span class="math inline">\(\theta^{(t+1)} = \theta^{(t)}\)</span> if not.</li>
 </ol>
@@ -449,7 +461,7 @@ Figure&nbsp;5.2: Two Metropolis comparisons for a standard Normal target distrib
 </section>
 <section id="three-iterations-of-the-metropolis-algorithm" class="level3" data-number="5.1.3">
 <h3 data-number="5.1.3" class="anchored" data-anchor-id="three-iterations-of-the-metropolis-algorithm"><span class="header-section-number">5.1.3</span> Three iterations of the Metropolis algorithm</h3>
-<p>Let’s walk through the first three iterations of the Metropolis algorithm for a Normal target distribution with mean <span class="math inline">\(0\)</span> and variance <span class="math inline">\(1\)</span>, i.e., <span class="math inline">\(f(\theta) \propto \exp\left(-\theta^2/2\right)\)</span>, starting at <span class="math inline">\(\theta^{(0)}=0\)</span>. Suppose the proposed values <span class="math inline">\(\theta^\star\)</span> and Uniform draws <span class="math inline">\(u\)</span> are those in <a href="#tbl-metropolis-decisions" class="quarto-xref">Table&nbsp;<span>5.1</span></a>. Each proposal is drawn from the proposal distribution conditional on the state of the Markov chain at the preceding iteration.</p>
+<p>Let’s walk through the first three iterations of the Metropolis algorithm, starting at <span class="math inline">\(\theta^{(0)} = 0\)</span>. We use a standard Normal target distribution, with mean <span class="math inline">\(0\)</span> and variance <span class="math inline">\(1\)</span>. The density of this distribution is <span class="math inline">\(f(\theta) = \frac{1}{\sqrt{2\pi}}\exp(-\theta^2/2)\)</span>. Because the normalizing constant cancels, we work with the unnormalized target density <span class="math inline">\(f(\theta) \propto \exp(-\theta^2/2)\)</span>. Suppose the proposed values <span class="math inline">\(\theta^\star\)</span> and Uniform draws <span class="math inline">\(u\)</span> are those in <a href="#tbl-metropolis-decisions" class="quarto-xref">Table&nbsp;<span>5.1</span></a>. Each proposal is drawn from the proposal distribution conditional on the state of the Markov chain at the preceding iteration.</p>
 <div id="tbl-metropolis-decisions" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-metropolis-decisions-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -510,7 +522,7 @@ Table&nbsp;5.1: Three Metropolis iterations for a standard Normal target.
 </div>
 </figure>
 </div>
-<p>In the first iteration, the proposed value <span class="math inline">\(\theta^\star = 1\)</span> is drawn from <span class="math inline">\(q(\cdots \mid \theta^{(0)} = 0)\)</span>. Since <span class="math inline">\(u = 0.80 &gt; r = 0.607\)</span>, the proposal is rejected, and the chain remains at <span class="math inline">\(0\)</span>. In the second iteration, a new proposal is drawn from <span class="math inline">\(q(\cdots \mid \theta^{(1)} = 0)\)</span>. This time, <span class="math inline">\(u = 0.40 &lt; r = 0.607\)</span>, so the proposal is accepted and the chain moves to <span class="math inline">\(1\)</span>. In the third iteration, the target density at the proposed value is higher than at the current state, so the proposal is accepted. The three recorded states of the Markov chain are <span class="math inline">\((0,1,0.5)\)</span>. The first recorded <span class="math inline">\(0\)</span> must be retained: an iteration has passed even though the chain did not move.</p>
+<p>In the first iteration, the proposed value <span class="math inline">\(\theta^\star = 1\)</span> is drawn from <span class="math inline">\(q(\theta^\star \mid \theta^{(0)} = 0)\)</span>. Since <span class="math inline">\(u = 0.80 &gt; r = 0.607\)</span>, the proposal is rejected, and the chain remains at <span class="math inline">\(0\)</span>. In the second iteration, a new proposal is drawn from <span class="math inline">\(q(\theta^\star \mid \theta^{(1)} = 0)\)</span>. This time, <span class="math inline">\(u = 0.40 &lt; r = 0.607\)</span>, so the proposal is accepted and the chain moves to <span class="math inline">\(1\)</span>. In the third iteration, the target density at the proposed value is higher than at the current state, so the proposal is accepted. The three recorded states of the Markov chain are <span class="math inline">\((0,1,0.5)\)</span>. The first recorded <span class="math inline">\(0\)</span> must be retained because an iteration has passed, even though the chain did not move.</p>
 <div class="quiz bookgraybox">
 <div class="title">
 <p>Quiz yourself!</p>
@@ -567,13 +579,13 @@ Table&nbsp;5.1: Three Metropolis iterations for a standard Normal target.
 </div>
 <p>Given a target log density <span class="math inline">\(\ell\)</span>, a starting value <span class="math inline">\(\theta^{(0)}\)</span>, and a symmetric proposal distribution <span class="math inline">\(q\)</span>:</p>
 <ol type="1">
-<li><strong>Propose.</strong> Draw <span class="math inline">\(\theta^\star \sim q(\cdot \mid \theta^{(t)})\)</span>.</li>
+<li><strong>Propose.</strong> Draw <span class="math inline">\(\theta^\star \sim q(\theta^\star \mid \theta^{(t)})\)</span>.</li>
 <li><strong>Compare.</strong> Compute <span class="math inline">\(\log r = \ell(\theta^\star) - \ell(\theta^{(t)})\)</span>.</li>
 <li><strong>Accept or reject.</strong> If <span class="math inline">\(\log r \geq 0\)</span>, set <span class="math inline">\(\theta^{(t+1)} = \theta^\star\)</span>. Otherwise draw <span class="math inline">\(u \sim \text{Unif}(0,1)\)</span> and set <span class="math inline">\(\theta^{(t+1)} = \theta^\star\)</span> if <span class="math inline">\(\log u &lt; log r\)</span>, and <span class="math inline">\(\theta^{(t+1)} = \theta^{(t)}\)</span> if not.</li>
 </ol>
 <p>Repeat for <span class="math inline">\(t = 0, 1, 2, \ldots\)</span>. After <span class="math inline">\(T\)</span> iterations, the recorded states are <span class="math inline">\(\theta^{(1)},\ldots,\theta^{(T)}\)</span>.</p>
 </div>
-<p>To verify that the log-scale calculation gives the same decisions, consider the three iterations in <a href="#tbl-metropolis-decisions" class="quarto-xref">Table&nbsp;<span>5.1</span></a>. In the first iteration, the proposal from <span class="math inline">\(0\)</span> to <span class="math inline">\(1\)</span> has <span class="math inline">\(\log r=-0.5\)</span>. The Uniform draw gives <span class="math inline">\(\log(0.80)\approx-0.223\)</span>, which is greater than <span class="math inline">\(\log r\)</span>, so the proposal is rejected and the chain remains at <span class="math inline">\(0\)</span>. In the second iteration, the same proposal has <span class="math inline">\(\log r=-0.5\)</span>, but now <span class="math inline">\(\log(0.40)\approx-0.916\)</span> is smaller than <span class="math inline">\(\log r\)</span>, so the proposal is accepted and the chain moves to <span class="math inline">\(1\)</span>. In the third iteration, the proposal from <span class="math inline">\(1\)</span> to <span class="math inline">\(0.5\)</span> has <span class="math inline">\(\log r=0.375\)</span>. Because <span class="math inline">\(\log r&gt;0\)</span>, the proposal is always accepted, and the chain moves to <span class="math inline">\(0.5\)</span>. The recorded states are again <span class="math inline">\((0,1,0.5)\)</span>.</p>
+<p>To verify that the log-scale calculation gives the same decisions, consider the three iterations in <a href="#tbl-metropolis-decisions" class="quarto-xref">Table&nbsp;<span>5.1</span></a>. In the first iteration, the proposal from <span class="math inline">\(0\)</span> to <span class="math inline">\(1\)</span> has <span class="math inline">\(\log r=-0.5\)</span>. The Uniform draw gives <span class="math inline">\(\log(0.80)\approx-0.223\)</span>, which is greater than <span class="math inline">\(\log r\)</span>, so the proposal is rejected and the chain remains at <span class="math inline">\(0\)</span>. In the second iteration, the same proposal has <span class="math inline">\(\log r=-0.5\)</span>, but now <span class="math inline">\(\log(0.40)\approx-0.916\)</span> is smaller than <span class="math inline">\(\log r\)</span>, so the proposal is accepted and the chain moves to <span class="math inline">\(1\)</span>. In the third iteration, the proposal from <span class="math inline">\(1\)</span> to <span class="math inline">\(0.5\)</span> has <span class="math inline">\(\log r=0.375\)</span>. Because <span class="math inline">\(\log r\geq 0\)</span>, the proposal is always accepted, and the chain moves to <span class="math inline">\(0.5\)</span>. The recorded states are again <span class="math inline">\((0,1,0.5)\)</span>.</p>
 </section>
 <section id="the-metropolis-function-in-r" class="level3" data-number="5.2.3">
 <h3 data-number="5.2.3" class="anchored" data-anchor-id="the-metropolis-function-in-r"><span class="header-section-number">5.2.3</span> The Metropolis function in R</h3>
@@ -650,7 +662,7 @@ Figure&nbsp;5.3: Left: Trace plot of the Metropolis chain for the mean hours of 
 </div>
 </div>
 </div>
-<p>We can also use the draws to estimate the posterior mean, standard deviation, and central 95% credible interval, and compare them with their exact values:</p>
+<p>We can also use the draws to estimate the posterior mean, standard deviation, and central 95% credible interval, and compare them with their exact values.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>draws <span class="ot">&lt;-</span> fit<span class="sc">$</span>draws <span class="sc">|&gt;</span> <span class="fu">filter</span>(iteration <span class="sc">&gt;</span> <span class="dv">500</span>)</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>draws <span class="sc">|&gt;</span></span>
@@ -673,15 +685,30 @@ Figure&nbsp;5.3: Left: Trace plot of the Metropolis chain for the mean hours of 
 <p>The Metropolis algorithm worked well for the Normal posterior in our sleep survey. But there we could compare the generated draws with the exact posterior distribution. How can we be confident that the algorithm also works when the posterior distribution is not known in advance? To answer this question, we first show that the Metropolis algorithm satisfies the detailed balance condition, which guarantees that the target distribution is stationary. We then argue that the Markov chain is irreducible and aperiodic, which together with stationarity ensures that it converges to the target distribution.</p>
 <section id="detailed-balance" class="level3" data-number="5.3.1">
 <h3 data-number="5.3.1" class="anchored" data-anchor-id="detailed-balance"><span class="header-section-number">5.3.1</span> Detailed balance</h3>
-<p>Suppose that in iteration <span class="math inline">\(t + 1\)</span>, the chain is at <span class="math inline">\(\theta^{(t)}\)</span> and proposes a new state <span class="math inline">\(\theta^\star\)</span>. The Metropolis acceptance probability can be written as <span class="math display">\[
+<p>Suppose that in iteration <span class="math inline">\(t + 1\)</span>, the chain is at <span class="math inline">\(\theta^{(t)}\)</span> and we propose a new state <span class="math inline">\(\theta^\star\)</span>. The Metropolis acceptance probability can be written as <span class="math display">\[
 \min\left\{1\text{, }r\right\} = \min\left\{1\text{, }\frac{f(\theta^\star)}{f(\theta^{(t)})}\right\} = \begin{cases}
 1 \text{, if }r \geq 1\\
 r \text{, if }r &lt; 1
 \end{cases}.
 \]</span> This is the usual formulation of the Metropolis acceptance rule. Although we use the numerically more stable <span class="math inline">\(\log r\)</span> formulation in our R implementation, the expression above is more convenient for establishing detailed balance.</p>
-<p>We write <span class="math inline">\(K(\theta^{(t)}\text{, }\theta^\star)\)</span> for the density of moving from <span class="math inline">\(\theta^{(t)}\)</span> to <span class="math inline">\(\theta^\star\)</span> in one update. The candidate must first be proposed and then accepted, giving <span class="math display">\[
+<p>In a discrete Markov chain, the transition matrix gives a probability of moving from the current state <span class="math inline">\(\theta^{(t)}\)</span> to the next state <span class="math inline">\(\theta^\star\)</span>. For a continuous state space, we instead use a transition density, as illustrated in <a href="#fig-transition-density" class="quarto-xref">Figure&nbsp;<span>5.4</span></a>. We write <span class="math inline">\(K(\theta^{(t)}\text{, }\theta^\star)\)</span> for the density of moving from <span class="math inline">\(\theta^{(t)}\)</span> to <span class="math inline">\(\theta^\star\)</span> in one update. The candidate must first be proposed and then accepted, giving <span class="math display">\[
 K(\theta^{(t)}\text{, }\theta^\star) = q(\theta^\star\mid \theta^{(t)})\min\!\left\{1,\frac{f(\theta^\star)}{f(\theta^{(t)})}\right\}.
-\]</span> Multiplying by the target density at the current state gives <span class="math display">\[
+\]</span></p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div id="fig-transition-density" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-transition-density-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="05-metropolis_files/figure-html/fig-transition-density-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-transition-density-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5.4: The transition density <span class="math inline">\(K(\theta^{(t)}, \theta^\star)\)</span> of the random-walk Metropolis algorithm with step size <span class="math inline">\(1\)</span> and a standard Normal target, shown for three current states. The target density is drawn vertically on the left. At each current state, the curve shows the Normal proposal density multiplied by the acceptance probability. The dotted stem marks the current state, which is also the proposal mean. The curves integrate to the probabilities of accepting a move: 0.63, 0.71, and 0.65 from bottom to top. The remaining probability is a point mass at the current state, corresponding to rejected proposals.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Multiplying by the target density at the current state gives <span class="math display">\[
 \begin{aligned}
 f(\theta^{(t)})\,K(\theta^{(t)}\text{, }\theta^\star) &amp;= f(\theta^{(t)})\,q(\theta^\star\mid \theta^{(t)})\,\min\!\left\{1\text{, }\frac{f(\theta^\star)}{f(\theta^{(t)})}\right\}\\
 &amp;= q(\theta^\star\mid \theta^{(t)})\,\min\!\left\{f(\theta^{(t)})\text{, }f(\theta^\star)\right\}\\
@@ -709,7 +736,7 @@ f(\theta^\star)\,K(\theta^\star\text{, }\theta^{(t)}),
 <section id="a-robust-prior-for-the-sleep-example" class="level3" data-number="5.4.1">
 <h3 data-number="5.4.1" class="anchored" data-anchor-id="a-robust-prior-for-the-sleep-example"><span class="header-section-number">5.4.1</span> A robust prior for the sleep example</h3>
 <p>In our analysis of the average number of hours first-year students sleep we started with a <span class="math inline">\(\text{N}(7\text{, } 0.5^2)\)</span> prior for the unknown average number of hours <span class="math inline">\(\mu\)</span>. This prior is quite confident. For example, it puts almost no mass below six hours.</p>
-<p>Suppose we believe that an average of seven hours of sleep is most plausible, but we are uncertain and want to allow for the possibility that we are badly wrong. A common choice in such cases is the <strong>Cauchy prior</strong>, <span class="math inline">\(\mu \sim \text{Cauchy}(7\text{, } 0.5)\)</span>, which has the same location as the Normal prior distribution but much heavier tails, assigning more probability to values far from seven hours. Its scale parameter <span class="math inline">\(0.5\)</span> controls the spread but is not a standard deviation, because the Cauchy distribution has no finite variance. <a href="#fig-cauchy-prior" class="quarto-xref">Figure&nbsp;<span>5.4</span></a> compares the <span class="math inline">\(\text{N}(7\text{, } 0.5^2)\)</span> and the <span class="math inline">\(\text{Cauchy}(7\text{, } 0.5)\)</span> densities. The Cauchy density is lower at the center and assigns more probability to the tails, where the Normal density is practically zero.</p>
+<p>Suppose we believe that an average of seven hours of sleep is most plausible, but we are uncertain and want to allow for the possibility that we are badly wrong. A common choice in such cases is the <strong>Cauchy prior</strong>, <span class="math inline">\(\mu \sim \text{Cauchy}(7\text{, } 0.5)\)</span>, which has the same location as the Normal prior distribution but much heavier tails, assigning more probability to values far from seven hours. Its scale parameter <span class="math inline">\(0.5\)</span> controls the spread but is not a standard deviation, because the Cauchy distribution has no finite variance. <a href="#fig-cauchy-prior" class="quarto-xref">Figure&nbsp;<span>5.5</span></a> compares the <span class="math inline">\(\text{N}(7\text{, } 0.5^2)\)</span> and the <span class="math inline">\(\text{Cauchy}(7\text{, } 0.5)\)</span> densities. The Cauchy density is lower at the center and assigns more probability to the tails, where the Normal density is practically zero.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div id="fig-cauchy-prior" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
@@ -718,7 +745,7 @@ f(\theta^\star)\,K(\theta^\star\text{, }\theta^{(t)}),
 <img src="05-metropolis_files/figure-html/fig-cauchy-prior-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-cauchy-prior-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;5.4: The <span class="math inline">\(\text{N}(7\text{, } 0.5^2)\)</span> prior (purple, solid) and the <span class="math inline">\(\text{Cauchy}(7\text{, } 0.5)\)</span> prior (gray, dashed) for the average hours of sleep. Both are centered at seven hours. The Cauchy density is lower at the center but has much heavier tails, assigning more probability to values far from seven hours.
+Figure&nbsp;5.5: The <span class="math inline">\(\text{N}(7\text{, } 0.5^2)\)</span> prior (purple, solid) and the <span class="math inline">\(\text{Cauchy}(7\text{, } 0.5)\)</span> prior (gray, dashed) for the average hours of sleep. Both are centered at seven hours. The Cauchy density is lower at the center but has much heavier tails, assigning more probability to values far from seven hours.
 </figcaption>
 </figure>
 </div>
@@ -739,7 +766,7 @@ Figure&nbsp;5.4: The <span class="math inline">\(\text{N}(7\text{, } 0.5^2)\)</s
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>fit_cauchy<span class="sc">$</span>accept_rate</span>
 <span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.4444</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>The histogram in <a href="#fig-cauchy-posterior" class="quarto-xref">Figure&nbsp;<span>5.5</span></a> compares the posterior draws under the Cauchy prior with the exact posterior density under the Normal prior. Despite the substantial differences in their tails, the two priors yield similar posterior distributions for these data.</p>
+<p>The histogram in <a href="#fig-cauchy-posterior" class="quarto-xref">Figure&nbsp;<span>5.6</span></a> compares the posterior draws under the Cauchy prior with the exact posterior density under the Normal prior. Despite the substantial differences in their tails, the two priors yield similar posterior distributions for these data.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div id="fig-cauchy-posterior" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
@@ -748,7 +775,7 @@ Figure&nbsp;5.4: The <span class="math inline">\(\text{N}(7\text{, } 0.5^2)\)</s
 <img src="05-metropolis_files/figure-html/fig-cauchy-posterior-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-cauchy-posterior-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;5.5: Posterior distributions for the mean hours of sleep under the Normal prior (exact, purple line) and the Cauchy prior (Metropolis draws, histogram). The two posteriors nearly coincide, indicating that the data have a strong influence relative to the choice of prior distribution. The dashed line marks the sample mean.
+Figure&nbsp;5.6: Posterior distributions for the mean hours of sleep under the Normal prior (exact, purple line) and the Cauchy prior (Metropolis draws, histogram). The two posteriors nearly coincide, indicating that the data have a strong influence relative to the choice of prior distribution. The dashed line marks the sample mean.
 </figcaption>
 </figure>
 </div>
@@ -769,7 +796,7 @@ f(\theta) = \frac{1}{2}\times\frac{1}{\sqrt{2\pi}} \exp\left(-\frac{1}{2}(\theta
 <span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>fit_small <span class="ot">&lt;-</span> <span class="fu">metropolis</span>(log_bimodal, <span class="at">init =</span> <span class="sc">-</span><span class="dv">5</span>, <span class="at">n_iter =</span> <span class="dv">10000</span>, <span class="at">step_size =</span> <span class="fl">0.5</span>)</span>
 <span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>fit_large <span class="ot">&lt;-</span> <span class="fu">metropolis</span>(log_bimodal, <span class="at">init =</span> <span class="sc">-</span><span class="dv">5</span>, <span class="at">n_iter =</span> <span class="dv">10000</span>, <span class="at">step_size =</span> <span class="dv">5</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p><a href="#fig-bimodal" class="quarto-xref">Figure&nbsp;<span>5.6</span></a> shows trace plots of both Markov chains and histograms of their sampled states, with the target density overlaid on the histograms.</p>
+<p><a href="#fig-bimodal" class="quarto-xref">Figure&nbsp;<span>5.7</span></a> shows trace plots of both Markov chains and histograms of their sampled states, with the target density overlaid on the histograms.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div id="fig-bimodal" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
@@ -778,7 +805,7 @@ f(\theta) = \frac{1}{2}\times\frac{1}{\sqrt{2\pi}} \exp\left(-\frac{1}{2}(\theta
 <img src="05-metropolis_files/figure-html/fig-bimodal-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-bimodal-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;5.6: Metropolis sampling from an equal mixture of two Normal distributions centered at <span class="math inline">\(-5\)</span> and <span class="math inline">\(5\)</span>. Each row shows the trace plot (left) and histogram (right) of the same Markov chain, with the full target density overlaid in purple. With a step size of <span class="math inline">\(0.5\)</span>, the chain remains near its starting mode; with a step size of <span class="math inline">\(5\)</span>, it moves between the two modes. Compare the time spent on either side of zero with the equal mixing weights of the target distribution.
+Figure&nbsp;5.7: Metropolis sampling from an equal mixture of two Normal distributions centered at <span class="math inline">\(-5\)</span> and <span class="math inline">\(5\)</span>. Each row shows the trace plot (left) and histogram (right) of the same Markov chain, with the full target density overlaid in purple. With a step size of <span class="math inline">\(0.5\)</span>, the chain remains near its starting mode; with a step size of <span class="math inline">\(5\)</span>, it moves between the two modes. Compare the time spent on either side of zero with the equal mixing weights of the target distribution.
 </figcaption>
 </figure>
 </div>
@@ -794,8 +821,8 @@ Figure&nbsp;5.6: Metropolis sampling from an equal mixture of two Normal distrib
 <p>In <a href="04-diagnosing-markov-chains.html#sec-ar1" class="quarto-xref"><span>Section 4.1</span></a>, we introduced the autoregressive process of order 1, or AR(1) process: <span class="math display">\[
 \theta^{(t+1)} = \phi \,\theta^{(t)} + \sqrt{1-\phi^2}\,\epsilon_t\text{, with }\epsilon_t \sim \text{N}(0\text{, }1^2)\text{, and }\phi \in (-1\text{, }1).
 \]</span> We used this process to study how <strong>autocorrelation</strong> affects the precision of estimates based on the states of a Markov chain. Assuming that the chain has reached its stationary distribution, we saw that, for the same number of iterations, estimates are more precise when autocorrelation is low than when it is high.</p>
-<p>In this AR(1) process, the lag-one autocorrelation is <span class="math inline">\(\phi\)</span>, while the factor <span class="math inline">\(\sqrt{1-\phi^2}\)</span> controls the size of the innovations <span class="math inline">\(\epsilon_t\)</span>. For positive <span class="math inline">\(\phi\)</span>, we can think of this factor as the step size of the process. A larger step size corresponds to lower autocorrelation, and a smaller step size to higher autocorrelation. The Metropolis algorithm has no explicit autocorrelation parameter, but its Normal proposal distribution also has a step size. The same intuition carries over: smaller step sizes generally produce higher autocorrelation, while larger step sizes can reduce it. However, as we shall see, there is a turning point beyond which increasing the step size no longer improves the chain’s efficiency.</p>
-<p>To investigate this, we run the <code>metropolis</code> function with the <code>log_posterior</code> function for the mean hours of sleep <span class="math inline">\(\mu\)</span>, using three step sizes: a very small one, a large one, and the value used throughout this chapter. Each chain starts at the posterior mean <span class="math inline">\(6.69\)</span> and runs for <span class="math inline">\(T=10,000\)</span> iterations. <a href="#fig-step-sizes" class="quarto-xref">Figure&nbsp;<span>5.7</span></a> pairs each trace plot with a histogram, allowing us to inspect both the movement of the chain and its approximation to the posterior distribution.</p>
+<p>In this AR(1) process, the lag-one autocorrelation is <span class="math inline">\(\phi\)</span>, while the factor <span class="math inline">\(\sqrt{1-\phi^2}\)</span> controls the size of the innovations <span class="math inline">\(\epsilon_t\)</span>. For positive <span class="math inline">\(\phi\)</span>, which is the case of interest here, we can think of this factor as the step size of the process. A larger step size corresponds to lower autocorrelation, and a smaller step size to higher autocorrelation. The Metropolis algorithm has no explicit autocorrelation parameter, but its Normal proposal distribution <span class="math inline">\(\text{N}(\theta^{(t)}\text{, } c^2)\)</span> also has a step size <span class="math inline">\(c\)</span>. The same intuition carries over: smaller step sizes generally produce higher autocorrelation, while larger step sizes can reduce it. However, as we shall see, there is a turning point beyond which increasing the step size no longer improves the chain’s efficiency.</p>
+<p>To investigate this, we run the <code>metropolis</code> function with the <code>log_posterior</code> function for the mean hours of sleep <span class="math inline">\(\mu\)</span>, using three step sizes: a very small one, a large one, and the value used throughout this chapter. Each chain starts at the posterior mean <span class="math inline">\(6.69\)</span> and runs for <span class="math inline">\(T=10,000\)</span> iterations. <a href="#fig-step-sizes" class="quarto-xref">Figure&nbsp;<span>5.8</span></a> pairs each trace plot with a histogram, allowing us to inspect both the movement of the chain and its approximation to the posterior distribution.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">84735</span>)</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>step_sizes <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">0.02</span>, <span class="fl">0.5</span>, <span class="dv">10</span>)</span>
@@ -810,7 +837,7 @@ Figure&nbsp;5.6: Metropolis sampling from an equal mixture of two Normal distrib
 <img src="05-metropolis_files/figure-html/fig-step-sizes-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-step-sizes-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;5.7: Three step sizes for the sleep posterior. Left: Trace plots of the first 2,000 iterations. Right: Histograms of all 10,000 recorded states, with the exact posterior density overlaid. Small steps produce slow movement, whereas large steps lead to frequent rejections and repeated states. Both can produce poor approximations to the posterior distribution in a run of this length.
+Figure&nbsp;5.8: Three step sizes for the sleep posterior. Left: Trace plots of the first 2,000 iterations. Right: Histograms of all 10,000 recorded states, with the exact posterior density overlaid. Small steps produce slow movement, whereas large steps lead to frequent rejections and repeated states. Both can produce poor approximations to the posterior distribution in a run of this length.
 </figcaption>
 </figure>
 </div>
@@ -826,7 +853,7 @@ Figure&nbsp;5.7: Three step sizes for the sleep posterior. Left: Trace plots of 
 <span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3     10         0.0253</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>As with the AR(1) process, the step size <span class="math inline">\(c\)</span> does not change the stationary distribution of the Metropolis chain, but it affects how efficiently the chain explores it. With <span class="math inline">\(c = 0.02\)</span>, almost every proposal is accepted, yet each move is so small that the chain takes hundreds of iterations to cross the posterior; successive draws are nearly identical. With <span class="math inline">\(c = 10\)</span>, most proposals land far outside the main posterior region and are rejected, so the chain repeats the same value for dozens of iterations at a time. With <span class="math inline">\(c = 0.5\)</span>, the proposal standard deviation is about 2.45 times the posterior standard deviation, allowing larger moves while maintaining a moderate acceptance rate. This chain explores the posterior more efficiently than the other two, producing a closer approximation to the posterior distribution.</p>
-<p><a href="#fig-step-acf" class="quarto-xref">Figure&nbsp;<span>5.8</span></a> shows the autocorrelation plots for the three Markov chains, confirming our intuition. Increasing the step size initially reduces autocorrelation by allowing the chain to move farther between iterations. But when the step size becomes too large, frequent rejections cause the chain to remain at the same state, increasing autocorrelation again. This is the turning point we anticipated earlier.</p>
+<p><a href="#fig-step-acf" class="quarto-xref">Figure&nbsp;<span>5.9</span></a> shows the autocorrelation plots for the three Markov chains, confirming our intuition. Comparing the chains, we see that larger step sizes initially reduce autocorrelation by allowing the chain to move farther between iterations. But when the step size becomes too large, frequent rejections cause the chain to remain at the same state, increasing autocorrelation again. This is the turning point we anticipated earlier.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div id="fig-step-acf" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
@@ -835,7 +862,7 @@ Figure&nbsp;5.7: Three step sizes for the sleep posterior. Left: Trace plots of 
 <img src="05-metropolis_files/figure-html/fig-step-acf-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-step-acf-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;5.8: Autocorrelation of the draws for the three step sizes. For the smallest and largest step sizes, autocorrelation decays slowly, whereas for the intermediate step size, it drops quickly toward zero.
+Figure&nbsp;5.9: Autocorrelation of the draws for the three step sizes. For the smallest and largest step sizes, autocorrelation decays slowly, whereas for the intermediate step size, it drops quickly toward zero.
 </figcaption>
 </figure>
 </div>
@@ -855,7 +882,7 @@ Figure&nbsp;5.8: Autocorrelation of the draws for the three step sizes. For the 
 <p>The middle chain is therefore worth roughly 12 times as many independent draws as the better of the other two, despite using the same number of iterations.</p>
 <section id="what-step-size-should-we-use" class="level3" data-number="5.5.1">
 <h3 data-number="5.5.1" class="anchored" data-anchor-id="what-step-size-should-we-use"><span class="header-section-number">5.5.1</span> What step size should we use?</h3>
-<p>Step size affects how efficiently the Markov chain explores the target distribution. The simulations in the previous section suggest that there is an optimal step size. The Metropolis algorithm we have used is called a <strong>random-walk Metropolis algorithm</strong> because it proposes new values by adding a random step to the current state. <span class="citation" data-cites="gelman1996efficient">Gelman et al. (<a href="../references.html#ref-gelman1996efficient" role="doc-biblioref">1996</a>)</span> showed that for a random-walk Metropolis algorithm with a Normal proposal distribution and a Normal target distribution, the optimal step size is about <span class="math inline">\(2.4\)</span> times the standard deviation of the target, which corresponds to an acceptance rate of approximately <span class="math inline">\(44\)</span>%.</p>
+<p>Step size affects how efficiently the Markov chain explores the target distribution. The simulations in the previous section suggest that there is an optimal step size. The Metropolis algorithm we have used is called a <strong>random-walk Metropolis algorithm</strong> because it proposes new values by adding a random step to the current state. <span class="citation" data-cites="gelman1996efficient">Gelman et al. (<a href="../references.html#ref-gelman1996efficient" role="doc-biblioref">1996</a>)</span> showed that for a random-walk Metropolis algorithm with a Normal proposal distribution and a Normal target distribution, the optimal step size is about <span class="math inline">\(2.4\)</span> times the standard deviation of the target, which corresponds to an acceptance rate of approximately <span class="math inline">\(44\)</span>%. Although this acceptance rate need not be optimal for other target distributions, it is a useful heuristic that often gives close-to-optimal efficiency in practice.</p>
 <p>To investigate the relationship between step size, acceptance rate, and effective sample size, we return to our sleep survey and run the Metropolis algorithm with different step sizes. Each chain starts at the posterior mode <span class="math inline">\(\theta^{(0)} = 6.69\)</span> and runs for <span class="math inline">\(T = 10,000\)</span> iterations.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">84735</span>)</span>
@@ -865,7 +892,7 @@ Figure&nbsp;5.8: Autocorrelation of the draws for the three step sizes. For the 
 <span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">accept_rate =</span> <span class="fu">map_dbl</span>(fit, <span class="st">"accept_rate"</span>)) <span class="sc">|&gt;</span></span>
 <span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>fit)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p><a href="#fig-ess-curve" class="quarto-xref">Figure&nbsp;<span>5.9</span></a> compares the results across step sizes. The horizontal axis uses a logarithmic scale so that both small and large step sizes remain visible. The gray curve in the left panel shows the theoretical acceptance rate, which can be calculated exactly for this example. The dashed lines mark the acceptance rate of <span class="math inline">\(0.44\)</span> and the corresponding step size.</p>
+<p><a href="#fig-ess-curve" class="quarto-xref">Figure&nbsp;<span>5.10</span></a> compares the results across step sizes. The horizontal axis uses a logarithmic scale so that both small and large step sizes remain visible. The gray curve in the left panel shows the theoretical acceptance rate, which can be calculated exactly for this example. The dashed lines mark the acceptance rate of <span class="math inline">\(0.44\)</span> and the corresponding step size.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div id="fig-ess-curve" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
@@ -874,14 +901,14 @@ Figure&nbsp;5.8: Autocorrelation of the draws for the three step sizes. For the 
 <img src="05-metropolis_files/figure-html/fig-ess-curve-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ess-curve-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;5.9: Acceptance rate (left) and effective sample size out of 10,000 draws (right) as functions of step size, shown on a logarithmic scale. Purple points show the simulation results, and the gray curve shows the theoretical acceptance rate for the Normal posterior. The dashed lines mark the acceptance rate of <span class="math inline">\(0.44\)</span> and the corresponding step size, with an open circle at their intersection. The effective sample size peaks near this step size.
+Figure&nbsp;5.10: Acceptance rate (left) and effective sample size out of 10,000 draws (right) as functions of step size, shown on a logarithmic scale. Purple points show the simulation results, and the gray curve shows the theoretical acceptance rate for the Normal posterior. The dashed lines mark the acceptance rate of <span class="math inline">\(0.44\)</span> and the corresponding step size, with an open circle at their intersection. The effective sample size peaks near this step size.
 </figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p>Increasing the step size decreases the acceptance rate. With very small steps, the proposed and current states are similar, so the ratio <span class="math inline">\(r\)</span> is close to one. Larger steps produce proposals farther from the current state, increasing the probability of proposing values in regions with low target density and reducing the acceptance rate. The relationship between step size and acceptance rate is smooth, and the simulated acceptance rates closely follow the theoretical curve. An acceptance rate of <span class="math inline">\(44\)</span>% is achieved at a step size of approximately 0.49, or 2.4 posterior standard deviations.</p>
-<p>The corresponding step size also performs well in terms of effective sample size. In the right panel of <a href="#fig-ess-curve" class="quarto-xref">Figure&nbsp;<span>5.9</span></a>, the dashed line passes close to the highest effective sample size among the step sizes investigated. Thus, the theoretical acceptance rate of <span class="math inline">\(44\)</span>% is close to optimal in our simulation, with a corresponding step size of approximately 0.5. This is the step size we have used throughout the chapter.</p>
+<p>Increasing the step size decreases the acceptance rate. With very small steps, the proposed and current states are similar, so the ratio <span class="math inline">\(r\)</span> is close to one. Larger steps produce proposals farther from the current state, increasing the probability of proposing values in regions with low target density and reducing the acceptance rate. The simulated acceptance rates closely follow the theoretical curve. An acceptance rate of <span class="math inline">\(44\)</span>% is achieved at a step size of approximately 0.49, or 2.4 posterior standard deviations.</p>
+<p>The corresponding step size also performs well in terms of effective sample size. In the right panel of <a href="#fig-ess-curve" class="quarto-xref">Figure&nbsp;<span>5.10</span></a>, the dashed line passes close to the highest effective sample size among the step sizes investigated. Thus, the theoretical acceptance rate of <span class="math inline">\(44\)</span>% is close to optimal in our simulation, with a corresponding step size of approximately 0.5. This is the step size we have used throughout the chapter.</p>
 </section>
 <section id="what-step-size-to-choose" class="level3" data-number="5.5.2">
 <h3 data-number="5.5.2" class="anchored" data-anchor-id="what-step-size-to-choose"><span class="header-section-number">5.5.2</span> What step size to choose?</h3>
@@ -890,8 +917,8 @@ Figure&nbsp;5.9: Acceptance rate (left) and effective sample size out of 10,000 
 <div class="title">
 <p>Choosing a step size</p>
 </div>
-<p>Start with trial runs at a few step sizes. If most proposals are accepted but the chain moves slowly, try a larger step size. If the chain repeatedly stays at the same state, try a smaller one. Compare the effective sample sizes (ESS) and trace plots for runs of equal length. An acceptance rate around 0.4–0.5 is a useful starting guide for one approximately Normal parameter; around 0.25 is a guide for many similarly scaled parameters updated together.</p>
-<p>After tuning, keep the step size fixed for the run used to estimate posterior summaries. Chapter 6 (Metropolis–Hastings and Adaptive Proposals) introduces an adaptive procedure that adjusts the step size during warmup.</p>
+<p>Start with trial runs at a few step sizes. If most proposals are accepted but the chain moves slowly, try a larger step size. If the chain repeatedly stays at the same state, try a smaller one. Compare the effective sample sizes (ESS) and trace plots for runs of equal length. An acceptance rate around 0.4–0.5 is a useful starting guide for one approximately Normal parameter; around 0.25 is a guide for many similarly scaled parameters updated together (see <a href="#sec-metropolis-multivariate" class="quarto-xref"><span>Section 5.6</span></a>).</p>
+<p>After tuning, keep the step size fixed for the run used to estimate posterior summaries. <a href="06-adaptive-metropolis.html" class="quarto-xref"><span>Chapter 6</span></a> introduces an adaptive procedure that adjusts the step size during warmup.</p>
 </div>
 <div class="quiz bookgraybox">
 <div class="title">
@@ -903,7 +930,7 @@ Figure&nbsp;5.9: Acceptance rate (left) and effective sample size out of 10,000 
 </section>
 <section id="sec-metropolis-multivariate" class="level2" data-number="5.6">
 <h2 data-number="5.6" class="anchored" data-anchor-id="sec-metropolis-multivariate"><span class="header-section-number">5.6</span> Metropolis in more than one dimension</h2>
-<p>Almost every real model has several parameters. The Metropolis algorithm extends to multidimensional target distributions without changing its underlying logic. Instead of proposing a single value, we propose a vector <span class="math inline">\(\boldsymbol{\theta}^\star\)</span>. Here, we generate each component from a Normal distribution centered at the corresponding component of the current state: <span class="math display">\[
+<p>Almost every real model has several parameters. In our sleep survey, for example, both the mean <span class="math inline">\(\mu\)</span> and the standard deviation <span class="math inline">\(\sigma\)</span> could be unknown, giving us a posterior distribution over the pair <span class="math inline">\((\mu, \sigma)\)</span>. A regression model for hours of sleep with age and caffeine intake as predictors would have even more parameters: an intercept, two regression coefficients, and a residual variance. The Metropolis algorithm extends to such multidimensional target distributions without changing its underlying logic. Instead of proposing a single value, we propose a vector <span class="math inline">\(\boldsymbol{\theta}^\star\)</span>. Here, we generate each component from a Normal distribution centered at the corresponding component of the current state: <span class="math display">\[
 \theta_d^\star \sim \text{N}(\theta_d^{(t)}\text{, }c^2),
 \]</span> where <span class="math inline">\(\theta_d^\star\)</span> denotes the <span class="math inline">\(d\)</span>-th entry of <span class="math inline">\(\boldsymbol{\theta}^\star\)</span>. We use a common step size <span class="math inline">\(c\)</span> for all dimensions and accept or reject the entire proposed vector using the ratio <span class="math display">\[
 r = \frac{f(\boldsymbol{\theta}^\star)}{f(\boldsymbol{\theta}^{(t)})}.
@@ -935,7 +962,7 @@ r = \frac{f(\boldsymbol{\theta}^\star)}{f(\boldsymbol{\theta}^{(t)})}.
 <span id="cb16-24"><a href="#cb16-24" aria-hidden="true" tabindex="-1"></a>  )</span>
 <span id="cb16-25"><a href="#cb16-25" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>This version of <code>metropolis</code> is a drop-in replacement for the one-dimensional version used earlier. To illustrate how dependence between parameters affects the algorithm, consider a bivariate Normal target distribution with mean vector <span class="math inline">\(\boldsymbol{0}\)</span>, variances of <span class="math inline">\(1\)</span> in both dimensions, and a correlation of <span class="math inline">\(0.9\)</span>. This strong positive correlation produces the elongated target distribution in <a href="#fig-bivariate" class="quarto-xref">Figure&nbsp;<span>5.10</span></a>.</p>
+<p>This version of <code>metropolis</code> is a drop-in replacement for the one-dimensional version used earlier. To illustrate how dependence between parameters affects the algorithm, consider a bivariate Normal target distribution with mean vector <span class="math inline">\(\boldsymbol{0}\)</span>, variances of <span class="math inline">\(1\)</span> in both dimensions, and a correlation of <span class="math inline">\(0.9\)</span>. This strong positive correlation produces the elongated target distribution in <a href="#fig-bivariate" class="quarto-xref">Figure&nbsp;<span>5.11</span></a>.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>Sigma <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="fl">0.9</span>, <span class="fl">0.9</span>, <span class="dv">1</span>), <span class="dv">2</span>, <span class="dv">2</span>)</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>log_bvn <span class="ot">&lt;-</span> <span class="cf">function</span>(theta) <span class="fu">dmvnorm</span>(theta, <span class="at">mean =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>), <span class="at">sigma =</span> Sigma, <span class="at">log =</span> <span class="cn">TRUE</span>)</span>
@@ -953,22 +980,22 @@ r = \frac{f(\boldsymbol{\theta}^\star)}{f(\boldsymbol{\theta}^{(t)})}.
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>fit_bvn<span class="sc">$</span>accept_rate</span>
 <span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.5465</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>The acceptance rate of 55% is higher than the <span class="math inline">\(44\)</span>% guideline for one-dimensional targets and considerably higher than the approximately <span class="math inline">\(25\)</span>% suggested for multidimensional targets. We introduced the latter guideline in the call-out box of the previous section and will explain it below. <a href="#fig-bivariate" class="quarto-xref">Figure&nbsp;<span>5.10</span></a> shows the resulting draws against contours of the bivariate Normal target density. Each contour shows combinations <span class="math inline">\((\theta_1\text{, }\theta_2)\)</span> with the same target density.</p>
+<p>The acceptance rate of 55% is higher than the <span class="math inline">\(44\)</span>% guideline for one-dimensional targets and considerably higher than the approximately <span class="math inline">\(25\)</span>% suggested for multidimensional targets. We introduced the latter guideline in the call-out box of the previous section and will explain it below. <a href="#fig-bivariate" class="quarto-xref">Figure&nbsp;<span>5.11</span></a> shows the resulting draws against contours of the bivariate Normal target density. Each contour shows combinations <span class="math inline">\((\theta_1\text{, }\theta_2)\)</span> with the same target density.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div id="fig-bivariate" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center" data-fig-pos="H">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-bivariate-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="05-metropolis_files/figure-html/fig-bivariate-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:75.0%" data-fig-pos="H">
+<img src="05-metropolis_files/figure-html/fig-bivariate-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%" data-fig-pos="H">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-bivariate-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;5.10: A bivariate Normal target with correlation 0.9. Dots show the first 2,000 draws and the path connects the first 80 updates; the contours, drawn on top, enclose 50%, 90%, and 99% of the target probability. The draws spread farther along the diagonal than across it.
+Figure&nbsp;5.11: A bivariate Normal target with correlation 0.9; the contours enclose 50%, 90%, and 99% of the target probability. Left: the first 2,000 draws of the Metropolis chain with step size 0.5. Right: the first 80 iterations, starting from the origin (open circle). Accepted moves are purple segments ending in a dot (46 of the 80), rejected proposals are gray dashed segments ending in a cross (34). The rejected proposals mostly move away from the narrow diagonal region of high posterior density, where the density falls off quickly; the accepted proposals tend to move along this region.
 </figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p>Our Metropolis algorithm appears to work, but it is not very efficient. The problem is that the two parameters are strongly correlated, whereas our proposal distribution treats them independently. In <a href="#fig-bivariate" class="quarto-xref">Figure&nbsp;<span>5.10</span></a>, we see that the target distribution is stretched along the diagonal, with relatively little probability away from it. We have already seen what this means: a proposal from <span class="math inline">\((0,0)\)</span> to <span class="math inline">\((1,1)\)</span> has a reasonable chance of being accepted, whereas a proposal to <span class="math inline">\((1,-1)\)</span> is almost certainly rejected. Yet our proposal distribution is equally likely to suggest either move. To avoid proposing too many values that will be rejected, we could reduce the step size. But then the accepted moves would also become smaller, and the chain would explore the target more slowly. This problem becomes more difficult as the number of parameters increases.</p>
+<p>Our Metropolis algorithm appears to work, but it is not very efficient. The problem is that the two parameters are strongly correlated, whereas our proposal distribution treats them independently. In <a href="#fig-bivariate" class="quarto-xref">Figure&nbsp;<span>5.11</span></a>, we see that the target distribution is stretched along the diagonal, with relatively little probability away from it. We have already seen that a proposal from <span class="math inline">\((0,0)\)</span> to <span class="math inline">\((1,1)\)</span> has a reasonable chance of being accepted, whereas a proposal to <span class="math inline">\((1,-1)\)</span> is almost certainly rejected. Yet our proposal distribution is equally likely to suggest either move. To avoid proposing too many values that will be rejected, we could reduce the step size. But then the accepted moves would also become smaller, and the chain would explore the target more slowly. This problem becomes more difficult as the number of parameters increases.</p>
 <p>The preceding example showed how correlation between parameters can make the Metropolis algorithm inefficient. But even when the parameters are independent, proposing many values at once can cause problems. To illustrate this, we fix the step size at <span class="math inline">\(c=1\)</span> and increase the number of parameters. We use a multivariate Normal target distribution with mean vector <span class="math inline">\(\boldsymbol{0}\)</span>, variances of <span class="math inline">\(1\)</span>, and no correlations between parameters. This allows us to investigate the effect of increasing the number of parameters without the added complication of correlation. Each chain starts with a draw from its target distribution.</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">84735</span>)</span>
@@ -1000,14 +1027,14 @@ Figure&nbsp;5.10: A bivariate Normal target with correlation 0.9. Dots show the 
 <img src="05-metropolis_files/figure-html/fig-dimension-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-dimension-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;5.11: Metropolis sampling from a <span class="math inline">\(d\)</span>-dimensional standard Normal target distribution with a fixed step size of <span class="math inline">\(1\)</span>. As the number of parameters increases, the acceptance rate decreases, as does the effective sample size of the first parameter (out of 5,000 draws).
+Figure&nbsp;5.12: Metropolis sampling from a <span class="math inline">\(d\)</span>-dimensional standard Normal target distribution with a fixed step size of <span class="math inline">\(1\)</span>. As the number of parameters increases, the acceptance rate decreases, as does the effective sample size of the first parameter (out of 5,000 draws).
 </figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p><a href="#fig-dimension" class="quarto-xref">Figure&nbsp;<span>5.11</span></a> shows that increasing the number of parameters reduces both the acceptance rate and the effective sample size, even though the target parameters are independent. The reason lies in the acceptance rule we introduced earlier: the entire proposed vector is accepted or rejected at once. As more parameters change together, their combined effect can produce a low target density, even when the proposed change in each parameter is modest.</p>
-<p>We have seen that step size is crucial for efficient sampling. In higher dimensions, it becomes even more important to choose it carefully. For high-dimensional targets with independent standard Normal coordinates, optimal-scaling theory suggests <span class="math inline">\(c\approx2.38/\sqrt d\)</span>, with an acceptance rate near <span class="math inline">\(0.234\)</span> <span class="citation" data-cites="roberts1997weak">(<a href="../references.html#ref-roberts1997weak" role="doc-biblioref">Roberts et al., 1997</a>)</span>. Thus, the step size should decrease as the number of parameters increases. However, smaller steps also mean that the chain moves less in each dimension, making efficient exploration increasingly difficult. The appropriate step size also depends on the scale and dependence of the target parameters, so this is not a universal rule. More advanced algorithms address these difficulties by shaping proposals to the target (Chapter 6 (Metropolis–Hastings and Adaptive Proposals)), updating parameters separately (Chapter 7 (Gibbs Sampling and Metropolis-within-Gibbs)), or using gradients to guide their movement (Chapter 10 (Hamiltonian Monte Carlo)).</p>
+<p><a href="#fig-dimension" class="quarto-xref">Figure&nbsp;<span>5.12</span></a> shows that increasing the number of parameters reduces both the acceptance rate and the effective sample size, even though the target parameters are independent. The reason lies in the acceptance rule we introduced earlier: the entire proposed vector is accepted or rejected at once. As more parameters change together, their combined effect can produce a low target density, even when the proposed change in each parameter is modest.</p>
+<p>We have seen that step size is crucial for efficient sampling. In higher dimensions, it becomes even more important to choose it carefully. For targets with independent standard Normal coordinates, optimal-scaling theory shows that as the dimension <span class="math inline">\(d\)</span> tends to infinity, the optimal step size approaches <span class="math inline">\(c\approx2.38/\sqrt d\)</span>, with an acceptance rate approaching <span class="math inline">\(0.234\)</span> <span class="citation" data-cites="roberts1997weak">(<a href="../references.html#ref-roberts1997weak" role="doc-biblioref">Roberts et al., 1997</a>)</span>. Thus, the step size should decrease as the number of parameters increases. However, smaller steps also mean that the chain moves less in each dimension, making efficient exploration increasingly difficult. The appropriate step size also depends on the scale and dependence of the target parameters, so this is not a universal rule. More advanced algorithms address these difficulties by tuning the step size automatically (<a href="06-adaptive-metropolis.html" class="quarto-xref"><span>Chapter 6</span></a>), shaping proposals to the target (<a href="07-metropolis-hastings.html" class="quarto-xref"><span>Chapter 7</span></a>), updating parameters separately (Chapter 8 (Gibbs Sampling and Metropolis-within-Gibbs)), or using gradients to guide their movement (Chapter 11 (Hamiltonian Monte Carlo)).</p>
 </section>
 <section id="chapter-summary" class="level2" data-number="5.7">
 <h2 data-number="5.7" class="anchored" data-anchor-id="chapter-summary"><span class="header-section-number">5.7</span> Chapter summary</h2>
@@ -1017,14 +1044,13 @@ Figure&nbsp;5.11: Metropolis sampling from a <span class="math inline">\(d\)</sp
 <li>The normalizing constant cancels in the ratio <span class="math inline">\(r\)</span>, so the algorithm only requires the <strong>unnormalized posterior density</strong> <span class="math inline">\(f(y \mid \theta) f(\theta)\)</span>. Working with log densities makes the computation numerically more stable.</li>
 <li>With a symmetric proposal, the Metropolis acceptance rule satisfies <strong>detailed balance</strong>, making the target distribution stationary. We also argued that the chains considered in this chapter are irreducible and aperiodic, which ensures convergence to the target distribution. Thus, for the Normal random-walk proposals used here, every fixed positive step size gives the same stationary distribution, although reaching it may take a very long time.</li>
 <li>The <strong>efficiency</strong> of the chain depends on the step size <span class="math inline">\(c\)</span> and the shape of the target distribution. Small steps produce slow movement, whereas excessively large steps lead to frequent rejections. Both can result in highly autocorrelated draws. We can <strong>tune the step size</strong> by examining trace plots, effective sample size (ESS), and acceptance rates. Rates around 0.4–0.5 for one approximately Normal parameter and around 0.25 for many similarly scaled parameters updated together are useful starting points.</li>
-<li>The Metropolis algorithm also extends to <strong>multidimensional target distributions</strong>, but proposing independent Normal changes to all parameters at once can become inefficient as the number of parameters grows or when they are strongly correlated. Chapter 6 (Metropolis–Hastings and Adaptive Proposals), Chapter 7 (Gibbs Sampling and Metropolis-within-Gibbs), and Chapter 10 (Hamiltonian Monte Carlo) introduce methods for improving exploration.</li>
+<li>The Metropolis algorithm also extends to <strong>multidimensional target distributions</strong>, but proposing independent Normal changes to all parameters at once can become inefficient as the number of parameters grows or when they are strongly correlated. <a href="06-adaptive-metropolis.html" class="quarto-xref"><span>Chapter 6</span></a>, <a href="07-metropolis-hastings.html" class="quarto-xref"><span>Chapter 7</span></a>, Chapter 8 (Gibbs Sampling and Metropolis-within-Gibbs), and Chapter 11 (Hamiltonian Monte Carlo) introduce methods for improving exploration.</li>
 </ul>
 </section>
 <section id="quiz-answers" class="level2" data-number="5.8">
 <h2 data-number="5.8" class="anchored" data-anchor-id="quiz-answers"><span class="header-section-number">5.8</span> Quiz answers</h2>
 <p><strong>Quiz 1.</strong> For the proposal <span class="math inline">\(2.5\)</span>, the acceptance probability is <span class="math inline">\(\min(1,0.02/0.24)\approx0.083\)</span>. For the proposal <span class="math inline">\(0.3\)</span>, the ratio is <span class="math inline">\(0.38/0.24&gt;1\)</span>, so the proposal is always accepted. These probabilities describe the acceptance of an already generated proposal, not the probability of proposing that exact value from a continuous distribution.</p>
 <p><strong>Quiz 2.</strong> A high acceptance rate alone does not guarantee good exploration. For this Normal random-walk sampler, an acceptance rate of 99% suggests that the step size may be too small, causing the chain to move slowly. Inspect the trace plot and effective sample size (ESS), and compare the results with a trial run using a larger step size. The goal is to obtain precise estimates through efficient exploration, not to achieve a particular acceptance rate.</p>
-<p><strong>Quiz 3.</strong> Recording only accepted moves omits the time the chain spends at states following rejections. For example, a state retained for five iterations should contribute five times to a posterior average, but a record of accepted moves includes it only once. The resulting draws therefore represent a different distribution. For this Normal target and random-walk proposal, omitting repeated states gives too much relative weight to the tails, which can explain the wider histogram.</p>
 </section>
 <section id="exercises" class="level2" data-number="5.9">
 <h2 data-number="5.9" class="anchored" data-anchor-id="exercises"><span class="header-section-number">5.9</span> Exercises</h2>
@@ -1738,8 +1764,8 @@ Roberts, G. O., Gelman, A., &amp; Gilks, W. R. (1997). Weak convergence and opti
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../references.html" class="pagination-link" aria-label="References">
-        <span class="nav-page-text">References</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../chapters/06-adaptive-metropolis.html" class="pagination-link" aria-label="Adaptive Metropolis">
+        <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Adaptive Metropolis</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

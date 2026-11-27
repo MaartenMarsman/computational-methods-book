@@ -103,7 +103,7 @@ div.csl-indent {
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-85f7a32731ed2b609fa7be27e34d4366.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-0b2b94c5a528e4e5a70806ea6f8266d3.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-3a98a03ac4b40154dca883bd300bb55e.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -259,6 +259,18 @@ window.Quarto = {
   <div class="sidebar-item-container"> 
   <a href="../chapters/05-metropolis.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">The Metropolis Algorithm</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/06-adaptive-metropolis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Adaptive Metropolis</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/07-metropolis-hastings.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">The Metropolis–Hastings algorithm</span></span></a>
   </div>
 </li>
       </ul>
@@ -1167,7 +1179,7 @@ Figure&nbsp;3.7: Left: steps 0 to 500 of the hand-built chain, started at <span 
 <p><strong>Quiz 2.</strong> The chain cycles <span class="math inline">\(1 \to 2 \to 3 \to 1\)</span> with certainty, so every state is reachable from every other and the chain is irreducible. Returns to a state take exactly 3, 6, 9, … steps, so the period is 3 and the chain is not aperiodic. It has a unique stationary distribution, <span class="math inline">\(\boldsymbol{\pi} = (1/3, 1/3, 1/3)\)</span>, but <span class="math inline">\(\boldsymbol{\mu}^{(0)} \mathbf{P}^t\)</span> does not converge to it: started in state 1, the chain is in state 1 with certainty at <span class="math inline">\(t = 0, 3, 6, \ldots\)</span>. The long-run fraction of time in each state does converge to <span class="math inline">\(1/3\)</span>.</p>
 <p><strong>Quiz 3.</strong> Entry <span class="math inline">\((i,j)\)</span> compares the stationary flow from <span class="math inline">\(i\)</span> to <span class="math inline">\(j\)</span> with the reverse flow. A positive difference means the former is larger. Diagonal entries subtract a value from itself and are always zero, so they cannot establish detailed balance. Zero column sums express overall flow balance at each state, not equality for every pair; the mood chain demonstrates this distinction.</p>
 <p><strong>Quiz 4.</strong> Stationarity requires <span class="math inline">\(\pi_1 (1 - a) + \pi_2 b = \pi_1\)</span>, that is <span class="math inline">\(\pi_1 a = \pi_2 b\)</span>, together with <span class="math inline">\(\pi_1 + \pi_2 = 1\)</span>, which gives <span class="math inline">\(\boldsymbol{\pi} = (b, a) / (a + b)\)</span>. The equation <span class="math inline">\(\pi_1 a = \pi_2 b\)</span> is exactly detailed balance for the only pair of distinct states, so every two-state chain with positive <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span> is reversible. With three states, balance only constrains the sum of the flows into each state, and a circulation <span class="math inline">\(1 \to 2 \to 3 \to 1\)</span> can balance every state without balancing any pair; the mood chain has such a circulation.</p>
-<p><strong>Quiz 5.</strong> No.&nbsp;With the biased coin, <span class="math inline">\(P_{g,g+1} = 0.7 \min\{1, \text{target}[g+1]/\text{target}[g]\}\)</span> but <span class="math inline">\(P_{g+1,g} = 0.3 \min\{1, \text{target}[g]/\text{target}[g+1]\}\)</span>, so <span class="math inline">\(\text{target}[g] P_{g,g+1} = 0.7 \min\{\cdot\}\)</span> while <span class="math inline">\(\text{target}[g+1] P_{g+1,g} = 0.3 \min\{\cdot\}\)</span> with the same minimum; they differ by a factor <span class="math inline">\(7/3\)</span>. The chain is pushed to the right, so its stationary distribution is shifted toward larger <span class="math inline">\(\pi\)</span> relative to the target. The proposal must be symmetric for this acceptance rule to work; Chapter 6 (Metropolis–Hastings and Adaptive Proposals) shows how to fix the rule when it is not.</p>
+<p><strong>Quiz 5.</strong> No.&nbsp;With the biased coin, <span class="math inline">\(P_{g,g+1} = 0.7 \min\{1, \text{target}[g+1]/\text{target}[g]\}\)</span> but <span class="math inline">\(P_{g+1,g} = 0.3 \min\{1, \text{target}[g]/\text{target}[g+1]\}\)</span>, so <span class="math inline">\(\text{target}[g] P_{g,g+1} = 0.7 \min\{\cdot\}\)</span> while <span class="math inline">\(\text{target}[g+1] P_{g+1,g} = 0.3 \min\{\cdot\}\)</span> with the same minimum; they differ by a factor <span class="math inline">\(7/3\)</span>. The chain is pushed to the right, so its stationary distribution is shifted toward larger <span class="math inline">\(\pi\)</span> relative to the target. The proposal must be symmetric for this acceptance rule to work; <a href="07-metropolis-hastings.html" class="quarto-xref"><span>Chapter 7</span></a> shows how to fix the rule when it is not.</p>
 </section>
 <section id="exercises" class="level2" data-number="3.10">
 <h2 data-number="3.10" class="anchored" data-anchor-id="exercises"><span class="header-section-number">3.10</span> Exercises</h2>

@@ -103,7 +103,7 @@ div.csl-indent {
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-85f7a32731ed2b609fa7be27e34d4366.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-0b2b94c5a528e4e5a70806ea6f8266d3.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-3a98a03ac4b40154dca883bd300bb55e.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -261,6 +261,18 @@ window.Quarto = {
  <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">The Metropolis Algorithm</span></span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/06-adaptive-metropolis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Adaptive Metropolis</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/07-metropolis-hastings.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">The Metropolis–Hastings algorithm</span></span></a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="sidebar-item">
@@ -346,7 +358,7 @@ window.Quarto = {
 </header>
 
 
-<p>These notes expand on the diagnostics in <a href="../chapters/04-diagnosing-markov-chains.html" class="quarto-xref"><span>Chapter 4</span></a> and derive the acceptance rule used in <a href="../chapters/05-metropolis.html" class="quarto-xref"><span>Chapter 5</span></a> and Chapter 6 (Metropolis–Hastings and Adaptive Proposals). Exercise 4.7 uses the R-hat functions in <a href="#sec-rhat-calculations" class="quarto-xref"><span>Section C.2</span></a>.</p>
+<p>These notes expand on the diagnostics in <a href="../chapters/04-diagnosing-markov-chains.html" class="quarto-xref"><span>Chapter 4</span></a> and derive the acceptance rule used in <a href="../chapters/05-metropolis.html" class="quarto-xref"><span>Chapter 5</span></a> and <a href="../chapters/07-metropolis-hastings.html" class="quarto-xref"><span>Chapter 7</span></a>. Exercise 4.7 uses the R-hat functions in <a href="#sec-rhat-calculations" class="quarto-xref"><span>Section C.2</span></a>.</p>
 <section id="sec-mcmc-variance" class="level2" data-number="C.1">
 <h2 data-number="C.1" class="anchored" data-anchor-id="sec-mcmc-variance"><span class="header-section-number">C.1</span> The variance of a dependent average</h2>
 <p>For <span class="math inline">\(N\)</span> independent draws with variance <span class="math inline">\(\sigma^2\)</span>, the variance of their average is <span class="math inline">\(\sigma^2/N\)</span>. Dependent draws can vary together, so their covariances also contribute. We derive that contribution first for three states and then for a run of length <span class="math inline">\(N\)</span>.</p>
@@ -521,7 +533,7 @@ R=\frac{f(b)q(a\mid b)}{f(a)q(b\mid a)}.
 \]</span> Applying the same bounds yields the <strong>Metropolis–Hastings</strong> acceptance probability <span id="eq-derived-hastings-acceptance"><span class="math display">\[
 \alpha(a,b)=\min\!\left\{1,
 \frac{f(b)q(a\mid b)}{f(a)q(b\mid a)}\right\}.
-\tag{C.5}\]</span></span> The reverse proposal density is in the numerator and the forward proposal density is in the denominator. This adjustment accounts for a proposal mechanism that favors one direction. Chapter 6 (Metropolis–Hastings and Adaptive Proposals) develops examples of such proposals. With a symmetric proposal, their ratio is one and the expression reduces to the rule derived above.</p>
+\tag{C.5}\]</span></span> The reverse proposal density is in the numerator and the forward proposal density is in the denominator. This adjustment accounts for a proposal mechanism that favors one direction. <a href="../chapters/07-metropolis-hastings.html" class="quarto-xref"><span>Chapter 7</span></a> develops examples of such proposals. With a symmetric proposal, their ratio is one and the expression reduces to the rule derived above.</p>
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" data-line-spacing="2" role="list" style="display: none">

@@ -103,7 +103,7 @@ div.csl-indent {
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-85f7a32731ed2b609fa7be27e34d4366.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-0b2b94c5a528e4e5a70806ea6f8266d3.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-3a98a03ac4b40154dca883bd300bb55e.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -259,6 +259,18 @@ window.Quarto = {
   <div class="sidebar-item-container"> 
   <a href="../chapters/05-metropolis.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">The Metropolis Algorithm</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/06-adaptive-metropolis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Adaptive Metropolis</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/07-metropolis-hastings.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">The Metropolis–Hastings algorithm</span></span></a>
   </div>
 </li>
       </ul>
@@ -569,7 +581,7 @@ f_\pi(\pi)=f_z\!\left(\log\frac{\pi}{1-\pi}\right)
 <span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  lp</span>
 <span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>The function evaluates a log posterior even though the result does not have the Beta log-density form. In the grid section, we use these evaluations to approximate its normalized posterior. Chapter 6 (Metropolis–Hastings and Adaptive Proposals) returns to transformations in more detail.</p>
+<p>The function evaluates a log posterior even though the result does not have the Beta log-density form. In the grid section, we use these evaluations to approximate its normalized posterior.</p>
 </section>
 <section id="summarizing-a-posterior" class="level2" data-number="2.3">
 <h2 data-number="2.3" class="anchored" data-anchor-id="summarizing-a-posterior"><span class="header-section-number">2.3</span> Summarizing a posterior</h2>
@@ -752,7 +764,7 @@ f(y \mid H_1) = \int_0^1 f(y \mid \pi)\, f(\pi \mid H_1)\, d\pi.
 \tag{2.3}\]</span></span> Thus posterior odds equal prior odds multiplied by the Bayes factor. If the prior odds are <span class="math inline">\(1:1\)</span> and <span class="math inline">\(\text{BF}_{01}=4\)</span>, the posterior odds are <span class="math inline">\(4:1\)</span>, giving <span class="math inline">\(P(H_0\mid y)=4/(4+1)=0.8\)</span>. With prior odds <span class="math inline">\(1:4\)</span>, the same Bayes factor instead gives posterior odds <span class="math inline">\(1:1\)</span> and <span class="math inline">\(P(H_0\mid y)=0.5\)</span>.</p>
 <p>For two models with prior model probabilities that sum to one, write <span class="math inline">\(O_{01}=P(H_0)/P(H_1)\)</span>. Then <span class="math display">\[
 P(H_0\mid y)=\frac{\text{BF}_{01}O_{01}}{1+\text{BF}_{01}O_{01}}.
-\]</span> These prior probabilities concern which model is considered plausible; they are distinct from the Beta prior on <span class="math inline">\(\pi\)</span> <em>within</em> <span class="math inline">\(H_1\)</span>. Chapter 8 (Bayesian Variable Selection) and Chapter 9 (Bayesian Model Averaging) extend this reasoning to larger sets of models.</p>
+\]</span> These prior probabilities concern which model is considered plausible; they are distinct from the Beta prior on <span class="math inline">\(\pi\)</span> <em>within</em> <span class="math inline">\(H_1\)</span>. Chapter 9 (Bayesian Variable Selection) and Chapter 10 (Bayesian Model Averaging) extend this reasoning to larger sets of models.</p>
 <p>For the Beta-Binomial model both marginal likelihoods are available in closed form. Under <span class="math inline">\(H_1\)</span> the integral is the same Beta-function integral that kernel recognition handled for us, <span class="math display">\[
 f(y \mid H_1) = \binom{n}{y} \frac{B(y + \alpha,\; n - y + \beta)}{B(\alpha, \beta)},
 \]</span> so we can compute the Bayes factor directly. We also compute the integral numerically with <code>integrate()</code>, to make the phrase “average the likelihood over the prior” concrete.</p>
