@@ -499,7 +499,7 @@ We will estimate its mean and a 95% credible interval by simulation. The exact p
 
 ### Generating the chains with Stan
 
-Stan [@carpenter2017stan] generates posterior draws from a model specification. We tell it what is observed, which parameters are unknown, and which prior and likelihood define the model. Its sampling algorithm is explained in Chapter 10 (Hamiltonian Monte Carlo). Here we use it to obtain chains that we can inspect with the tools just developed.
+Stan [@carpenter2017stan] generates posterior draws from a model specification. We tell it what is observed, which parameters are unknown, and which prior and likelihood define the model. Its sampling algorithm is explained in Chapter 11 (Hamiltonian Monte Carlo). Here we use it to obtain chains that we can inspect with the tools just developed.
 
 The R package `rstan` fits a model written in Stan's language. The model has three blocks: `data` declares the observations, `parameters` declares the unknown proportion, and `model` specifies the prior and likelihood.
 
@@ -574,7 +574,7 @@ For this run it is `r round(posterior::rhat(pi_mat), 3)`, below 1.01. We also as
 rstan::check_hmc_diagnostics(radio_fit)
 ```
 
-Stan reports no such problems for this fit. Chapter 10 (Hamiltonian Monte Carlo) explains these checks in detail. When a fit does produce warnings, investigate them before relying on the posterior summaries.
+Stan reports no such problems for this fit. Chapter 11 (Hamiltonian Monte Carlo) explains these checks in detail. When a fit does produce warnings, investigate them before relying on the posterior summaries.
 
 ### Is the mean precise enough?
 
@@ -836,7 +836,7 @@ A bicycle counter on Amsterdam's Weesperstraat records 23, 19, 25, 21, and 17 bi
 
 Write this model in Stan as `bikes_model`, using an array of observed counts in the data block, `array[n] int<lower = 0> y;`, and a positive real parameter `lambda`. Fit it with `chains = 4`, `iter = 60`, and `seed = 84735`.
 
-a. Run the full diagnostic workflow. Which checks fail? Distinguish warnings about the agreement or precision of the chains from warnings about Stan's sampling algorithm; Chapter 10 explains the latter in detail.
+a. Run the full diagnostic workflow. Which checks fail? Distinguish warnings about the agreement or precision of the chains from warnings about Stan's sampling algorithm; Chapter 11 explains the latter in detail.
 b. Fit the model at `iter = 60, 100, 200, 400, 800, 1600, 3200`, using the same seed. Record R-hat, bulk ESS, tail ESS, mean MCSE, and sampler warnings. Report the first tested setting with R-hat below 1.01, both ESS values at least 400, no sampler warnings, and satisfactory plots. If needed, extend the schedule. Explain why this is not a universal minimum or a guarantee that every larger setting passes.
 c. Estimate $P(\lambda>22\mid y)$ with an indicator average: give each draw value one if $\lambda>22$ and zero otherwise, then average. Apply `mcse_mean()` to this indicator matrix to assess numerical precision, keeping one column per chain. Use a pilot run to plan a run with indicator MCSE at most 0.0025, then check the achieved MCSE and diagnose the final fit. Compare the result with the exact Gamma-posterior probability. Explain why this numerical tolerance does not guarantee stable two-decimal rounding.
 :::

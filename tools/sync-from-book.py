@@ -29,6 +29,8 @@ PUBLIC_CHAPTERS = [
     "03-markov-chains.qmd",
     "04-diagnosing-markov-chains.qmd",
     "05-metropolis.qmd",
+    "06-adaptive-metropolis.qmd",
+    "07-metropolis-hastings.qmd",
 ]
 PUBLIC_APPENDICES = [
     "A-software-setup.qmd",
@@ -39,6 +41,7 @@ PUBLIC_APPENDICES = [
 PUBLIC_FILES = ["chapters/" + n for n in PUBLIC_CHAPTERS] + ["appendices/" + n for n in PUBLIC_APPENDICES]
 SHARED = [
     "R/_common.R",
+    "R/samplers.R",
     "style/bayesrules.css",
     "style/bayesrules.sty",
     "style/bookbox.lua",
@@ -49,11 +52,10 @@ SHARED = [
 # Chapters that are not (yet) on the website. Update when a chapter goes online:
 # remove its entry here and add its file to PUBLIC_CHAPTERS and to _quarto.yml.
 ABSENT = {
-    "sec-metropolis-hastings": "Chapter 6 (Metropolis–Hastings and Adaptive Proposals)",
-    "sec-gibbs": "Chapter 7 (Gibbs Sampling and Metropolis-within-Gibbs)",
-    "sec-variable-selection": "Chapter 8 (Bayesian Variable Selection)",
-    "sec-model-averaging": "Chapter 9 (Bayesian Model Averaging)",
-    "sec-hmc": "Chapter 10 (Hamiltonian Monte Carlo)",
+    "sec-gibbs": "Chapter 8 (Gibbs Sampling and Metropolis-within-Gibbs)",
+    "sec-variable-selection": "Chapter 9 (Bayesian Variable Selection)",
+    "sec-model-averaging": "Chapter 10 (Bayesian Model Averaging)",
+    "sec-hmc": "Chapter 11 (Hamiltonian Monte Carlo)",
 }
 
 site = Path(__file__).resolve().parent.parent

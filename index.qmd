@@ -33,11 +33,11 @@ The book has five parts. Each builds on the concepts and methods introduced earl
 
 **Markov Chains.** @sec-markov-chains develops the properties of Markov chains and explains how their transitions can be constructed to preserve a chosen stationary distribution. @sec-diagnostics uses simulations from Stan to introduce practical checks of chain behavior and estimates of Monte Carlo accuracy.
 
-**Sampling Algorithms.** @sec-metropolis develops the Metropolis algorithm using ratios of posterior densities. Chapter 6 (Metropolis–Hastings and Adaptive Proposals) extends it to asymmetric proposals, parameter transformations, and adaptive tuning. Chapter 7 (Gibbs Sampling and Metropolis-within-Gibbs) introduces updates from conditional distributions and combines them with Metropolis steps when direct conditional sampling is unavailable. The code makes the connection between each algorithm's mathematical definition and its implementation explicit.
+**Sampling Algorithms.** @sec-metropolis develops the Metropolis algorithm using ratios of posterior densities. @sec-adaptive-metropolis turns it into a procedure that tunes its own step size, by way of the Robbins–Monro procedure. @sec-metropolis-hastings generalizes the proposal distribution and introduces the independence sampler. Chapter 8 (Gibbs Sampling and Metropolis-within-Gibbs) introduces updates from conditional distributions and combines them with Metropolis steps when direct conditional sampling is unavailable. The code makes the connection between each algorithm's mathematical definition and its implementation explicit.
 
-**Model Uncertainty.** Chapter 8 (Bayesian Variable Selection) treats the inclusion of predictors as an unknown part of a regression model. Chapter 9 (Bayesian Model Averaging) uses posterior model probabilities to combine estimates and predictions across models, accounting for uncertainty about model choice.
+**Model Uncertainty.** Chapter 9 (Bayesian Variable Selection) treats the inclusion of predictors as an unknown part of a regression model. Chapter 10 (Bayesian Model Averaging) uses posterior model probabilities to combine estimates and predictions across models, accounting for uncertainty about model choice.
 
-**Going Further.** Chapter 10 (Hamiltonian Monte Carlo) introduces Hamiltonian Monte Carlo, the family of methods underlying Stan's sampling algorithms. This chapter is optional; the earlier chapters can be studied independently of it.
+**Going Further.** Chapter 11 (Hamiltonian Monte Carlo) introduces Hamiltonian Monte Carlo, the family of methods underlying Stan's sampling algorithms. This chapter is optional; the earlier chapters can be studied independently of it.
 
 ## How to read this book {.unnumbered}
 

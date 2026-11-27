@@ -14,7 +14,7 @@ to_draws <- function(M, name = "theta") {
 ```
 
 
-These notes expand on the diagnostics in @sec-diagnostics and derive the acceptance rule used in @sec-metropolis and Chapter 6 (Metropolis–Hastings and Adaptive Proposals). Exercise 4.7 uses the R-hat functions in @sec-rhat-calculations.
+These notes expand on the diagnostics in @sec-diagnostics and derive the acceptance rule used in @sec-metropolis and @sec-metropolis-hastings. Exercise 4.7 uses the R-hat functions in @sec-rhat-calculations.
 
 ## The variance of a dependent average {#sec-mcmc-variance}
 
@@ -230,5 +230,5 @@ $$
 \alpha(a,b)=\min\!\left\{1,
 \frac{f(b)q(a\mid b)}{f(a)q(b\mid a)}\right\}.
 $$ {#eq-derived-hastings-acceptance}
-The reverse proposal density is in the numerator and the forward proposal density is in the denominator. This adjustment accounts for a proposal mechanism that favors one direction. Chapter 6 (Metropolis–Hastings and Adaptive Proposals) develops examples of such proposals. With a symmetric proposal, their ratio is one and the expression reduces to the rule derived above.
+The reverse proposal density is in the numerator and the forward proposal density is in the denominator. This adjustment accounts for a proposal mechanism that favors one direction. @sec-metropolis-hastings develops examples of such proposals. With a symmetric proposal, their ratio is one and the expression reduces to the rule derived above.
 

@@ -208,7 +208,7 @@ log_posterior_logitnormal <- function(pi) {
 }
 ```
 
-The function evaluates a log posterior even though the result does not have the Beta log-density form. In the grid section, we use these evaluations to approximate its normalized posterior. Chapter 6 (Metropolis–Hastings and Adaptive Proposals) returns to transformations in more detail.
+The function evaluates a log posterior even though the result does not have the Beta log-density form. In the grid section, we use these evaluations to approximate its normalized posterior.
 
 ## Summarizing a posterior
 
@@ -357,7 +357,7 @@ For two models with prior model probabilities that sum to one, write $O_{01}=P(H
 $$
 P(H_0\mid y)=\frac{\text{BF}_{01}O_{01}}{1+\text{BF}_{01}O_{01}}.
 $$
-These prior probabilities concern which model is considered plausible; they are distinct from the Beta prior on $\pi$ *within* $H_1$. Chapter 8 (Bayesian Variable Selection) and Chapter 9 (Bayesian Model Averaging) extend this reasoning to larger sets of models.
+These prior probabilities concern which model is considered plausible; they are distinct from the Beta prior on $\pi$ *within* $H_1$. Chapter 9 (Bayesian Variable Selection) and Chapter 10 (Bayesian Model Averaging) extend this reasoning to larger sets of models.
 
 For the Beta-Binomial model both marginal likelihoods are available in closed form. Under $H_1$ the integral is the same Beta-function integral that kernel recognition handled for us,
 $$

@@ -128,7 +128,7 @@ comparison_plot <- function(current, proposal, title, decision) {
 ::: {.bookbox title="The Metropolis algorithm"}
 Given a target density $f$, a starting value $\theta^{(0)}$, and a symmetric proposal distribution $q$:
 
-1. **Propose.** Draw $\theta^\star \sim q(\cdot \mid \theta^{(t)})$.
+1. **Propose.** Draw $\theta^\star \sim q(\theta^\star \mid \theta^{(t)})$.
 2. **Compare.** Compute $r = f(\theta^\star) / f(\theta^{(t)})$.
 3. **Accept or reject.** If $r \geq 1$, set $\theta^{(t+1)} = \theta^\star$. Otherwise draw $u \sim \text{Unif}(0,1)$ and set $\theta^{(t+1)} = \theta^\star$ if $u < r$, and $\theta^{(t+1)} = \theta^{(t)}$ if not.
 
@@ -147,7 +147,7 @@ Thus, we can use the Metropolis algorithm without calculating $f(y)$.
 
 ### Three iterations of the Metropolis algorithm
 
-Let's walk through the first three iterations of the Metropolis algorithm for a Normal target distribution with mean $0$ and variance $1$, i.e., $f(\theta) \propto \exp\left(-\theta^2/2\right)$, starting at $\theta^{(0)}=0$. Suppose the proposed values $\theta^\star$ and Uniform draws $u$ are those in @tbl-metropolis-decisions. Each proposal is drawn from the proposal distribution conditional on the state of the Markov chain at the preceding iteration.
+Let's walk through the first three iterations of the Metropolis algorithm, starting at $\theta^{(0)} = 0$. We use a standard Normal target distribution, with mean $0$ and variance $1$. The density of this distribution is $f(\theta) = \frac{1}{\sqrt{2\pi}}\exp(-\theta^2/2)$. Because the normalizing constant cancels, we work with the unnormalized target density $f(\theta) \propto \exp(-\theta^2/2)$. Suppose the proposed values $\theta^\star$ and Uniform draws $u$ are those in @tbl-metropolis-decisions. Each proposal is drawn from the proposal distribution conditional on the state of the Markov chain at the preceding iteration.
 
 | Iteration $t$ | Current state | Proposal $\theta^\star$ | Ratio $r$ | Uniform draw $u$ | Decision | Recorded state $\theta^{(t)}$ |
 |---:|---:|---:|---:|---:|---|---:|
@@ -157,7 +157,7 @@ Let's walk through the first three iterations of the Metropolis algorithm for a 
 
 : Three Metropolis iterations for a standard Normal target. {#tbl-metropolis-decisions}
 
-In the first iteration, the proposed value $\theta^\star = 1$ is drawn from $q(\cdots \mid \theta^{(0)} = 0)$. Since $u = 0.80 > r = 0.607$, the proposal is rejected, and the chain remains at $0$. In the second iteration, a new proposal is drawn from $q(\cdots \mid \theta^{(1)} = 0)$. This time, $u = 0.40 < r = 0.607$, so the proposal is accepted and the chain moves to $1$. In the third iteration, the target density at the proposed value is higher than at the current state, so the proposal is accepted. The three recorded states of the Markov chain are $(0,1,0.5)$. The first recorded $0$ must be retained: an iteration has passed even though the chain did not move.
+In the first iteration, the proposed value $\theta^\star = 1$ is drawn from $q(\theta^\star \mid \theta^{(0)} = 0)$. Since $u = 0.80 > r = 0.607$, the proposal is rejected, and the chain remains at $0$. In the second iteration, a new proposal is drawn from $q(\theta^\star \mid \theta^{(1)} = 0)$. This time, $u = 0.40 < r = 0.607$, so the proposal is accepted and the chain moves to $1$. In the third iteration, the target density at the proposed value is higher than at the current state, so the proposal is accepted. The three recorded states of the Markov chain are $(0,1,0.5)$. The first recorded $0$ must be retained because an iteration has passed, even though the chain did not move.
 
 ::: {.quiz title="Quiz yourself!"}
 The chain is at $\theta^{(t)} = 1$ where $f(1) = 0.24$, and the proposal is $\theta^\star = 2.5$ where $f(2.5) = 0.02$. Given this proposal, what is its acceptance probability? And if instead the proposal were $\theta^\star = 0.3$ with $f(0.3) = 0.38$?
@@ -223,14 +223,14 @@ In the Metropolis algorithm, we compare the ratio $r$ with a draw $u$ from a Uni
 ::: {.bookbox title="Metropolis on the log scale"}
 Given a target log density $\ell$, a starting value $\theta^{(0)}$, and a symmetric proposal distribution $q$:
 
-1. **Propose.** Draw $\theta^\star \sim q(\cdot \mid \theta^{(t)})$.
+1. **Propose.** Draw $\theta^\star \sim q(\theta^\star \mid \theta^{(t)})$.
 2. **Compare.** Compute $\log r = \ell(\theta^\star) - \ell(\theta^{(t)})$.
 3. **Accept or reject.** If $\log r \geq 0$, set $\theta^{(t+1)} = \theta^\star$. Otherwise draw $u \sim \text{Unif}(0,1)$ and set $\theta^{(t+1)} = \theta^\star$ if $\log u < log r$, and $\theta^{(t+1)} = \theta^{(t)}$ if not.
 
 Repeat for $t = 0, 1, 2, \ldots$. After $T$ iterations, the recorded states are $\theta^{(1)},\ldots,\theta^{(T)}$.
 :::
 
-To verify that the log-scale calculation gives the same decisions, consider the three iterations in @tbl-metropolis-decisions. In the first iteration, the proposal from $0$ to $1$ has $\log r=-0.5$. The Uniform draw gives $\log(0.80)\approx-0.223$, which is greater than $\log r$, so the proposal is rejected and the chain remains at $0$. In the second iteration, the same proposal has $\log r=-0.5$, but now $\log(0.40)\approx-0.916$ is smaller than $\log r$, so the proposal is accepted and the chain moves to $1$. In the third iteration, the proposal from $1$ to $0.5$ has $\log r=0.375$. Because $\log r>0$, the proposal is always accepted, and the chain moves to $0.5$. The recorded states are again $(0,1,0.5)$. 
+To verify that the log-scale calculation gives the same decisions, consider the three iterations in @tbl-metropolis-decisions. In the first iteration, the proposal from $0$ to $1$ has $\log r=-0.5$. The Uniform draw gives $\log(0.80)\approx-0.223$, which is greater than $\log r$, so the proposal is rejected and the chain remains at $0$. In the second iteration, the same proposal has $\log r=-0.5$, but now $\log(0.40)\approx-0.916$ is smaller than $\log r$, so the proposal is accepted and the chain moves to $1$. In the third iteration, the proposal from $1$ to $0.5$ has $\log r=0.375$. Because $\log r\geq 0$, the proposal is always accepted, and the chain moves to $0.5$. The recorded states are again $(0,1,0.5)$. 
 
 ### The Metropolis function in R
 
@@ -296,7 +296,7 @@ p_hist <- ggplot(filter(fit$draws, iteration > 500), aes(theta)) +
 p_trace | p_hist
 ```
 
-We can also use the draws to estimate the posterior mean, standard deviation, and central 95% credible interval, and compare them with their exact values:
+We can also use the draws to estimate the posterior mean, standard deviation, and central 95% credible interval, and compare them with their exact values.
 
 ```{r}
 draws <- fit$draws |> filter(iteration > 500)
@@ -315,7 +315,7 @@ The Metropolis algorithm worked well for the Normal posterior in our sleep surve
 
 ### Detailed balance
 
-Suppose that in iteration $t + 1$, the chain is at $\theta^{(t)}$ and proposes a new state $\theta^\star$. The Metropolis acceptance probability can be written as
+Suppose that in iteration $t + 1$, the chain is at $\theta^{(t)}$ and we propose a new state $\theta^\star$. The Metropolis acceptance probability can be written as
 $$
 \min\left\{1\text{, }r\right\} = \min\left\{1\text{, }\frac{f(\theta^\star)}{f(\theta^{(t)})}\right\} = \begin{cases}
 1 \text{, if }r \geq 1\\
@@ -324,10 +324,66 @@ r \text{, if }r < 1
 $$
 This is the usual formulation of the Metropolis acceptance rule. Although we use the numerically more stable $\log r$ formulation in our R implementation, the expression above is more convenient for establishing detailed balance.
 
-We write $K(\theta^{(t)}\text{, }\theta^\star)$ for the density of moving from $\theta^{(t)}$ to $\theta^\star$ in one update. The candidate must first be proposed and then accepted, giving
+In a discrete Markov chain, the transition matrix gives a probability of moving from the current state $\theta^{(t)}$ to the next state $\theta^\star$. For a continuous state space, we instead use a transition density, as illustrated in @fig-transition-density. We write $K(\theta^{(t)}\text{, }\theta^\star)$ for the density of moving from $\theta^{(t)}$ to $\theta^\star$ in one update. The candidate must first be proposed and then accepted, giving
 $$
 K(\theta^{(t)}\text{, }\theta^\star) = q(\theta^\star\mid \theta^{(t)})\min\!\left\{1,\frac{f(\theta^\star)}{f(\theta^{(t)})}\right\}.
 $$
+
+```{r}
+#| include: false
+# the transition density of the random walk with step size 1 on a standard Normal target,
+# drawn from three current states; each curve integrates to the acceptance probability
+kernel_f <- function(x) dnorm(x)
+kernel_K <- function(to, from) dnorm(to, from, 1) * pmin(1, kernel_f(to) / kernel_f(from))
+kernel_states <- c(-2.5, 0, 2)
+kernel_accept <- map_dbl(kernel_states, \(a) integrate(kernel_K, -Inf, Inf, from = a)$value)
+transition_caption <- sprintf(
+  "The transition density $K(\\theta^{(t)}, \\theta^\\star)$ of the random-walk Metropolis algorithm with step size $1$ and a standard Normal target, shown for three current states. The target density is drawn vertically on the left. At each current state, the curve shows the Normal proposal density multiplied by the acceptance probability. The dotted stem marks the current state, which is also the proposal mean. The curves integrate to the probabilities of accepting a move: %.2f, %.2f, and %.2f from bottom to top. The remaining probability is a point mass at the current state, corresponding to rejected proposals.",
+  kernel_accept[1], kernel_accept[2], kernel_accept[3])
+```
+
+```{r}
+#| label: fig-transition-density
+#| echo: false
+#| fig-cap: !expr transition_caption
+#| fig-height: 4.2
+state_cols <- c("-2.5" = "#9E7BB5", "0" = "#552E6B", "2" = "gray40")
+s_ridge <- 2.4; x_target <- -5.6; s_target <- 2.6
+kernel_grid <- seq(-4.5, 4.5, length.out = 601)
+ridges <- crossing(current = kernel_states, next_value = kernel_grid) |>
+  mutate(density = kernel_K(next_value, current), top = current + s_ridge * density,
+         state = factor(current, levels = kernel_states))
+target_curve <- tibble(theta = seq(-4.3, 4.3, length.out = 601)) |>
+  mutate(x = x_target - kernel_f(theta) * s_target)
+marks <- tibble(current = kernel_states,
+                x_on_target = x_target - kernel_f(kernel_states) * s_target,
+                stem_top = kernel_states + s_ridge * kernel_K(kernel_states, kernel_states),
+                label = sprintf("theta^(t) == %s", kernel_states),
+                state = factor(kernel_states, levels = kernel_states))
+ggplot() +
+  geom_ribbon(data = target_curve, aes(y = theta, xmin = x, xmax = x_target), fill = "#ECECEC", orientation = "y") +
+  geom_path(data = target_curve, aes(x, theta), color = "gray40", linewidth = 0.6) +
+  annotate("text", x = x_target - 0.35 * s_target, y = 3.7, label = "f(theta)", parse = TRUE, color = "gray30", size = 3.6) +
+  geom_segment(data = marks, aes(x = x_on_target, xend = 4.5, y = current, yend = current, color = state),
+               linewidth = 0.3, alpha = 0.5) +
+  geom_ribbon(data = ridges, aes(x = next_value, ymin = current, ymax = top, fill = state, group = state), alpha = 0.25) +
+  geom_line(data = ridges, aes(next_value, top, color = state, group = state), linewidth = 0.8) +
+  geom_segment(data = marks, aes(x = current, xend = current, y = current, yend = stem_top, color = state),
+               linetype = "dotted", linewidth = 0.5) +
+  geom_point(data = marks, aes(current, current, color = state), shape = 21, fill = "white", size = 2.6, stroke = 1) +
+  geom_point(data = marks, aes(x_on_target, current, color = state), size = 2.6) +
+  geom_text(data = marks, aes(x_on_target - 0.25, current, label = label, color = state), parse = TRUE, hjust = 1, size = 3.4) +
+  annotate("text", x = 4.5, y = 2 + 0.55 * s_ridge, label = "K(theta^(t), theta*'*')", parse = TRUE, hjust = 1, color = "gray30", size = 3.6) +
+  annotate("text", x = -2.3, y = -2.5 - 0.45, label = "proposal mean", color = "#9E7BB5", hjust = 0, size = 3) +
+  scale_color_manual(values = state_cols, guide = "none") +
+  scale_fill_manual(values = state_cols, guide = "none") +
+  scale_x_continuous(breaks = -4:4) +
+  scale_y_continuous(breaks = seq(-4, 4, 2), position = "right") +
+  coord_cartesian(xlim = c(x_target - 0.6 * s_target - 1.3, 4.6), ylim = c(-4.2, 4.2)) +
+  labs(x = expression(theta * "*"), y = expression(theta^(t))) +
+  theme(panel.grid.major.x = element_blank(), panel.grid.minor = element_blank(),
+        axis.title.y.right = element_text(angle = 0, vjust = 0.5))
+```
 Multiplying by the target density at the current state gives
 $$
 \begin{aligned}
@@ -478,7 +534,7 @@ $$
 $$
 We used this process to study how **autocorrelation** affects the precision of estimates based on the states of a Markov chain. Assuming that the chain has reached its stationary distribution, we saw that, for the same number of iterations, estimates are more precise when autocorrelation is low than when it is high. 
 
-In this AR(1) process, the lag-one autocorrelation is $\phi$, while the factor $\sqrt{1-\phi^2}$ controls the size of the innovations $\epsilon_t$. For positive $\phi$, we can think of this factor as the step size of the process. A larger step size corresponds to lower autocorrelation, and a smaller step size to higher autocorrelation. The Metropolis algorithm has no explicit autocorrelation parameter, but its Normal proposal distribution also has a step size. The same intuition carries over: smaller step sizes generally produce higher autocorrelation, while larger step sizes can reduce it. However, as we shall see, there is a turning point beyond which increasing the step size no longer improves the chain's efficiency.
+In this AR(1) process, the lag-one autocorrelation is $\phi$, while the factor $\sqrt{1-\phi^2}$ controls the size of the innovations $\epsilon_t$. For positive $\phi$, which is the case of interest here, we can think of this factor as the step size of the process. A larger step size corresponds to lower autocorrelation, and a smaller step size to higher autocorrelation. The Metropolis algorithm has no explicit autocorrelation parameter, but its Normal proposal distribution $\text{N}(\theta^{(t)}\text{, } c^2)$ also has a step size $c$. The same intuition carries over: smaller step sizes generally produce higher autocorrelation, while larger step sizes can reduce it. However, as we shall see, there is a turning point beyond which increasing the step size no longer improves the chain's efficiency.
 
 To investigate this, we run the `metropolis` function with the `log_posterior` function for the mean hours of sleep $\mu$, using three step sizes: a very small one, a large one, and the value used throughout this chapter. Each chain starts at the posterior mean $6.69$ and runs for $T=10,000$ iterations. @fig-step-sizes pairs each trace plot with a histogram, allowing us to inspect both the movement of the chain and its approximation to the posterior distribution.
 
@@ -521,7 +577,7 @@ tibble(step_size = step_sizes, accept_rate = map_dbl(fits, "accept_rate"))
 
 As with the AR(1) process, the step size $c$ does not change the stationary distribution of the Metropolis chain, but it affects how efficiently the chain explores it. With $c = 0.02$, almost every proposal is accepted, yet each move is so small that the chain takes hundreds of iterations to cross the posterior; successive draws are nearly identical. With $c = 10$, most proposals land far outside the main posterior region and are rejected, so the chain repeats the same value for dozens of iterations at a time. With $c = 0.5$, the proposal standard deviation is about 2.45 times the posterior standard deviation, allowing larger moves while maintaining a moderate acceptance rate. This chain explores the posterior more efficiently than the other two, producing a closer approximation to the posterior distribution.
 
-@fig-step-acf shows the autocorrelation plots for the three Markov chains, confirming our intuition. Increasing the step size initially reduces autocorrelation by allowing the chain to move farther between iterations. But when the step size becomes too large, frequent rejections cause the chain to remain at the same state, increasing autocorrelation again. This is the turning point we anticipated earlier.
+@fig-step-acf shows the autocorrelation plots for the three Markov chains, confirming our intuition. Comparing the chains, we see that larger step sizes initially reduce autocorrelation by allowing the chain to move farther between iterations. But when the step size becomes too large, frequent rejections cause the chain to remain at the same state, increasing autocorrelation again. This is the turning point we anticipated earlier.
 
 ```{r}
 #| label: fig-step-acf
@@ -551,7 +607,7 @@ The middle chain is therefore worth roughly `r round(ess_basic(fits[[2]]$draws$t
 
 ### What step size should we use?
 
-Step size affects how efficiently the Markov chain explores the target distribution. The simulations in the previous section suggest that there is an optimal step size. The Metropolis algorithm we have used is called a **random-walk Metropolis algorithm** because it proposes new values by adding a random step to the current state. @gelman1996efficient showed that for a random-walk Metropolis algorithm with a Normal proposal distribution and a Normal target distribution, the optimal step size is about $2.4$ times the standard deviation of the target, which corresponds to an acceptance rate of approximately $44$%. 
+Step size affects how efficiently the Markov chain explores the target distribution. The simulations in the previous section suggest that there is an optimal step size. The Metropolis algorithm we have used is called a **random-walk Metropolis algorithm** because it proposes new values by adding a random step to the current state. @gelman1996efficient showed that for a random-walk Metropolis algorithm with a Normal proposal distribution and a Normal target distribution, the optimal step size is about $2.4$ times the standard deviation of the target, which corresponds to an acceptance rate of approximately $44$%. Although this acceptance rate need not be optimal for other target distributions, it is a useful heuristic that often gives close-to-optimal efficiency in practice.
 
 To investigate the relationship between step size, acceptance rate, and effective sample size, we return to our sleep survey and run the Metropolis algorithm with different step sizes. Each chain starts at the posterior mode $\theta^{(0)} = 6.69$ and runs for $T = 10,000$ iterations. 
 ```{r}
@@ -598,7 +654,7 @@ tuning |>
   labs(x = "Step size (log scale)", y = NULL)
 ```
 
-Increasing the step size decreases the acceptance rate. With very small steps, the proposed and current states are similar, so the ratio $r$ is close to one. Larger steps produce proposals farther from the current state, increasing the probability of proposing values in regions with low target density and reducing the acceptance rate. The relationship between step size and acceptance rate is smooth, and the simulated acceptance rates closely follow the theoretical curve. An acceptance rate of $44$% is achieved at a step size of approximately `r round(step_44, 2)`, or `r round(step_44 / posterior_sd, 1)` posterior standard deviations.
+Increasing the step size decreases the acceptance rate. With very small steps, the proposed and current states are similar, so the ratio $r$ is close to one. Larger steps produce proposals farther from the current state, increasing the probability of proposing values in regions with low target density and reducing the acceptance rate. The simulated acceptance rates closely follow the theoretical curve. An acceptance rate of $44$% is achieved at a step size of approximately `r round(step_44, 2)`, or `r round(step_44 / posterior_sd, 1)` posterior standard deviations.
 
 The corresponding step size also performs well in terms of effective sample size. In the right panel of @fig-ess-curve, the dashed line passes close to the highest effective sample size among the step sizes investigated. Thus, the theoretical acceptance rate of $44$% is close to optimal in our simulation, with a corresponding step size of approximately `r round(step_44, 1)`. This is the step size we have used throughout the chapter.
 
@@ -607,9 +663,9 @@ The corresponding step size also performs well in terms of effective sample size
 The results for our sleep survey agree closely with the theoretical predictions. However, the optimal acceptance rate of $44$% does not necessarily apply to other target or proposal distributions. Nevertheless, we can use $44$% as a starting point for tuning one-dimensional Metropolis algorithms. But even if we aim for an acceptance rate close to $44$%, we do not know in advance which step size will produce it. We must find a suitable step size through trial and error.
 
 ::: {.bookbox title="Choosing a step size"}
-Start with trial runs at a few step sizes. If most proposals are accepted but the chain moves slowly, try a larger step size. If the chain repeatedly stays at the same state, try a smaller one. Compare the effective sample sizes (ESS) and trace plots for runs of equal length. An acceptance rate around 0.4–0.5 is a useful starting guide for one approximately Normal parameter; around 0.25 is a guide for many similarly scaled parameters updated together.
+Start with trial runs at a few step sizes. If most proposals are accepted but the chain moves slowly, try a larger step size. If the chain repeatedly stays at the same state, try a smaller one. Compare the effective sample sizes (ESS) and trace plots for runs of equal length. An acceptance rate around 0.4–0.5 is a useful starting guide for one approximately Normal parameter; around 0.25 is a guide for many similarly scaled parameters updated together (see @sec-metropolis-multivariate).
 
-After tuning, keep the step size fixed for the run used to estimate posterior summaries. Chapter 6 (Metropolis–Hastings and Adaptive Proposals) introduces an adaptive procedure that adjusts the step size during warmup.
+After tuning, keep the step size fixed for the run used to estimate posterior summaries. @sec-adaptive-metropolis introduces an adaptive procedure that adjusts the step size during warmup.
 :::
 
 ::: {.quiz title="Quiz yourself!"}
@@ -619,7 +675,7 @@ A colleague reports that their Metropolis chain accepted 99% of its proposals an
 
 ## Metropolis in more than one dimension {#sec-metropolis-multivariate}
 
-Almost every real model has several parameters. The Metropolis algorithm extends to multidimensional target distributions without changing its underlying logic. Instead of proposing a single value, we propose a vector $\boldsymbol{\theta}^\star$. Here, we generate each component from a Normal distribution centered at the corresponding component of the current state:
+Almost every real model has several parameters. In our sleep survey, for example, both the mean $\mu$ and the standard deviation $\sigma$ could be unknown, giving us a posterior distribution over the pair $(\mu, \sigma)$. A regression model for hours of sleep with age and caffeine intake as predictors would have even more parameters: an intercept, two regression coefficients, and a residual variance. The Metropolis algorithm extends to such multidimensional target distributions without changing its underlying logic. Instead of proposing a single value, we propose a vector $\boldsymbol{\theta}^\star$. Here, we generate each component from a Normal distribution centered at the corresponding component of the current state:
 $$
 \theta_d^\star \sim \text{N}(\theta_d^{(t)}\text{, }c^2),
 $$
@@ -680,30 +736,69 @@ fit_bvn$accept_rate
 The acceptance rate of `r round(fit_bvn$accept_rate*100, 0)`% is higher than the $44$% guideline for one-dimensional targets and considerably higher than the approximately $25$% suggested for multidimensional targets. We introduced the latter guideline in the call-out box of the previous section and will explain it below. @fig-bivariate shows the resulting draws against contours of the bivariate Normal target density. Each contour shows combinations $(\theta_1\text{, }\theta_2)$ with the same target density.
 
 ```{r}
+#| include: false
+# replay the first 80 iterations from the same seed, recording every proposal and its fate
+metropolis_steps <- function(log_target, init, n_iter, step_size) {
+  current <- init
+  current_lp <- log_target(current)
+  out <- vector("list", n_iter)
+  for (t in seq_len(n_iter)) {
+    proposal <- rnorm(length(init), mean = current, sd = step_size)
+    proposal_lp <- log_target(proposal)
+    accepted <- log(runif(1)) < proposal_lp - current_lp
+    out[[t]] <- tibble(iteration = t, from_1 = current[1], from_2 = current[2],
+                       to_1 = proposal[1], to_2 = proposal[2], accepted = accepted)
+    if (accepted) {
+      current <- proposal
+      current_lp <- proposal_lp
+    }
+  }
+  bind_rows(out)
+}
+set.seed(84735)
+bvn_steps <- metropolis_steps(log_bvn, init = c(0, 0), n_iter = 80, step_size = 0.5)
+# the replay must reproduce the chain's first 80 states
+stopifnot(all.equal(if_else(bvn_steps$accepted, bvn_steps$to_1, bvn_steps$from_1), fit_bvn$draws$theta_1[1:80]),
+          all.equal(if_else(bvn_steps$accepted, bvn_steps$to_2, bvn_steps$from_2), fit_bvn$draws$theta_2[1:80]))
+bvn_caption <- sprintf("A bivariate Normal target with correlation 0.9; the contours enclose 50%%, 90%%, and 99%% of the target probability. Left: the first 2,000 draws of the Metropolis chain with step size 0.5. Right: the first 80 iterations, starting from the origin (open circle). Accepted moves are purple segments ending in a dot (%d of the 80), rejected proposals are gray dashed segments ending in a cross (%d). The rejected proposals mostly move away from the narrow diagonal region of high posterior density, where the density falls off quickly; the accepted proposals tend to move along this region.", sum(bvn_steps$accepted), sum(!bvn_steps$accepted))
+```
+
+```{r}
 #| label: fig-bivariate
 #| fig-pos: H
 #| echo: false
-#| out-width: "75%"
-#| fig-cap: "A bivariate Normal target with correlation 0.9. Dots show the first 2,000 draws and the path connects the first 80 updates; the contours, drawn on top, enclose 50%, 90%, and 99% of the target probability. The draws spread farther along the diagonal than across it."
-#| fig-height: 3
+#| fig-cap: !expr bvn_caption
+#| fig-height: 3.6
 bvn_grid <- expand_grid(theta_1 = seq(-3.5, 3.5, length.out = 100),
                         theta_2 = seq(-3.5, 3.5, length.out = 100)) |>
   mutate(density = dmvnorm(cbind(theta_1, theta_2), sigma = Sigma))
 # For a bivariate Normal, the contour enclosing probability p has density (1 - p) times the peak.
 peak <- dmvnorm(c(0, 0), sigma = Sigma)
-fit_bvn$draws |>
+bvn_contours <- geom_contour(data = bvn_grid, aes(theta_1, theta_2, z = density), color = "gray20",
+                             linewidth = 0.4, breaks = peak * c(0.5, 0.1, 0.01))
+p_bvn_draws <- fit_bvn$draws |>
   filter(iteration <= 2000) |>
   ggplot(aes(theta_1, theta_2)) +
   geom_point(color = "#552E6B", size = 0.6, alpha = 0.35) +
-  geom_path(data = filter(fit_bvn$draws, iteration <= 80),
-            color = "gray35", linewidth = 0.3) +
-  geom_contour(data = bvn_grid, aes(z = density), color = "gray20", linewidth = 0.4,
-               breaks = peak * c(0.5, 0.1, 0.01)) +
+  bvn_contours +
   coord_equal() +
-  labs(x = expression(theta[1]), y = expression(theta[2]))
+  labs(x = expression(theta[1]), y = expression(theta[2]), title = "First 2,000 draws")
+step_lim <- range(c(bvn_steps$from_1, bvn_steps$to_1, bvn_steps$from_2, bvn_steps$to_2)) + c(-0.15, 0.15)
+p_bvn_steps <- ggplot() +
+  bvn_contours +
+  geom_segment(data = filter(bvn_steps, !accepted), aes(x = from_1, y = from_2, xend = to_1, yend = to_2),
+               color = "gray55", linetype = "dashed", linewidth = 0.35) +
+  geom_point(data = filter(bvn_steps, !accepted), aes(to_1, to_2), shape = 4, color = "gray40", size = 1.8, stroke = 0.7) +
+  geom_segment(data = filter(bvn_steps, accepted), aes(x = from_1, y = from_2, xend = to_1, yend = to_2),
+               color = "#552E6B", linewidth = 0.5) +
+  geom_point(data = filter(bvn_steps, accepted), aes(to_1, to_2), color = "#552E6B", size = 1.3) +
+  annotate("point", x = 0, y = 0, shape = 21, fill = "white", color = "#552E6B", size = 2.4, stroke = 1) +
+  coord_equal(xlim = step_lim, ylim = step_lim) +
+  labs(x = expression(theta[1]), y = expression(theta[2]), title = "First 80 iterations")
+p_bvn_draws | p_bvn_steps
 ```
 
-Our Metropolis algorithm appears to work, but it is not very efficient. The problem is that the two parameters are strongly correlated, whereas our proposal distribution treats them independently. In @fig-bivariate, we see that the target distribution is stretched along the diagonal, with relatively little probability away from it. We have already seen what this means: a proposal from $(0,0)$ to $(1,1)$ has a reasonable chance of being accepted, whereas a proposal to $(1,-1)$ is almost certainly rejected. Yet our proposal distribution is equally likely to suggest either move. To avoid proposing too many values that will be rejected, we could reduce the step size. But then the accepted moves would also become smaller, and the chain would explore the target more slowly. This problem becomes more difficult as the number of parameters increases.
+Our Metropolis algorithm appears to work, but it is not very efficient. The problem is that the two parameters are strongly correlated, whereas our proposal distribution treats them independently. In @fig-bivariate, we see that the target distribution is stretched along the diagonal, with relatively little probability away from it. We have already seen that a proposal from $(0,0)$ to $(1,1)$ has a reasonable chance of being accepted, whereas a proposal to $(1,-1)$ is almost certainly rejected. Yet our proposal distribution is equally likely to suggest either move. To avoid proposing too many values that will be rejected, we could reduce the step size. But then the accepted moves would also become smaller, and the chain would explore the target more slowly. This problem becomes more difficult as the number of parameters increases.
 
 The preceding example showed how correlation between parameters can make the Metropolis algorithm inefficient. But even when the parameters are independent, proposing many values at once can cause problems. To illustrate this, we fix the step size at $c=1$ and increase the number of parameters. We use a multivariate Normal target distribution with mean vector $\boldsymbol{0}$, variances of $1$, and no correlations between parameters. This allows us to investigate the effect of increasing the number of parameters without the added complication of correlation. Each chain starts with a draw from its target distribution.
 
@@ -738,7 +833,7 @@ by_dim |>
 
 @fig-dimension shows that increasing the number of parameters reduces both the acceptance rate and the effective sample size, even though the target parameters are independent. The reason lies in the acceptance rule we introduced earlier: the entire proposed vector is accepted or rejected at once. As more parameters change together, their combined effect can produce a low target density, even when the proposed change in each parameter is modest.
 
-We have seen that step size is crucial for efficient sampling. In higher dimensions, it becomes even more important to choose it carefully. For high-dimensional targets with independent standard Normal coordinates, optimal-scaling theory suggests $c\approx2.38/\sqrt d$, with an acceptance rate near $0.234$ [@roberts1997weak]. Thus, the step size should decrease as the number of parameters increases. However, smaller steps also mean that the chain moves less in each dimension, making efficient exploration increasingly difficult. The appropriate step size also depends on the scale and dependence of the target parameters, so this is not a universal rule. More advanced algorithms address these difficulties by shaping proposals to the target (Chapter 6 (Metropolis–Hastings and Adaptive Proposals)), updating parameters separately (Chapter 7 (Gibbs Sampling and Metropolis-within-Gibbs)), or using gradients to guide their movement (Chapter 10 (Hamiltonian Monte Carlo)).
+We have seen that step size is crucial for efficient sampling. In higher dimensions, it becomes even more important to choose it carefully. For targets with independent standard Normal coordinates, optimal-scaling theory shows that as the dimension $d$ tends to infinity, the optimal step size approaches $c\approx2.38/\sqrt d$, with an acceptance rate approaching $0.234$ [@roberts1997weak]. Thus, the step size should decrease as the number of parameters increases. However, smaller steps also mean that the chain moves less in each dimension, making efficient exploration increasingly difficult. The appropriate step size also depends on the scale and dependence of the target parameters, so this is not a universal rule. More advanced algorithms address these difficulties by tuning the step size automatically (@sec-adaptive-metropolis), shaping proposals to the target (@sec-metropolis-hastings), updating parameters separately (Chapter 8 (Gibbs Sampling and Metropolis-within-Gibbs)), or using gradients to guide their movement (Chapter 11 (Hamiltonian Monte Carlo)).
 
 ## Chapter summary
 
@@ -748,15 +843,13 @@ In this chapter, you built the Metropolis algorithm from scratch and learned why
 - The normalizing constant cancels in the ratio $r$, so the algorithm only requires the **unnormalized posterior density** $f(y \mid \theta) f(\theta)$. Working with log densities makes the computation numerically more stable.
 - With a symmetric proposal, the Metropolis acceptance rule satisfies **detailed balance**, making the target distribution stationary. We also argued that the chains considered in this chapter are irreducible and aperiodic, which ensures convergence to the target distribution. Thus, for the Normal random-walk proposals used here, every fixed positive step size gives the same stationary distribution, although reaching it may take a very long time.
 - The **efficiency** of the chain depends on the step size $c$ and the shape of the target distribution. Small steps produce slow movement, whereas excessively large steps lead to frequent rejections. Both can result in highly autocorrelated draws. We can **tune the step size** by examining trace plots, effective sample size (ESS), and acceptance rates. Rates around 0.4–0.5 for one approximately Normal parameter and around 0.25 for many similarly scaled parameters updated together are useful starting points.
-- The Metropolis algorithm also extends to **multidimensional target distributions**, but proposing independent Normal changes to all parameters at once can become inefficient as the number of parameters grows or when they are strongly correlated. Chapter 6 (Metropolis–Hastings and Adaptive Proposals), Chapter 7 (Gibbs Sampling and Metropolis-within-Gibbs), and Chapter 10 (Hamiltonian Monte Carlo) introduce methods for improving exploration.
+- The Metropolis algorithm also extends to **multidimensional target distributions**, but proposing independent Normal changes to all parameters at once can become inefficient as the number of parameters grows or when they are strongly correlated. @sec-adaptive-metropolis, @sec-metropolis-hastings, Chapter 8 (Gibbs Sampling and Metropolis-within-Gibbs), and Chapter 11 (Hamiltonian Monte Carlo) introduce methods for improving exploration.
 
 ## Quiz answers
 
 **Quiz 1.** For the proposal $2.5$, the acceptance probability is $\min(1,0.02/0.24)\approx0.083$. For the proposal $0.3$, the ratio is $0.38/0.24>1$, so the proposal is always accepted. These probabilities describe the acceptance of an already generated proposal, not the probability of proposing that exact value from a continuous distribution.
 
 **Quiz 2.** A high acceptance rate alone does not guarantee good exploration. For this Normal random-walk sampler, an acceptance rate of 99% suggests that the step size may be too small, causing the chain to move slowly. Inspect the trace plot and effective sample size (ESS), and compare the results with a trial run using a larger step size. The goal is to obtain precise estimates through efficient exploration, not to achieve a particular acceptance rate.
-
-**Quiz 3.** Recording only accepted moves omits the time the chain spends at states following rejections. For example, a state retained for five iterations should contribute five times to a posterior average, but a record of accepted moves includes it only once. The resulting draws therefore represent a different distribution. For this Normal target and random-walk proposal, omitting repeated states gives too much relative weight to the tails, which can explain the wider histogram.
 
 ## Exercises
 

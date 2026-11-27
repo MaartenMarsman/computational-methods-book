@@ -27,6 +27,8 @@ book:
     - part: "Sampling Algorithms"
       chapters:
         - chapters/05-metropolis.qmd
+        - chapters/06-adaptive-metropolis.qmd
+        - chapters/07-metropolis-hastings.qmd
     - references.qmd
     - news.qmd
   appendices:

@@ -41,7 +41,7 @@ Packages that these depend on, such as `dplyr`, `tidyr`, and `scales`, are insta
 install.packages(c(
   "lars",     # diabetes data, Chapters 7–9
   "bgms",     # graphical-model examples, Chapters 7–9
-  "numDeriv"  # numerical gradient checks, Chapter 10
+  "numDeriv"  # numerical gradient checks, Chapter 11
 ))
 ```
 

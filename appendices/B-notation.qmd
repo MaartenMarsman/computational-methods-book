@@ -43,12 +43,12 @@ This appendix collects the symbols used for data, probability distributions, Mar
 | $\alpha(\theta, \theta^\star) = \min\{1, r\}$ | acceptance probability |
 | $u \sim \text{Unif}(0, 1)$ | the uniform draw that decides acceptance |
 | $c$ | step size of a random-walk proposal, $\theta^\star \sim \text{N}(\theta^{(t)}, c^2)$ |
-| $\alpha^\ast$, $\gamma_t$ | target acceptance rate and learning rate in Robbins–Monro adaptation (Chapter 6 (Metropolis–Hastings and Adaptive Proposals)) |
+| $\alpha^\ast$, $\gamma_t$ | target acceptance rate and learning rate in Robbins–Monro adaptation (@sec-adaptive-metropolis) |
 | $\mathbf{P}$, $P_{ij}$ | transition matrix of a discrete chain; probability of moving from state $i$ to state $j$ (@sec-markov-chains) |
 | $K(\theta, \theta')$ | transition density between distinct states of a continuous chain; rejections also give a probability of staying at the current state |
 | $\boldsymbol{\pi}$ | stationary distribution of a discrete chain, a row vector with $\boldsymbol{\pi} \mathbf{P} = \boldsymbol{\pi}$ |
 | $f(\theta) K(\theta, \theta') = f(\theta') K(\theta', \theta)$ | detailed balance with respect to $f$ |
-| $f(\theta_j \mid \boldsymbol{\theta}_{-j}, y)$ | full conditional of $\theta_j$ given all other parameters (Chapter 7 (Gibbs Sampling and Metropolis-within-Gibbs)) |
+| $f(\theta_j \mid \boldsymbol{\theta}_{-j}, y)$ | full conditional of $\theta_j$ given all other parameters (Chapter 8 (Gibbs Sampling and Metropolis-within-Gibbs)) |
 | $\rho_k$ | autocorrelation of a chain at lag $k$ (@sec-diagnostics) |
 | $\text{ESS}$ | effective sample size; the equivalent independent-draw count for the precision of a specified summary |
 | $\widehat{R}$ | R-hat, a diagnostic comparing behavior within and between chains; use a value below 1.01 alongside the other checks in @sec-diagnostics |
@@ -58,19 +58,19 @@ This appendix collects the symbols used for data, probability distributions, Mar
 
 | Symbol | Meaning |
 |---|---|
-| $\mathcal{M}_m$, $m = 1, \ldots, M$ | model $m$ out of $M$ candidate models (Chapter 8 (Bayesian Variable Selection)) |
+| $\mathcal{M}_m$, $m = 1, \ldots, M$ | model $m$ out of $M$ candidate models (Chapter 9 (Bayesian Variable Selection)) |
 | $\gamma_j \in \{0, 1\}$ | inclusion indicator for predictor $j$: $\gamma_j = 1$ means $x_j$ is in the model |
 | $\boldsymbol{\gamma} = (\gamma_1, \ldots, \gamma_p)$ | a model, written as its vector of indicators; there are $2^p$ of them |
 | $f(\mathcal{M}_m)$, $f(\mathcal{M}_m \mid y)$ | prior and posterior model probabilities |
 | $f(y \mid \mathcal{M}_m)$ | marginal likelihood of model $m$ |
 | $P(\gamma_j = 1 \mid y)$ | posterior inclusion probability of predictor $j$ |
-| $f(\theta \mid y) = \sum_m f(\theta \mid y, \mathcal{M}_m) f(\mathcal{M}_m \mid y)$ | model-averaged posterior (Chapter 9 (Bayesian Model Averaging)) |
+| $f(\theta \mid y) = \sum_m f(\theta \mid y, \mathcal{M}_m) f(\mathcal{M}_m \mid y)$ | model-averaged posterior (Chapter 10 (Bayesian Model Averaging)) |
 
 ## Hamiltonian Monte Carlo
 
 | Symbol | Meaning |
 |---|---|
-| $\mathbf{p}$ | momentum, an auxiliary vector of the same length as $\boldsymbol{\theta}$ (Chapter 10 (Hamiltonian Monte Carlo)) |
+| $\mathbf{p}$ | momentum, an auxiliary vector of the same length as $\boldsymbol{\theta}$ (Chapter 11 (Hamiltonian Monte Carlo)) |
 | $\mathbf{M}$ | mass matrix, the covariance of the momentum, $\mathbf{p} \sim \text{N}(\mathbf{0}, \mathbf{M})$ |
 | $H(\boldsymbol{\theta}, \mathbf{p}) = -\log f(\boldsymbol{\theta}) + \tfrac{1}{2} \mathbf{p}^\top \mathbf{M}^{-1} \mathbf{p}$ | the Hamiltonian: potential energy plus kinetic energy |
 | $\nabla \log f(\boldsymbol{\theta})$ | gradient of the log target, the `grad_log_target` argument of `hmc()` |
